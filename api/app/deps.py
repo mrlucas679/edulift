@@ -10,6 +10,7 @@ from app.auth import Auth, Identity
 from app.config import Settings
 from app.db import transaction
 from app.errors import UnauthenticatedError
+from app.explain import ExplanationProvider
 from app.mail import Mailer
 
 _bearer = HTTPBearer(auto_error=False)
@@ -64,4 +65,12 @@ Identities = Annotated[Auth, Depends(_auth)]
 SignedIn = Annotated[Identity, Depends(_signed_in)]
 ClientIp = Annotated[str, Depends(client_ip)]
 Mail = Annotated[Mailer, Depends(_mailer)]
+
+
+def _explainer(request: Request) -> ExplanationProvider:
+    provider: ExplanationProvider = request.app.state.explainer
+    return provider
+
+
+Explainer = Annotated[ExplanationProvider, Depends(_explainer)]
 AppSettings = Annotated[Settings, Depends(_settings)]

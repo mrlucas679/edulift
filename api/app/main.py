@@ -5,6 +5,8 @@ import logging
 import time
 from collections.abc import Awaitable, Callable
 
+import boto3
+from botocore.config import Config
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import Engine
@@ -14,6 +16,7 @@ from app.auth import Auth
 from app.config import Settings
 from app.db import new_engine
 from app.errors import add_handlers, error_response
+from app.explain import BedrockProvider, ExplanationProvider, TemplateProvider
 from app.identity import identity_for
 from app.logs import setup_logging
 from app.mail import Mailer, mailer_for
@@ -23,6 +26,7 @@ from app.routers import (
     applications,
     aps,
     auth,
+    explain,
     health,
     marks,
     me,
@@ -48,6 +52,17 @@ def _auth(settings: Settings) -> Auth:
     return identity_for(settings)
 
 
+def _explainer(settings: Settings) -> ExplanationProvider:
+    if settings.ai_enabled and settings.bedrock_model_id:
+        client = boto3.client(
+            "bedrock-runtime",
+            region_name=settings.aws_region,
+            config=Config(read_timeout=settings.ai_timeout_seconds, retries={"max_attempts": 1}),
+        )
+        return BedrockProvider(client, settings.bedrock_model_id)
+    return TemplateProvider()
+
+
 def _mailer(settings: Settings) -> Mailer:
     return mailer_for(settings)
 
@@ -57,6 +72,7 @@ def create_app(
     identity: Auth | None = None,
     engine: Engine | None = None,
     mailer: Mailer | None = None,
+    explainer: ExplanationProvider | None = None,
 ) -> FastAPI:
     if settings is None:
         setup_logging()
@@ -74,6 +90,7 @@ def create_app(
     app.state.sessions = sessionmaker(bind=app.state.engine, expire_on_commit=False)
     app.state.identity = identity or _auth(settings)
     app.state.mailer = mailer or _mailer(settings)
+    app.state.explainer = explainer or _explainer(settings)
 
     add_handlers(app)
     app.add_middleware(
@@ -135,6 +152,7 @@ def create_app(
         opportunities.router,
         saved.router,
         applications.router,
+        explain.router,
     ):
         app.include_router(router, prefix="/v1")
     return app

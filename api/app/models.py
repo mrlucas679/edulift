@@ -284,6 +284,21 @@ class ReminderSent(Base):
     sent_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class AiRequest(Base):
+    """What an AI call cost and why it fell back. Never the text sent or received."""
+
+    __tablename__ = "ai_requests"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id_hash: Mapped[str] = mapped_column(String(64), index=True)  # sha256 of the learner id
+    feature: Mapped[str] = mapped_column(String(20))
+    target_id: Mapped[str] = mapped_column(String(80))
+    outcome_class: Mapped[str] = mapped_column(String(30))
+    provider: Mapped[str] = mapped_column(String(20))
+    fallback_reason: Mapped[str | None] = mapped_column(String(30))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class AuditEvent(Base):
     __tablename__ = "audit_events"
 

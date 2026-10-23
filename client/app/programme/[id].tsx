@@ -5,6 +5,7 @@ import { Linking, Pressable } from 'react-native';
 import { toMarks, useMarks } from '../../src/marks';
 import { checkProgramme, useProgramme, useSubjectNames, type Verdict } from '../../src/reference';
 import { useAlternatives } from '../../src/alternatives';
+import { useExplain } from '../../src/explain';
 import { useSaved, useStartApplication, useToggleSaved } from '../../src/tracking';
 import { usePlan, useSavePlan } from '../../src/plan';
 import { useSession } from '../../src/session';
@@ -43,6 +44,7 @@ export default function ProgrammeScreen() {
   const marks = toMarks(rows);
   const check = useMutation({ mutationFn: () => checkProgramme(id, marks, accessToken) });
   const alternatives = useAlternatives(id, accessToken);
+  const explain = useExplain(id, accessToken);
   const saved = useSaved(accessToken);
   const toggleSaved = useToggleSaved(accessToken);
   const startApplication = useStartApplication(accessToken);
@@ -82,6 +84,30 @@ export default function ProgrammeScreen() {
             )}
             <ErrorNote error={check.error} />
             {check.data && <VerdictCard verdict={check.data} />}
+
+            {check.data && (
+              <>
+                <Button
+                  label="Explain this result"
+                  busy={explain.isPending}
+                  onPress={() => explain.mutate(marks)}
+                />
+                <ErrorNote error={explain.error} />
+                {explain.data && (
+                  <Card>
+                    <Body>{explain.data.summary}</Body>
+                    <Body>{explain.data.next_step}</Body>
+                    <Body muted>{explain.data.plan_b_hint}</Body>
+                    <Body muted>
+                      {explain.data.provider === 'bedrock'
+                        ? 'Words written by an AI model from this result. The result itself comes from our rules.'
+                        : 'Standard wording from this result.'}
+                    </Body>
+                    <Body muted>{explain.data.disclaimer}</Body>
+                  </Card>
+                )}
+              </>
+            )}
 
             {check.data && check.data.outcome !== 'qualifies' && (
               <>
