@@ -4,5 +4,6 @@ type: university
 province: Western Cape
 apply_url: https://www.uct.ac.za/students/applications-apply-undergraduate-qualifications/application-procedure
 route: direct
-source: uct-apply
+aps_scheme: uct_fps
+source: uct-nsc-2027
 # cycles and programmes: add once checked against the 2027 prospectus
