@@ -87,3 +87,9 @@ def add_handlers(app: FastAPI) -> None:
     app.add_exception_handler(RequestValidationError, _bad_input)
     app.add_exception_handler(HTTPException, _http_error)
     app.add_exception_handler(Exception, _unexpected)
+
+
+class NotFoundError(AppError):
+    code = "not_found"
+    status_code = 404
+    message = "We couldn't find that."

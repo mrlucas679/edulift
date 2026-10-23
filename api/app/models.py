@@ -12,7 +12,7 @@ from sqlalchemy import (
     Text,
     func,
 )
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -88,6 +88,9 @@ class Institution(Base):
     aps_scheme: Mapped[str | None] = mapped_column(String(30))
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
 
+    source: Mapped[Source] = relationship(lazy="joined")
+    cycles: Mapped[list["Cycle"]] = relationship(order_by="Cycle.opens_on")
+
 
 class Cycle(Base):
     __tablename__ = "application_cycles"
@@ -98,6 +101,8 @@ class Cycle(Base):
     opens_on: Mapped[date] = mapped_column(Date)
     closes_on: Mapped[date] = mapped_column(Date)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
+
+    source: Mapped[Source] = relationship(lazy="joined")
 
 
 class Programme(Base):
@@ -113,6 +118,11 @@ class Programme(Base):
     closes_on: Mapped[date | None] = mapped_column(Date)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
     verified_on: Mapped[date | None] = mapped_column(Date)  # second-person check
+
+    source: Mapped[Source] = relationship(lazy="joined")
+    requirements: Mapped[list["Requirement"]] = relationship(
+        order_by="(Requirement.group_no, Requirement.id)"
+    )
 
 
 class Requirement(Base):
