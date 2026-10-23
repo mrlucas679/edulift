@@ -109,12 +109,13 @@ function Consents({ me }: { me: MeDetail }) {
   const queryClient = useQueryClient();
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<unknown>(null);
+  const [reminderEmail, setReminderEmail] = useState('');
 
   async function toggle(purpose: string, on: boolean) {
     setPending(purpose);
     setError(null);
     try {
-      await setConsent(accessToken, purpose, on);
+      await setConsent(accessToken, purpose, on, purpose === 'reminders' ? reminderEmail.trim() : undefined);
       await queryClient.invalidateQueries({ queryKey: ['me-details'] });
     } catch (e) {
       setError(e);
@@ -127,6 +128,13 @@ function Consents({ me }: { me: MeDetail }) {
     <>
       <Heading>Your choices</Heading>
       <Body muted>Only the first one is needed. You can change these any time in your profile.</Body>
+      <Field
+        label="Email for deadline reminders (only if you choose reminders)"
+        value={reminderEmail}
+        onChangeText={setReminderEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+      />
       {Object.entries(PURPOSES).map(([purpose, text]) => (
         <Card key={purpose}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>

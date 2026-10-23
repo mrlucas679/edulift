@@ -45,8 +45,17 @@ export function useMe() {
 export const saveProfile = (accessToken: string | null, body: { first_name: string; birth_date: string }) =>
   request('/v1/me/profile', me, { method: 'PUT', body, accessToken });
 
-export const setConsent = (accessToken: string | null, purpose: string, granted: boolean) =>
-  request('/v1/me/consents', me, { method: 'POST', body: { purpose, granted }, accessToken });
+export const setConsent = (
+  accessToken: string | null,
+  purpose: string,
+  granted: boolean,
+  contactEmail?: string,
+) =>
+  request('/v1/me/consents', me, {
+    method: 'POST',
+    body: { purpose, granted, ...(contactEmail ? { contact_email: contactEmail } : {}) },
+    accessToken,
+  });
 
 export const askGuardian = (accessToken: string | null, body: { guardian_name: string; guardian_email: string }) =>
   request('/v1/me/guardian', z.undefined(), { method: 'POST', body, accessToken });

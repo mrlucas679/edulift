@@ -160,6 +160,8 @@ class Profile(Base):
     first_name: Mapped[str | None] = mapped_column(String(60))
     birth_date: Mapped[date] = mapped_column(Date)
     province: Mapped[str | None] = mapped_column(String(30))
+    # Only kept while the learner has reminders consent; cleared when it is withdrawn.
+    contact_email: Mapped[str | None] = mapped_column(String(254))
     certificate: Mapped[str | None] = mapped_column(String(10))
 
 

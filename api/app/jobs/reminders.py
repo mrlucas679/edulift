@@ -4,6 +4,7 @@ Only learners who granted the reminders purpose get anything, and each
 (learner, item, threshold) is sent once.
 """
 
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
@@ -12,10 +13,13 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app import models as m
-from app.mail import Mailer
+from app.config import Settings
+from app.db import new_engine
+from app.mail import Mailer, mailer_for
 from app.tracking import target_summary
 
 THRESHOLDS = (14, 3)
+log = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -111,10 +115,19 @@ def send_due(
     return sent
 
 
+def contact_address(db: Session, user_id: str) -> str | None:
+    profile = db.get(m.Profile, user_id)
+    return profile.contact_email if profile else None
+
+
 def main() -> None:
-    # Reminders need each learner's address. Learners' emails live only in Cognito, and
-    # there is no decided way to look them up yet, so nothing is sent until there is.
-    raise SystemExit("No contact-address source is configured; no reminders were sent.")
+    settings = Settings()
+    engine = new_engine(settings.sqlalchemy_url)
+    with Session(engine) as db, db.begin():
+        sent = send_due(
+            db, date.today(), lambda uid: contact_address(db, uid), mailer_for(settings)
+        )
+    log.info("reminders sent: %d", sent)
 
 
 if __name__ == "__main__":

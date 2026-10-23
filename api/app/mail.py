@@ -4,6 +4,7 @@ import logging
 import sys
 from typing import TYPE_CHECKING, Protocol
 
+import boto3
 from botocore.exceptions import BotoCoreError, ClientError
 
 from app.errors import UpstreamUnavailableError
@@ -11,11 +12,20 @@ from app.errors import UpstreamUnavailableError
 if TYPE_CHECKING:
     from mypy_boto3_sesv2 import SESV2Client
 
+    from app.config import Settings
+
 log = logging.getLogger(__name__)
 
 
 class Mailer(Protocol):
     def send(self, to: str, subject: str, body: str) -> None: ...
+
+
+def mailer_for(settings: "Settings") -> Mailer:
+    if settings.identity_provider == "cognito":
+        client = boto3.client("sesv2", region_name=settings.aws_region)
+        return SesMailer(client, settings.sender_email)
+    return ConsoleMailer()
 
 
 class SesMailer:

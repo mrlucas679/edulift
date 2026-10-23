@@ -18,7 +18,7 @@ from app.db import new_engine
 from app.errors import add_handlers, error_response
 from app.fake_auth import FakeAuth
 from app.logs import setup_logging
-from app.mail import ConsoleMailer, Mailer, SesMailer
+from app.mail import Mailer, mailer_for
 from app.request_id import new_id
 from app.routers import (
     alternatives,
@@ -63,10 +63,7 @@ def _auth(settings: Settings) -> Auth:
 
 
 def _mailer(settings: Settings) -> Mailer:
-    if settings.identity_provider == "cognito":
-        client = boto3.client("sesv2", region_name=settings.aws_region)
-        return SesMailer(client, settings.sender_email)
-    return ConsoleMailer()
+    return mailer_for(settings)
 
 
 def create_app(

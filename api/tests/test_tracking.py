@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import Engine
+from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session as DbSession
 
 from app import models as m
@@ -150,7 +150,10 @@ class Outbox:
 
 def grant(client: TestClient, inbox: dict[str, str], email: str, purpose: str) -> None:
     s = sign_in(client, inbox, email)
-    client.post("/v1/me/consents", json={"purpose": purpose, "granted": True}, headers=s.headers)
+    body: dict[str, object] = {"purpose": purpose, "granted": True}
+    if purpose == "reminders":
+        body["contact_email"] = email
+    client.post("/v1/me/consents", json=body, headers=s.headers)
 
 
 def test_reminder_goes_out_once_at_fourteen_days(
@@ -203,3 +206,26 @@ def test_no_address_means_no_email(
     with DbSession(engine) as db, db.begin():
         assert send_due(db, date.today(), lambda _: None, outbox) == 0
     assert outbox.sent == []
+
+
+def test_reminder_needs_a_contact_email(
+    client: TestClient, inbox: dict[str, str], seeded: None
+) -> None:
+    s = active(client, inbox, "a@example.org")
+    r = client.post(
+        "/v1/me/consents", json={"purpose": "reminders", "granted": True}, headers=s.headers
+    )
+    assert r.status_code == 403
+
+
+def test_withdrawing_reminders_clears_the_contact_email(
+    client: TestClient, inbox: dict[str, str], seeded: None, engine: Engine
+) -> None:
+    s = active(client, inbox, "a@example.org")
+    grant(client, inbox, "a@example.org", "reminders")
+    client.post(
+        "/v1/me/consents", json={"purpose": "reminders", "granted": False}, headers=s.headers
+    )
+    with DbSession(engine) as db:
+        user = db.scalars(select(m.User)).one()
+        assert db.get_one(m.Profile, user.id).contact_email is None

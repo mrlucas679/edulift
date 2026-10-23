@@ -126,6 +126,10 @@ def set_consent(body: ConsentRequest, me: SignedIn, db: Db) -> MeDetail:
             allowed is None or body.purpose not in allowed
         ):
             raise NotAllowedError("Your guardian hasn't allowed this.")
+        if body.purpose == "reminders":
+            if body.contact_email is None:
+                raise NotAllowedError("Give the email address reminders should go to.")
+            profile.contact_email = body.contact_email.lower()
         if body.purpose not in _active_purposes(db, user.id):
             db.add(
                 m.Consent(
@@ -136,6 +140,9 @@ def set_consent(body: ConsentRequest, me: SignedIn, db: Db) -> MeDetail:
                 )
             )
     else:
+        learner_profile = db.get(m.Profile, user.id)
+        if body.purpose == "reminders" and learner_profile is not None:
+            learner_profile.contact_email = None
         db.execute(
             update(m.Consent)
             .where(

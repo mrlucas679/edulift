@@ -197,6 +197,8 @@ class ProfileIn(Request):
 class ConsentRequest(Request):
     purpose: Purpose
     granted: bool
+    # Required with the reminders purpose: where reminder emails go.
+    contact_email: EmailStr | None = Field(default=None, max_length=254)
 
 
 class MeDetail(BaseModel):
