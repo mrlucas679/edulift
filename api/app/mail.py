@@ -1,6 +1,7 @@
 """Outgoing email. SES on AWS, the console locally."""
 
 import logging
+import sys
 from typing import TYPE_CHECKING, Protocol
 
 from botocore.exceptions import BotoCoreError, ClientError
@@ -44,4 +45,5 @@ class ConsoleMailer:
 
     def send(self, to: str, subject: str, body: str) -> None:
         self.sent.append((to, subject, body))
-        log.warning("local email: %s", subject)
+        # Local only, so you can follow links. Printed, never logged.
+        print(f"\n--- local email to {to}: {subject}\n{body}\n---", file=sys.stderr)
