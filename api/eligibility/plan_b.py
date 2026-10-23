@@ -1,10 +1,7 @@
-"""Plan B: what to look at when a target programme says no. Plain data in, ranked lists out."""
-
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
 
-# Easier entry in the order the rules doc gives: extended degree, then diploma, then certificate.
 EASIER_ENTRY = ("extended_degree", "diploma", "higher_certificate")
 TVET = ("nc_v", "n4")
 QUALIFIES = frozenset({"qualifies", "qualifies_selection", "qualifies_unconfirmed"})
@@ -41,7 +38,6 @@ class Route:
 
 
 def _rank(candidate: Candidate, learner_province: str) -> tuple[int, date, int, str, str]:
-    # Open before closed, then closing soonest, then the learner's own province, then name.
     closed = 1 if candidate.window in {"closed", "not_open"} else 0
     return (
         closed,

@@ -20,6 +20,7 @@ from app.mail import ConsoleMailer
 from app.main import create_app
 
 TABLES = [
+    "document_drafts",
     "ai_requests", "reminders_sent", "checklist_items", "applications", "saved_items",
     "plan_targets", "opportunities", "mark_records", "guardian_requests", "consents", "profiles",
     "users", "rate_limit_hits", "programme_requirements", "programmes",

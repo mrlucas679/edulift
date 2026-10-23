@@ -1,5 +1,3 @@
-"""Export and erase a learner's data. Deleting the user row removes everything that hangs off it."""
-
 from datetime import UTC, datetime
 from typing import Any
 

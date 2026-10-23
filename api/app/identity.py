@@ -1,5 +1,3 @@
-"""Picks the sign-in provider for the environment: Cognito in the cloud, a fake locally."""
-
 import logging
 
 import boto3
@@ -22,7 +20,6 @@ def identity_for(settings: Settings) -> Auth:
         )
 
     def print_code(_email: str, code: str) -> None:
-        # Local only; no email in the log.
         log.warning("local sign-in code: %s", code)
 
     return FakeAuth(send_code=print_code)

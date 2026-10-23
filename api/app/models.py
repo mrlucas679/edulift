@@ -299,6 +299,22 @@ class AiRequest(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class DocumentDraft(Base):
+    """A CV or motivation letter the learner chose to keep. Written only on Save."""
+
+    __tablename__ = "document_drafts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    kind: Mapped[str] = mapped_column(String(20))  # cv, motivation_letter
+    title: Mapped[str] = mapped_column(String(120))
+    content: Mapped[str] = mapped_column(Text)
+    target_kind: Mapped[str | None] = mapped_column(String(20))
+    target_id: Mapped[str | None] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class AuditEvent(Base):
     __tablename__ = "audit_events"
 

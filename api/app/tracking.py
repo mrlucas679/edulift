@@ -1,5 +1,3 @@
-"""Saved items and applications: what the learner bookmarked, and what they have applied for."""
-
 from datetime import date
 
 from sqlalchemy import select
@@ -10,7 +8,6 @@ from app.errors import NotFoundError
 
 TargetKind = str  # "programme" or "opportunity"
 
-# Generic starting list. Each institution's own list is added once its page is checked.
 DEFAULT_CHECKLIST = (
     "Certificate or statement of results",
     "Certified copy of your ID",

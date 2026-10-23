@@ -1,9 +1,3 @@
-"""Plain-language explanation of a verdict. The rules engine decides; the model words it.
-
-A reply is used only if it passes the checks below. Anything else falls back to the
-template, which is built from the same verdict data and never invents a fact.
-"""
-
 import json
 import logging
 import re

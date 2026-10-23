@@ -1,5 +1,3 @@
-"""Bookmarks for programmes and opportunities. Only the signed-in learner's own."""
-
 from datetime import date
 from typing import Literal
 

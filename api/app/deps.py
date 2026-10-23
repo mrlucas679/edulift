@@ -6,6 +6,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 
+from app.assist import AskProvider, DraftProvider
 from app.auth import Auth, Identity
 from app.config import Settings
 from app.db import transaction
@@ -73,4 +74,18 @@ def _explainer(request: Request) -> ExplanationProvider:
 
 
 Explainer = Annotated[ExplanationProvider, Depends(_explainer)]
+
+
+def _asker(request: Request) -> AskProvider:
+    provider: AskProvider = request.app.state.asker
+    return provider
+
+
+def _drafter(request: Request) -> DraftProvider:
+    provider: DraftProvider = request.app.state.drafter
+    return provider
+
+
+Asker = Annotated[AskProvider, Depends(_asker)]
+Drafter = Annotated[DraftProvider, Depends(_drafter)]
 AppSettings = Annotated[Settings, Depends(_settings)]

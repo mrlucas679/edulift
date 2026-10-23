@@ -1,5 +1,3 @@
-"""Plain-language explanation of a verdict. No AI consent means the template, never an error."""
-
 import hashlib
 from datetime import date
 from typing import Literal

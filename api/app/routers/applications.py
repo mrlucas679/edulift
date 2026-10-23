@@ -1,5 +1,3 @@
-"""The learner's own application tracker. EduLift never submits anything for them."""
-
 from datetime import date
 from typing import Literal
 
@@ -85,7 +83,6 @@ def _out(db: Session, app: m.Application, today: date) -> ApplicationOut:
 
 
 def _own(db: Session, user_id: str, application_id: int) -> m.Application:
-    # Filtering by the signed-in learner means another learner's id gets the same 404.
     app = db.scalar(
         select(m.Application).where(
             m.Application.id == application_id, m.Application.user_id == user_id
@@ -132,7 +129,6 @@ def update(application_id: int, body: ApplicationPatch, me: SignedIn, db: Db) ->
     user = active_user(db, me.subject)
     app = _own(db, user.id, application_id)
     for field, value in body.model_dump(exclude_unset=True).items():
-        # Status and notes cannot be cleared to nothing.
         if value is None and field in {"status", "notes"}:
             continue
         setattr(app, field, value)

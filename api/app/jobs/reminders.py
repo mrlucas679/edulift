@@ -1,9 +1,3 @@
-"""Daily: email learners 14 and 3 days before a saved or tracked item closes.
-
-Only learners who granted the reminders purpose get anything, and each
-(learner, item, threshold) is sent once.
-"""
-
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass

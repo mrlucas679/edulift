@@ -12,6 +12,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import Engine
 from sqlalchemy.orm import sessionmaker
 
+from app.assist import (
+    AskProvider,
+    BedrockAsk,
+    BedrockDraft,
+    DraftProvider,
+    TemplateAsk,
+    TemplateDraft,
+)
 from app.auth import Auth
 from app.config import Settings
 from app.db import new_engine
@@ -25,6 +33,7 @@ from app.routers import (
     alternatives,
     applications,
     aps,
+    assist,
     auth,
     explain,
     health,
@@ -63,6 +72,27 @@ def _explainer(settings: Settings) -> ExplanationProvider:
     return TemplateProvider()
 
 
+def _ai_client(settings: Settings) -> object | None:
+    if not (settings.ai_enabled and settings.bedrock_model_id):
+        return None
+    client: object = boto3.client(
+        "bedrock-runtime",
+        region_name=settings.aws_region,
+        config=Config(read_timeout=settings.ai_timeout_seconds, retries={"max_attempts": 1}),
+    )
+    return client
+
+
+def _asker(settings: Settings) -> AskProvider:
+    client = _ai_client(settings)
+    return BedrockAsk(client, settings.bedrock_model_id) if client else TemplateAsk()
+
+
+def _drafter(settings: Settings) -> DraftProvider:
+    client = _ai_client(settings)
+    return BedrockDraft(client, settings.bedrock_model_id) if client else TemplateDraft()
+
+
 def _mailer(settings: Settings) -> Mailer:
     return mailer_for(settings)
 
@@ -91,6 +121,8 @@ def create_app(
     app.state.identity = identity or _auth(settings)
     app.state.mailer = mailer or _mailer(settings)
     app.state.explainer = explainer or _explainer(settings)
+    app.state.asker = _asker(settings)
+    app.state.drafter = _drafter(settings)
 
     add_handlers(app)
     app.add_middleware(
@@ -153,6 +185,7 @@ def create_app(
         saved.router,
         applications.router,
         explain.router,
+        assist.router,
     ):
         app.include_router(router, prefix="/v1")
     return app

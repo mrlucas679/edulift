@@ -1,5 +1,3 @@
-"""Daily: erase guardian requests nobody answered within 7 days, with the learner's pending data."""
-
 import logging
 from datetime import UTC, datetime, timedelta
 
