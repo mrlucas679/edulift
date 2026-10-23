@@ -43,6 +43,7 @@ def test_verdict_lists_every_check(client: TestClient, inbox: dict[str, str], se
         ("subjects_1", "pass"),
     ]
     assert body["checks"][1]["required"] == "Mathematics 60%"
+    assert all(c["source_url"].startswith("https://") for c in body["checks"])
     assert "institution decides" in body["note"]
 
 

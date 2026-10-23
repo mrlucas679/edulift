@@ -168,6 +168,8 @@ class CheckOut(BaseModel):
     required: str
     yours: str
     result: Literal["pass", "fail", "unknown"]
+    source_url: str
+    checked_on: date | None  # None: the source has not been checked yet
 
 
 class VerdictOut(BaseModel):

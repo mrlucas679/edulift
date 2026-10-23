@@ -1,7 +1,6 @@
 """Where do I stand for this programme? Marks come with the request and aren't stored."""
 
 import re
-from dataclasses import asdict
 from datetime import date
 
 from fastapi import APIRouter
@@ -14,7 +13,7 @@ from app.errors import NotFoundError
 from app.routers.aps import UnknownSubjectError
 from app.routers.marks import active_user, latest_marks
 from app.schemas import CheckOut, CheckRequest, VerdictOut
-from eligibility.verdict import Option, Rules, evaluate
+from eligibility.verdict import Check, Option, Rules, evaluate
 
 router = APIRouter(prefix="/programmes", tags=["verdicts"])
 
@@ -61,13 +60,22 @@ def check(
         score=v.score,
         scheme=institution.aps_scheme,
         window=v.window,
-        checks=[_named(CheckOut(**asdict(c)), names) for c in v.checks],
+        checks=[_with_source(c, names, programme.source) for c in v.checks],
     )
 
 
-def _named(check: CheckOut, names: dict[str, str]) -> CheckOut:
-    # Subject ids read badly on screen; show names instead.
-    def swap(text: str) -> str:
-        return re.sub(r"\b[a-z_]+\b", lambda w: names.get(w.group(), w.group()), text)
+def _with_source(check: Check, names: dict[str, str], source: m.Source) -> CheckOut:
+    # Every check comes from the programme's own prospectus, so each one carries its source.
+    return CheckOut(
+        name=check.name,
+        result=check.result,
+        required=_named_subjects(check.required, names),
+        yours=_named_subjects(check.yours, names),
+        source_url=source.url,
+        checked_on=source.checked_on,
+    )
 
-    return check.model_copy(update={"required": swap(check.required), "yours": swap(check.yours)})
+
+def _named_subjects(text: str, names: dict[str, str]) -> str:
+    # Subject ids read badly on screen; show names instead.
+    return re.sub(r"\b[a-z_]+\b", lambda w: names.get(w.group(), w.group()), text)

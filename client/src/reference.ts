@@ -141,6 +141,8 @@ const verdict = z.object({
       required: z.string(),
       yours: z.string(),
       result: z.enum(['pass', 'fail', 'unknown']),
+      source_url: z.string(),
+      checked_on: z.string().nullable(),
     }),
   ),
   note: z.string(),
