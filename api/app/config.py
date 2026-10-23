@@ -1,4 +1,5 @@
 from typing import Literal, Self
+from urllib.parse import quote
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -10,8 +11,17 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     edulift_env: Literal["local", "test", "demo"]
-    database_url: str
     identity_provider: Literal["cognito", "fake"]
+
+    # Locally you set DATABASE_URL. On AWS the password comes from the secret RDS manages
+    # and rotates, so we get the pieces and put the URL together ourselves.
+    database_url: str = ""
+    db_host: str = ""
+    db_port: int = 5432
+    db_name: str = ""
+    db_user: str = ""
+    db_password: str = ""
+
     aws_region: str = ""
     cognito_user_pool_id: str = ""
     cognito_app_client_id: str = ""
@@ -19,18 +29,36 @@ class Settings(BaseSettings):
     # How many proxies sit in front of us and append to X-Forwarded-For
     # (CloudFront + the load balancer = 2). 0 locally: use the socket address.
     trusted_proxy_hops: int = Field(default=0, ge=0, le=5)
+    # CloudFront sends this header to us. Anything arriving without it went around
+    # CloudFront, straight at the load balancer, and could have faked its own IP.
+    origin_secret: str = ""
 
     @model_validator(mode="after")
     def _check(self) -> Self:
-        if self.edulift_env == "demo" and self.identity_provider == "fake":
-            raise ValueError("the fake sign-in provider must never run in demo")
+        if self.edulift_env == "demo":
+            if self.identity_provider == "fake":
+                raise ValueError("the fake sign-in provider must never run in demo")
+            if len(self.origin_secret) < 32:  # noqa: PLR2004
+                raise ValueError("demo needs ORIGIN_SECRET (32+ characters)")
         if self.identity_provider == "cognito" and not (
             self.aws_region and self.cognito_user_pool_id and self.cognito_app_client_id
         ):
             raise ValueError(
                 "cognito needs AWS_REGION, COGNITO_USER_POOL_ID, COGNITO_APP_CLIENT_ID"
             )
+        if not self.database_url and not (self.db_host and self.db_name and self.db_user):
+            raise ValueError("set DATABASE_URL, or DB_HOST, DB_NAME, DB_USER and DB_PASSWORD")
         return self
+
+    @property
+    def sqlalchemy_url(self) -> str:
+        if self.database_url:
+            return self.database_url
+        password = quote(self.db_password, safe="")
+        return (
+            f"postgresql+psycopg://{quote(self.db_user, safe='')}:{password}"
+            f"@{self.db_host}:{self.db_port}/{self.db_name}?sslmode=require"
+        )
 
     @property
     def deployed(self) -> bool:

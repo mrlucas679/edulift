@@ -1,5 +1,6 @@
 """Run with: uvicorn app.main:create_app --factory --no-access-log"""
 
+import hmac
 import logging
 import time
 from collections.abc import Awaitable, Callable
@@ -14,7 +15,7 @@ from app.adapters.cognito_identity import CognitoIdentityProvider
 from app.adapters.fake_identity import FakeIdentityProvider
 from app.config import Settings
 from app.db import make_engine
-from app.errors import add_error_handlers
+from app.errors import add_error_handlers, error_response
 from app.identity import IdentityProvider
 from app.logging_config import configure_logging
 from app.request_id import new_request_id
@@ -63,7 +64,7 @@ def create_app(
         openapi_url=None if settings.deployed else "/openapi.json",
     )
     app.state.settings = settings
-    app.state.engine = engine or make_engine(settings.database_url)
+    app.state.engine = engine or make_engine(settings.sqlalchemy_url)
     app.state.sessions = sessionmaker(bind=app.state.engine, expire_on_commit=False)
     app.state.identity = identity or _identity_provider(settings)
 
@@ -82,7 +83,17 @@ def create_app(
     ) -> Response:
         request_id = new_request_id()
         started = time.perf_counter()
-        response = await call_next(request)
+        # The load balancer's health check is the one caller that never passes CloudFront.
+        if (
+            settings.origin_secret
+            and request.url.path != "/v1/health"
+            and not hmac.compare_digest(
+                request.headers.get("x-origin-secret", ""), settings.origin_secret
+            )
+        ):
+            response: Response = error_response(403, "not_allowed", "That isn't allowed.")
+        else:
+            response = await call_next(request)
         response.headers["X-Request-Id"] = request_id
         response.headers.update(SECURITY_HEADERS)
         if settings.deployed:

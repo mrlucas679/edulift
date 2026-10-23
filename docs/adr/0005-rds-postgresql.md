@@ -8,5 +8,7 @@ private subnets, reachable only from the API security group, 7-day automated bac
 deletion protection. The API connects with a role that has no DDL rights; migrations run
 with a separate migration role.
 
+**Not done yet (2026-10-23).** In M1 the API connects as the database's master user, from the secret RDS manages. The separate no-DDL app role and migration role come in M2, before any learner data exists.
+
 **Consequences.** Local and CI use PostgreSQL in Docker so behaviour matches production.
 There is no in-memory substitute for the database.
