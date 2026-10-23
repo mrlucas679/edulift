@@ -36,8 +36,28 @@ def test_best6_ignores_life_orientation_and_the_seventh_subject() -> None:
 
 
 def test_unverified_scheme_gives_no_score() -> None:
-    assert score("wits_best7", THANDI) is None
+    assert score("uct_fps", THANDI) is None
     assert score(None, THANDI) is None
+
+
+def test_wits_scores_thandi_from_the_published_table() -> None:
+    # English 72 -> 6+2, Maths 68 -> 5+2, Physical 70 -> 6, Geography 74 -> 6,
+    # Life Sciences 65 -> 5, isiZulu 60 -> 5, LO 90 -> 4.  8+7+6+6+5+5+4 = 41
+    assert score("wits_best7", THANDI) == 41
+
+
+def test_wits_top_band_and_low_marks() -> None:
+    marks = {
+        "english_hl": 95, "mathematics": 59, "physical_sciences": 90, "life_sciences": 39,
+        "geography": 40, "history": 0, "life_orientation": 55,
+    }  # fmt: skip
+    # English 10, Maths 4 (no bonus below 60), Physical 8, Life Sci 0, Geo 3, History 0, LO 0
+    assert score("wits_best7", marks) == 25
+
+
+def test_wits_does_not_give_maths_literacy_the_bonus() -> None:
+    marks = {k: v for k, v in THANDI.items() if k != "mathematics"} | {"maths_literacy": 68}
+    assert score("wits_best7", marks) == 39
 
 
 def rules(**kw: object) -> Rules:
