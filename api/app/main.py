@@ -19,7 +19,7 @@ from app.errors import add_handlers, error_response
 from app.fake_auth import FakeAuth
 from app.logs import setup_logging
 from app.request_id import new_id
-from app.routers import aps, auth, health, me, reference
+from app.routers import aps, auth, health, me, reference, verdicts
 
 log = logging.getLogger("edulift.request")
 
@@ -114,6 +114,13 @@ def create_app(
         )
         return response
 
-    for router in (health.router, auth.router, me.router, reference.router, aps.router):
+    for router in (
+        health.router,
+        auth.router,
+        me.router,
+        reference.router,
+        aps.router,
+        verdicts.router,
+    ):
         app.include_router(router, prefix="/v1")
     return app
