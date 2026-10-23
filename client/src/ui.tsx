@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -11,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ApiError } from './api';
+import type { Source } from './reference';
 import { font, lineHeight, radius, space, text, touchTarget, useColors } from './theme';
 
 export function Screen({ children }: { children: React.ReactNode }) {
@@ -98,6 +100,68 @@ export function ErrorNote({ error }: { error: unknown }) {
   );
 }
 
+export function Card({ children, onPress, label }: {
+  children: React.ReactNode;
+  onPress?: () => void;
+  label?: string;
+}) {
+  const colors = useColors();
+  const style = [styles.card, { backgroundColor: colors.surface, borderColor: colors.border }];
+  if (!onPress) return <View style={style}>{children}</View>;
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={style}>
+      {children}
+    </Pressable>
+  );
+}
+
+export function Title({ children }: { children: React.ReactNode }) {
+  const colors = useColors();
+  return <Text style={[styles.title, { color: colors.ink }]}>{children}</Text>;
+}
+
+// Where a fact came from, and whether anyone has checked it yet.
+export function SourceLine({ source }: { source: Source }) {
+  const colors = useColors();
+  const checked = source.checked_on ? `checked ${source.checked_on}` : 'not checked yet';
+  return (
+    <Pressable accessibilityRole="link" onPress={() => Linking.openURL(source.url)}>
+      <Text style={[styles.small, { color: colors.inkMuted }]}>
+        Source: {source.publisher} · {checked}
+      </Text>
+    </Pressable>
+  );
+}
+
+// Names the site before you leave the app, so a bad link can't pass as ours.
+export function ExternalLink({ url }: { url: string }) {
+  const host = new URL(url).hostname.replace(/^www\./, '');
+  return <Button label={`Apply on ${host}`} onPress={() => Linking.openURL(url)} />;
+}
+
+export function Empty({ message }: { message: string }) {
+  return <Body muted>{message}</Body>;
+}
+
+// Loading, error and empty, so every screen handles all three the same way.
+export function QueryState({ query, empty, children }: {
+  query: { isPending: boolean; error: unknown; refetch: () => unknown };
+  empty?: boolean;
+  children: React.ReactNode;
+}) {
+  if (query.isPending) return <ActivityIndicator accessibilityLabel="Loading" />;
+  if (query.error) {
+    return (
+      <>
+        <ErrorNote error={query.error} />
+        <Button label="Try again" onPress={() => query.refetch()} />
+      </>
+    );
+  }
+  if (empty) return null;
+  return <>{children}</>;
+}
+
 export function Loading() {
   const colors = useColors();
   return (
@@ -131,4 +195,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonLabel: { fontFamily: font.bold, fontSize: text.body },
+  card: { borderWidth: 1, borderRadius: radius.card, padding: space.lg, gap: space.xs },
+  title: { fontFamily: font.bold, fontSize: text.h3, lineHeight: text.h3 * lineHeight },
+  small: { fontFamily: font.regular, fontSize: text.small, lineHeight: text.small * lineHeight },
 });
