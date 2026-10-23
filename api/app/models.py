@@ -191,6 +191,8 @@ class GuardianRequest(Base):
     relationship: Mapped[str | None] = mapped_column(String(20))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    withdraw_token_hash: Mapped[str | None] = mapped_column(String(64), unique=True)
+    withdrawn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Mark(Base):

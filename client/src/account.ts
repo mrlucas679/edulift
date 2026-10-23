@@ -10,6 +10,7 @@ const me = z.object({
   first_name: z.string().nullable(),
   birth_date: z.string().nullable(),
   consents: z.array(z.string()),
+  reconfirm: z.array(z.string()),
 });
 export type MeDetail = z.infer<typeof me>;
 

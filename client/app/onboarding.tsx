@@ -127,6 +127,19 @@ function Consents({ me }: { me: MeDetail }) {
   return (
     <>
       <Heading>Your choices</Heading>
+      {me.reconfirm.length > 0 && (
+        <>
+          <Body>Your guardian made these choices when you were 17. Now you’re 18, so please confirm each one yourself.</Body>
+          {me.reconfirm.map((purpose) => (
+            <Button
+              key={purpose}
+              label={`Confirm ${purpose.replace('_', ' ')}`}
+              busy={pending === purpose}
+              onPress={() => toggle(purpose, true)}
+            />
+          ))}
+        </>
+      )}
       <Body muted>Only the first one is needed. You can change these any time in your profile.</Body>
       <Field
         label="Email for deadline reminders (only if you choose reminders)"

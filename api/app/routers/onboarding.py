@@ -5,6 +5,7 @@ import secrets
 from datetime import UTC, date, datetime, timedelta
 
 from fastapi import APIRouter, Response
+from pydantic import BaseModel
 from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
 
@@ -46,20 +47,42 @@ def _hash(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
 
 
-def _active_purposes(db: Session, user_id: str) -> set[str]:
-    rows = db.scalars(
-        select(m.Consent.purpose).where(
-            m.Consent.user_id == user_id, m.Consent.withdrawn_at.is_(None)
-        )
+def _active_purposes(db: Session, user_id: str, granted_by: str | None = None) -> set[str]:
+    query = select(m.Consent.purpose).where(
+        m.Consent.user_id == user_id, m.Consent.withdrawn_at.is_(None)
     )
-    return set(rows)
+    if granted_by is not None:
+        query = query.where(m.Consent.granted_by == granted_by)
+    return set(db.scalars(query))
+
+
+def _guardian_withdrew(db: Session, user_id: str) -> bool:
+    return (
+        db.scalar(
+            select(m.GuardianRequest.id).where(
+                m.GuardianRequest.user_id == user_id,
+                m.GuardianRequest.withdrawn_at.is_not(None),
+            )
+        )
+        is not None
+    )
+
+
+def reconfirm_purposes(db: Session, user: m.User, today: date) -> list[str]:
+    """At 18 a guardian's choices are only a starting point: the learner confirms them."""
+    profile = db.get(m.Profile, user.id)
+    if profile is None or age_on(profile.birth_date, today) < ADULT:
+        return []
+    return sorted(_active_purposes(db, user.id, granted_by="guardian"))
 
 
 def _guardian_allowed(db: Session, user_id: str) -> set[str] | None:
     """Purposes the guardian approved, or None if no guardian approval exists."""
     req = db.scalars(
         select(m.GuardianRequest).where(
-            m.GuardianRequest.user_id == user_id, m.GuardianRequest.status == "approved"
+            m.GuardianRequest.user_id == user_id,
+            m.GuardianRequest.status == "approved",
+            m.GuardianRequest.withdrawn_at.is_(None),
         )
     ).first()
     return set(req.purposes) | {"account"} if req else None
@@ -72,7 +95,9 @@ def _refresh_status(db: Session, user: m.User) -> None:
         return
     age = age_on(profile.birth_date, date.today())
     if age < ADULT and _guardian_allowed(db, user.id) is None:
-        user.status = "pending_guardian"
+        user.status = "restricted" if _guardian_withdrew(db, user.id) else "pending_guardian"
+    elif age >= ADULT and "account" not in _active_purposes(db, user.id, granted_by="learner"):
+        user.status = "onboarding"
     elif "account" in _active_purposes(db, user.id):
         user.status = "active"
     else:
@@ -80,6 +105,8 @@ def _refresh_status(db: Session, user: m.User) -> None:
 
 
 def _me(db: Session, user: m.User) -> MeDetail:
+    # Age moves on its own, so the status follows the birthday on every read.
+    _refresh_status(db, user)
     profile = db.get(m.Profile, user.id)
     return MeDetail(
         id=user.id,
@@ -88,6 +115,7 @@ def _me(db: Session, user: m.User) -> MeDetail:
         first_name=profile.first_name if profile else None,
         birth_date=profile.birth_date if profile else None,
         consents=sorted(_active_purposes(db, user.id)),
+        reconfirm=reconfirm_purposes(db, user, date.today()),
     )
 
 
@@ -130,7 +158,19 @@ def set_consent(body: ConsentRequest, me: SignedIn, db: Db) -> MeDetail:
             if body.contact_email is None:
                 raise NotAllowedError("Give the email address reminders should go to.")
             profile.contact_email = body.contact_email.lower()
-        if body.purpose not in _active_purposes(db, user.id):
+        if body.purpose not in _active_purposes(db, user.id, granted_by="learner"):
+            if age_on(profile.birth_date, date.today()) >= ADULT:
+                # At 18 the learner takes over the guardian's choice for this purpose.
+                db.execute(
+                    update(m.Consent)
+                    .where(
+                        m.Consent.user_id == user.id,
+                        m.Consent.purpose == body.purpose,
+                        m.Consent.granted_by == "guardian",
+                        m.Consent.withdrawn_at.is_(None),
+                    )
+                    .values(withdrawn_at=datetime.now(UTC))
+                )
             db.add(
                 m.Consent(
                     user_id=user.id,
@@ -236,7 +276,16 @@ def view_request(token: str, ip: ClientIp, db: Db, engine: DbEngine) -> Guardian
 
 
 @router.post("/guardian/{token}", status_code=204)
-def decide(token: str, body: GuardianDecision, ip: ClientIp, db: Db, engine: DbEngine) -> Response:
+def decide(
+    token: str,
+    body: GuardianDecision,
+    *,
+    ip: ClientIp,
+    db: Db,
+    engine: DbEngine,
+    mail: Mail,
+    settings: AppSettings,
+) -> Response:
     rate_limit.check(engine, "guardian:ip", ip, limit=10, window_seconds=60)
     req = _open_request(db, token)
     req.decided_at = datetime.now(UTC)
@@ -257,6 +306,72 @@ def decide(token: str, body: GuardianDecision, ip: ClientIp, db: Db, engine: DbE
                 user_id=user.id, purpose=purpose, granted_by="guardian", policy_version=POLICY
             )
         )
+    withdraw_token = secrets.token_urlsafe(32)
+    req.withdraw_token_hash = _hash(withdraw_token)
+    db.flush()
+    _refresh_status(db, user)
+    if settings.app_url:
+        profile = db.get_one(m.Profile, user.id)
+        link = f"{settings.app_url}/guardian/withdraw/{withdraw_token}"
+        mail.send(
+            req.guardian_email,
+            "You can change your decision any time",
+            _confirmation_email(req.guardian_name, profile.first_name or "Your child", link),
+        )
+    return Response(status_code=204)
+
+
+def _confirmation_email(guardian: str, learner: str, link: str) -> str:
+    return (
+        f"Hi {guardian}.\n\n"
+        f"Thank you. {learner} can now use EduLift with the choices you made.\n\n"
+        f"To withdraw your approval at any time, use this link:\n{link}\n\n"
+        f"If you withdraw, {learner} can only browse until they turn 18."
+    )
+
+
+class WithdrawalView(BaseModel):
+    learner_first_name: str
+    guardian_name: str
+
+
+def _open_withdrawal(db: Session, token: str) -> m.GuardianRequest:
+    req = db.scalars(
+        select(m.GuardianRequest).where(m.GuardianRequest.withdraw_token_hash == _hash(token))
+    ).first()
+    if req is None or req.withdrawn_at is not None:
+        raise NotFoundError("This link is no longer valid.")
+    return req
+
+
+@router.get("/guardian/withdraw/{token}")
+def view_withdrawal(token: str, ip: ClientIp, db: Db, engine: DbEngine) -> WithdrawalView:
+    rate_limit.check(engine, "guardian:ip", ip, limit=10, window_seconds=60)
+    req = _open_withdrawal(db, token)
+    profile = db.get(m.Profile, req.user_id)
+    return WithdrawalView(
+        learner_first_name=(profile.first_name if profile else None) or "Your child",
+        guardian_name=req.guardian_name,
+    )
+
+
+@router.post("/guardian/withdraw/{token}", status_code=204)
+def withdraw(token: str, ip: ClientIp, db: Db, engine: DbEngine) -> Response:
+    rate_limit.check(engine, "guardian:ip", ip, limit=10, window_seconds=60)
+    req = _open_withdrawal(db, token)
+    now = datetime.now(UTC)
+    req.withdrawn_at = now
+    req.withdraw_token_hash = None  # the link works once
+    user = db.get_one(m.User, req.user_id)
+    db.execute(
+        update(m.Consent)
+        .where(
+            m.Consent.user_id == user.id,
+            m.Consent.granted_by == "guardian",
+            m.Consent.withdrawn_at.is_(None),
+        )
+        .values(withdrawn_at=now)
+    )
     db.flush()
     _refresh_status(db, user)
     return Response(status_code=204)
