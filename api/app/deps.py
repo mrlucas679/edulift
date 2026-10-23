@@ -10,6 +10,7 @@ from app.auth import Auth, Identity
 from app.config import Settings
 from app.db import transaction
 from app.errors import UnauthenticatedError
+from app.mail import Mailer
 
 _bearer = HTTPBearer(auto_error=False)
 
@@ -27,6 +28,11 @@ def _engine(request: Request) -> Engine:
 def _auth(request: Request) -> Auth:
     provider: Auth = request.app.state.identity
     return provider
+
+
+def _mailer(request: Request) -> Mailer:
+    mailer: Mailer = request.app.state.mailer
+    return mailer
 
 
 def _db(request: Request) -> Iterator[Session]:
@@ -57,3 +63,5 @@ DbEngine = Annotated[Engine, Depends(_engine)]
 Identities = Annotated[Auth, Depends(_auth)]
 SignedIn = Annotated[Identity, Depends(_signed_in)]
 ClientIp = Annotated[str, Depends(client_ip)]
+Mail = Annotated[Mailer, Depends(_mailer)]
+AppSettings = Annotated[Settings, Depends(_settings)]

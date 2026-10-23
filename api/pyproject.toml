@@ -22,7 +22,7 @@ dev = [
     "httpx2",
     "ruff",
     "mypy",
-    "boto3-stubs[cognito-idp]",
+    "boto3-stubs[cognito-idp,sesv2]",
     "types-pyyaml>=6.0.12.20260906",
 ]
 

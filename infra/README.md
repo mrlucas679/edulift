@@ -37,3 +37,6 @@ Always `npx cdk diff` before `deploy`.
   TLS 1.0 from old clients. A custom domain with its own certificate fixes that.
 - `EduLift` has termination protection, and the database and user pool have deletion
   protection. Removing them is deliberate, two-step work.
+
+After the first deploy, redeploy `EduLift` with `-c appUrl=<SiteUrl output>` so guardian
+emails link to the app. Until then the API refuses guardian requests.

@@ -14,9 +14,11 @@ from sqlalchemy.engine import make_url
 
 from app.config import Settings
 from app.fake_auth import FakeAuth
+from app.mail import ConsoleMailer
 from app.main import create_app
 
 TABLES = [
+    "mark_records", "guardian_requests", "consents", "profiles",
     "users", "rate_limit_hits", "programme_requirements", "programmes",
     "application_cycles", "institutions", "handoffs", "subjects", "fields", "sources",
 ]  # fmt: skip
@@ -58,21 +60,29 @@ def identity(inbox: dict[str, str]) -> FakeAuth:
     return FakeAuth(send_code=inbox.__setitem__)
 
 
-def make_client(engine: Engine, identity: FakeAuth, **overrides: object) -> TestClient:
+def make_client(
+    engine: Engine, identity: FakeAuth, mailer: ConsoleMailer | None = None, **overrides: object
+) -> TestClient:
     values: dict[str, object] = {
         "edulift_env": "test",
         "database_url": engine.url.render_as_string(hide_password=False),
         "identity_provider": "fake",
+        "app_url": "http://localhost:8081",
         "_env_file": None,
     }
     settings = Settings(**(values | overrides))  # type: ignore[arg-type]
-    app = create_app(settings, identity=identity, engine=engine)
+    app = create_app(settings, identity=identity, engine=engine, mailer=mailer)
     return TestClient(app, raise_server_exceptions=False)
 
 
 @pytest.fixture
-def client(engine: Engine, identity: FakeAuth) -> TestClient:
-    return make_client(engine, identity)
+def mailer() -> ConsoleMailer:
+    return ConsoleMailer()
+
+
+@pytest.fixture
+def client(engine: Engine, identity: FakeAuth, mailer: ConsoleMailer) -> TestClient:
+    return make_client(engine, identity, mailer)
 
 
 @dataclass(frozen=True)

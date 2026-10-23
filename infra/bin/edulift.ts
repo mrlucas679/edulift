@@ -22,6 +22,7 @@ new SenderStack(app, 'EduLiftSender', { env: { account, region }, senderEmail })
 new EduLiftStack(app, 'EduLift', {
   env: { account, region },
   senderEmail,
+  appUrl: app.node.tryGetContext('appUrl'),
   githubRepo: 'mrlucas679/edulift',
   terminationProtection: true,
 });

@@ -79,6 +79,14 @@ class FakeAuth:
             raise UnauthenticatedError
         return Identity(subject=str(claims["sub"]))
 
+    def email_of(self, subject: str) -> str:
+        with self._lock:
+            return next(e for e, s in self._users.items() if s == subject)
+
+    def delete_user(self, subject: str) -> None:
+        with self._lock:
+            self._users = {e: s for e, s in self._users.items() if s != subject}
+
     def expired_token(self, subject: str) -> str:
         # For tests.
         return self._access_token(subject, lifetime=timedelta(seconds=-1))

@@ -122,6 +122,23 @@ class CognitoAuth:
             raise UnauthenticatedError
         return Identity(subject=str(claims["sub"]))
 
+    def email_of(self, subject: str) -> str:
+        try:
+            user = self._client.admin_get_user(UserPoolId=self._pool_id, Username=subject)
+        except (ClientError, BotoCoreError) as exc:
+            raise UpstreamUnavailableError from exc
+        attrs = {a["Name"]: a["Value"] for a in user.get("UserAttributes", [])}
+        return attrs["email"]
+
+    def delete_user(self, subject: str) -> None:
+        try:
+            self._client.admin_delete_user(UserPoolId=self._pool_id, Username=subject)
+        except ClientError as exc:
+            if _aws_error(exc) != "UserNotFoundException":
+                raise UpstreamUnavailableError from exc
+        except BotoCoreError as exc:
+            raise UpstreamUnavailableError from exc
+
     def _ensure_user(self, email: str) -> None:
         # Safe to mark verified: tokens still need the emailed code.
         try:
