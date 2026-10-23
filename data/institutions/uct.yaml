@@ -1,0 +1,8 @@
+id: uct
+name: University of Cape Town
+type: university
+province: Western Cape
+apply_url: https://www.uct.ac.za/students/applications-apply-undergraduate-qualifications/application-procedure
+route: direct
+source: uct-apply
+# cycles and programmes: add once checked against the 2027 prospectus

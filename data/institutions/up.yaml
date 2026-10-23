@@ -1,0 +1,8 @@
+id: up
+name: University of Pretoria
+type: university
+province: Gauteng
+apply_url: https://www.up.ac.za/online-application
+route: direct
+source: up-apply
+# cycles and programmes: add once checked against the 2027 prospectus

@@ -1,0 +1,10 @@
+- id: nsfas
+  name: NSFAS
+  purpose: Government funding for study at public universities and TVET colleges.
+  url: https://www.nsfas.org.za/
+  source: nsfas-site
+- id: dpsa
+  name: DPSA vacancies
+  purpose: Public service jobs and internships, published in the DPSA circular.
+  url: https://www.dpsa.gov.za/
+  source: dpsa-site

@@ -1,0 +1,35 @@
+source: dbe-nsc
+subjects:
+  - {id: english_hl, name: English Home Language, kind: language, aliases: [English HL]}
+  - {id: english_fal, name: English First Additional Language, kind: language, aliases: [English FAL]}
+  - {id: afrikaans_hl, name: Afrikaans Home Language, kind: language}
+  - {id: afrikaans_fal, name: Afrikaans First Additional Language, kind: language}
+  - {id: isizulu_hl, name: isiZulu Home Language, kind: language}
+  - {id: isizulu_fal, name: isiZulu First Additional Language, kind: language}
+  - {id: isixhosa_hl, name: isiXhosa Home Language, kind: language}
+  - {id: sesotho_hl, name: Sesotho Home Language, kind: language}
+  - {id: sepedi_hl, name: Sepedi Home Language, kind: language}
+  - {id: setswana_hl, name: Setswana Home Language, kind: language}
+  - {id: xitsonga_hl, name: Xitsonga Home Language, kind: language}
+  - {id: tshivenda_hl, name: Tshivenda Home Language, kind: language}
+  - {id: mathematics, name: Mathematics, kind: mathematics, aliases: [Maths, Math]}
+  - {id: maths_literacy, name: Mathematical Literacy, kind: mathematics, aliases: [Maths Lit, Math Lit]}
+  - {id: technical_maths, name: Technical Mathematics, kind: mathematics}
+  - {id: physical_sciences, name: Physical Sciences, kind: science, aliases: [Physics, Physical Science]}
+  - {id: life_sciences, name: Life Sciences, kind: science, aliases: [Biology]}
+  - {id: technical_sciences, name: Technical Sciences, kind: science}
+  - {id: agricultural_sciences, name: Agricultural Sciences, kind: science}
+  - {id: geography, name: Geography, kind: other}
+  - {id: history, name: History, kind: other}
+  - {id: accounting, name: Accounting, kind: other}
+  - {id: business_studies, name: Business Studies, kind: other}
+  - {id: economics, name: Economics, kind: other}
+  - {id: cat, name: Computer Applications Technology, kind: other, aliases: [CAT]}
+  - {id: it, name: Information Technology, kind: other, aliases: [IT]}
+  - {id: egd, name: Engineering Graphics and Design, kind: other, aliases: [EGD]}
+  - {id: tourism, name: Tourism, kind: other}
+  - {id: consumer_studies, name: Consumer Studies, kind: other}
+  - {id: visual_arts, name: Visual Arts, kind: other}
+  - {id: dramatic_arts, name: Dramatic Arts, kind: other}
+  - {id: music, name: Music, kind: other}
+  - {id: life_orientation, name: Life Orientation, kind: other, aliases: [LO]}

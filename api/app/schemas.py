@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
@@ -48,3 +48,104 @@ class MeResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: Literal["ok", "degraded"]
     database: Literal["ok", "unavailable"]
+
+
+# Reference data (public)
+
+
+class Out(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+
+class SourceOut(Out):
+    title: str
+    url: str
+    publisher: str
+    checked_on: date | None
+
+
+class SubjectOut(Out):
+    id: str
+    name: str
+    kind: str
+    aliases: list[str]
+
+
+class FieldOut(Out):
+    id: str
+    name: str
+    parent_id: str | None
+
+
+class CycleOut(Out):
+    intake_year: int
+    opens_on: date
+    closes_on: date
+    source: SourceOut
+
+
+class InstitutionOut(Out):
+    id: str
+    name: str
+    type: str
+    province: str
+    apply_url: str
+    route: str
+
+
+class InstitutionDetail(InstitutionOut):
+    fee_cents: int | None
+    max_choices: int | None
+    aps_scheme: str | None
+    source: SourceOut
+    cycles: list[CycleOut]
+
+
+class ProgrammeOut(Out):
+    id: str
+    name: str
+    institution_id: str
+    qualification: str
+    field_id: str
+    min_aps: int | None
+    selection: bool
+
+
+class OptionOut(BaseModel):
+    subject_id: str
+    min_percent: int
+
+
+class ProgrammeDetail(ProgrammeOut):
+    closes_on: date | None
+    verified: bool
+    source: SourceOut
+    # Each group is a list of alternatives; every group must be met.
+    requirement_groups: list[list[OptionOut]]
+
+
+class Page[T](BaseModel):
+    items: list[T]
+    page: int
+    page_size: int
+    total: int
+
+
+class DeadlineOut(BaseModel):
+    institution_id: str
+    institution: str
+    intake_year: int
+    closes_on: date
+    days_left: int
+
+
+class HandoffOut(Out):
+    id: str
+    name: str
+    purpose: str
+    url: str
+
+
+class MetaOut(BaseModel):
+    last_checked: date | None
+    unchecked_sources: int

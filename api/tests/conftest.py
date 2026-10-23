@@ -16,6 +16,10 @@ from app.config import Settings
 from app.fake_auth import FakeAuth
 from app.main import create_app
 
+TABLES = [
+    "users", "rate_limit_hits", "programme_requirements", "programmes",
+    "application_cycles", "institutions", "handoffs", "subjects", "fields", "sources",
+]  # fmt: skip
 LOCAL_TEST_DB = "postgresql+psycopg://edulift:edulift_local_only@127.0.0.1:5433/edulift_test"
 
 
@@ -40,7 +44,7 @@ def engine() -> Iterator[Engine]:
 @pytest.fixture(autouse=True)
 def empty_tables(engine: Engine) -> None:
     with engine.begin() as db:
-        db.execute(text("TRUNCATE users, rate_limit_hits"))
+        db.execute(text(f"TRUNCATE {', '.join(TABLES)}"))
 
 
 @pytest.fixture

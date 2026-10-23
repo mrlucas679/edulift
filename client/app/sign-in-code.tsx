@@ -19,7 +19,7 @@ export default function SignInCode() {
     setError(null);
     try {
       await checkCode(code);
-      router.replace('/home');
+      router.replace('/profile');
     } catch (e) {
       if (e instanceof ApiError && e.code === 'code_expired') {
         router.replace('/sign-in');
