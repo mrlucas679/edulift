@@ -268,3 +268,18 @@ class PlanTargetOut(BaseModel):
 class PlanOut(BaseModel):
     targets: list[PlanTargetOut]
     limit: int = PLAN_LIMIT
+
+
+# Plan B
+
+
+class RouteOut(BaseModel):
+    key: str
+    title: str
+    items: list[ProgrammeOut]
+    empty_reason: str
+
+
+class AlternativesOut(BaseModel):
+    # Empty when the programme itself already qualifies.
+    routes: list[RouteOut]
