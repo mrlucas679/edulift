@@ -4,6 +4,7 @@ import { Linking, Pressable } from 'react-native';
 
 import { toMarks, useMarks } from '../../src/marks';
 import { checkProgramme, useProgramme, useSubjectNames, type Verdict } from '../../src/reference';
+import { useAlternatives } from '../../src/alternatives';
 import { usePlan, useSavePlan } from '../../src/plan';
 import { useSession } from '../../src/session';
 import { Body, Button, Card, ErrorNote, Heading, QueryState, Screen, SourceLine, Title } from '../../src/ui';
@@ -40,6 +41,7 @@ export default function ProgrammeScreen() {
   const [rows] = useMarks();
   const marks = toMarks(rows);
   const check = useMutation({ mutationFn: () => checkProgramme(id, marks, accessToken) });
+  const alternatives = useAlternatives(id, accessToken);
   const plan = usePlan(accessToken);
   const savePlan = useSavePlan(accessToken);
   const onPlan = plan.data?.targets.some((t) => t.programme_id === id) ?? false;
@@ -75,6 +77,36 @@ export default function ProgrammeScreen() {
             )}
             <ErrorNote error={check.error} />
             {check.data && <VerdictCard verdict={check.data} />}
+
+            {check.data && check.data.outcome !== 'qualifies' && (
+              <>
+                <Title>Other options</Title>
+                <Button
+                  label="Show other options"
+                  busy={alternatives.isPending}
+                  onPress={() => alternatives.mutate()}
+                />
+                <ErrorNote error={alternatives.error} />
+                {alternatives.data?.routes.map((route) => (
+                  <Card key={route.key}>
+                    <Title>{route.title}</Title>
+                    {route.items.length === 0 ? (
+                      <Body muted>{route.empty_reason}</Body>
+                    ) : (
+                      route.items.map((item) => (
+                        <Pressable
+                          key={item.id}
+                          accessibilityRole="link"
+                          onPress={() => router.push(`/programme/${item.id}`)}
+                        >
+                          <Body>{item.name}</Body>
+                        </Pressable>
+                      ))
+                    )}
+                  </Card>
+                ))}
+              </>
+            )}
 
             {status === 'signed-in' && (
               <>
