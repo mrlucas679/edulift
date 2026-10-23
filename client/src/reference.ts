@@ -128,3 +128,28 @@ export const useSubjects = () =>
 
 export const previewAps = (marks: Record<string, number>) =>
   request('/v1/aps/preview', z.array(previewRow), { method: 'POST', body: { marks } });
+
+const verdict = z.object({
+  programme_id: z.string(),
+  outcome: z.string(),
+  score: z.number().nullable(),
+  scheme: z.string().nullable(),
+  window: z.string(),
+  checks: z.array(
+    z.object({
+      name: z.string(),
+      required: z.string(),
+      yours: z.string(),
+      result: z.enum(['pass', 'fail', 'unknown']),
+    }),
+  ),
+  note: z.string(),
+});
+export type Verdict = z.infer<typeof verdict>;
+
+export const checkProgramme = (id: string, marks: Record<string, number>, accessToken: string | null) =>
+  request(`/v1/programmes/${encodeURIComponent(id)}/check`, verdict, {
+    method: 'POST',
+    body: { marks },
+    accessToken,
+  });

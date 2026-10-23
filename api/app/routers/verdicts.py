@@ -1,5 +1,6 @@
 """Where do I stand for this programme? Marks come with the request and aren't stored."""
 
+import re
 from dataclasses import asdict
 from datetime import date
 
@@ -25,7 +26,8 @@ def check(
     programme = db.get(m.Programme, programme_id)
     if programme is None:
         raise NotFoundError
-    if unknown := sorted(set(body.marks) - set(db.scalars(select(m.Subject.id)))):
+    names = {sid: name for sid, name in db.execute(select(m.Subject.id, m.Subject.name))}
+    if unknown := sorted(set(body.marks) - set(names)):
         raise UnknownSubjectError(f"Unknown subjects: {', '.join(unknown[:5])}")
 
     institution = db.get_one(m.Institution, programme.institution_id)
@@ -53,5 +55,13 @@ def check(
         score=v.score,
         scheme=institution.aps_scheme,
         window=v.window,
-        checks=[CheckOut(**asdict(c)) for c in v.checks],
+        checks=[_named(CheckOut(**asdict(c)), names) for c in v.checks],
     )
+
+
+def _named(check: CheckOut, names: dict[str, str]) -> CheckOut:
+    # Subject ids read badly on screen; show names instead.
+    def swap(text: str) -> str:
+        return re.sub(r"\b[a-z_]+\b", lambda w: names.get(w.group(), w.group()), text)
+
+    return check.model_copy(update={"required": swap(check.required), "yours": swap(check.yours)})
