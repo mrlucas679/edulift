@@ -20,6 +20,7 @@ export default function Home() {
       {status !== 'signed-in' && (
         <Button label="Sign in to check your marks" onPress={() => router.push('/sign-in')} />
       )}
+      <Button label="Try the APS calculator" onPress={() => router.push('/aps')} />
 
       <Title>Closing soon</Title>
       <QueryState query={deadlines} empty={deadlines.data?.length === 0}>
