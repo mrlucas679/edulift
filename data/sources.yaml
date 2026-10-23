@@ -1,0 +1,36 @@
+- id: dbe-nsc
+  title: National Senior Certificate examinations
+  url: https://www.education.gov.za/Examinations/tabid/338/Default.aspx
+  publisher: Department of Basic Education
+- id: uj-site
+  title: University of Johannesburg
+  url: https://www.uj.ac.za/
+  publisher: University of Johannesburg
+- id: wits-apply
+  title: Apply to Wits
+  url: https://www.wits.ac.za/undergraduate/apply-to-wits/
+  publisher: University of the Witwatersrand
+- id: up-apply
+  title: UP online application
+  url: https://www.up.ac.za/online-application
+  publisher: University of Pretoria
+- id: tut-site
+  title: Tshwane University of Technology
+  url: https://www.tut.ac.za/
+  publisher: Tshwane University of Technology
+- id: uct-apply
+  title: UCT application procedure
+  url: https://www.uct.ac.za/students/applications-apply-undergraduate-qualifications/application-procedure
+  publisher: University of Cape Town
+- id: ukzn-apply
+  title: UKZN applications
+  url: https://applications.ukzn.ac.za/
+  publisher: University of KwaZulu-Natal
+- id: nsfas-site
+  title: NSFAS
+  url: https://www.nsfas.org.za/
+  publisher: National Student Financial Aid Scheme
+- id: dpsa-site
+  title: Department of Public Service and Administration
+  url: https://www.dpsa.gov.za/
+  publisher: DPSA

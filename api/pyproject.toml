@@ -13,6 +13,7 @@ dependencies = [
     "alembic",
     "pyjwt[crypto]",
     "boto3",
+    "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]
@@ -22,6 +23,7 @@ dev = [
     "ruff",
     "mypy",
     "boto3-stubs[cognito-idp]",
+    "types-pyyaml>=6.0.12.20260906",
 ]
 
 [build-system]

@@ -1,0 +1,8 @@
+id: ukzn
+name: University of KwaZulu-Natal
+type: university
+province: KwaZulu-Natal
+apply_url: https://applications.ukzn.ac.za/
+route: cao
+source: ukzn-apply
+# cycles and programmes: add once checked against the 2027 prospectus

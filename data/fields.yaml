@@ -1,0 +1,19 @@
+- {id: it, name: Information technology}
+- {id: it.software, name: Software development, parent: it}
+- {id: it.data, name: Data and analytics, parent: it}
+- {id: engineering, name: Engineering}
+- {id: engineering.civil, name: Civil engineering, parent: engineering}
+- {id: engineering.electrical, name: Electrical engineering, parent: engineering}
+- {id: engineering.mechanical, name: Mechanical engineering, parent: engineering}
+- {id: health, name: Health sciences}
+- {id: health.nursing, name: Nursing, parent: health}
+- {id: health.medicine, name: Medicine, parent: health}
+- {id: commerce, name: Commerce}
+- {id: commerce.accounting, name: Accounting, parent: commerce}
+- {id: commerce.management, name: Business management, parent: commerce}
+- {id: education, name: Education}
+- {id: education.foundation, name: Foundation phase teaching, parent: education}
+- {id: education.senior, name: Senior and FET teaching, parent: education}
+- {id: humanities, name: Humanities}
+- {id: humanities.law, name: Law, parent: humanities}
+- {id: humanities.social, name: Social sciences, parent: humanities}

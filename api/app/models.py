@@ -1,6 +1,17 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import CheckConstraint, DateTime, Integer, String, func
+from sqlalchemy import (
+    ARRAY,
+    Boolean,
+    CheckConstraint,
+    Date,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    func,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -30,3 +41,95 @@ class RateLimitHit(Base):
     key: Mapped[str] = mapped_column(String(64), primary_key=True)
     window_start: Mapped[datetime] = mapped_column(DateTime(timezone=True), primary_key=True)
     hits: Mapped[int] = mapped_column(Integer)
+
+
+# Reference data. Loaded from data/*.yaml; slugs are the keys.
+
+
+class Source(Base):
+    __tablename__ = "sources"
+
+    id: Mapped[str] = mapped_column(String(80), primary_key=True)
+    title: Mapped[str] = mapped_column(Text)
+    url: Mapped[str] = mapped_column(Text)
+    publisher: Mapped[str] = mapped_column(Text)
+    checked_on: Mapped[date | None] = mapped_column(Date)  # None: not checked yet
+
+
+class Subject(Base):
+    __tablename__ = "subjects"
+
+    id: Mapped[str] = mapped_column(String(60), primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    kind: Mapped[str] = mapped_column(String(20))
+    aliases: Mapped[list[str]] = mapped_column(ARRAY(Text), default=list)
+    source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
+
+
+class Field(Base):
+    __tablename__ = "fields"
+
+    id: Mapped[str] = mapped_column(String(60), primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    parent_id: Mapped[str | None] = mapped_column(ForeignKey("fields.id"))
+
+
+class Institution(Base):
+    __tablename__ = "institutions"
+
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    type: Mapped[str] = mapped_column(String(20))
+    province: Mapped[str] = mapped_column(String(30))
+    apply_url: Mapped[str] = mapped_column(Text)
+    route: Mapped[str] = mapped_column(String(10))
+    fee_cents: Mapped[int | None] = mapped_column(Integer)
+    max_choices: Mapped[int | None] = mapped_column(Integer)
+    aps_scheme: Mapped[str | None] = mapped_column(String(30))
+    source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
+
+
+class Cycle(Base):
+    __tablename__ = "application_cycles"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    institution_id: Mapped[str] = mapped_column(ForeignKey("institutions.id"))
+    intake_year: Mapped[int] = mapped_column(Integer)
+    opens_on: Mapped[date] = mapped_column(Date)
+    closes_on: Mapped[date] = mapped_column(Date)
+    source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
+
+
+class Programme(Base):
+    __tablename__ = "programmes"
+
+    id: Mapped[str] = mapped_column(String(80), primary_key=True)
+    institution_id: Mapped[str] = mapped_column(ForeignKey("institutions.id"))
+    name: Mapped[str] = mapped_column(Text)
+    qualification: Mapped[str] = mapped_column(String(20))
+    field_id: Mapped[str] = mapped_column(ForeignKey("fields.id"))
+    min_aps: Mapped[int | None] = mapped_column(Integer)
+    selection: Mapped[bool] = mapped_column(Boolean, default=False)
+    closes_on: Mapped[date | None] = mapped_column(Date)
+    source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
+    verified_on: Mapped[date | None] = mapped_column(Date)  # second-person check
+
+
+class Requirement(Base):
+    __tablename__ = "programme_requirements"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    programme_id: Mapped[str] = mapped_column(ForeignKey("programmes.id", ondelete="CASCADE"))
+    group_no: Mapped[int] = mapped_column(Integer)  # same group = alternatives
+    subject_id: Mapped[str] = mapped_column(ForeignKey("subjects.id"))
+    min_percent: Mapped[int] = mapped_column(Integer)
+
+
+class Handoff(Base):
+    __tablename__ = "handoffs"
+
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    purpose: Mapped[str] = mapped_column(Text)
+    url: Mapped[str] = mapped_column(Text)
+    source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))

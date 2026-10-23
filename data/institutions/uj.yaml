@@ -1,0 +1,8 @@
+id: uj
+name: University of Johannesburg
+type: university
+province: Gauteng
+apply_url: https://www.uj.ac.za/
+route: direct
+source: uj-site
+# cycles and programmes: add once checked against the 2027 prospectus

@@ -1,0 +1,8 @@
+id: tut
+name: Tshwane University of Technology
+type: uot
+province: Gauteng
+apply_url: https://www.tut.ac.za/
+route: direct
+source: tut-site
+# cycles and programmes: add once checked against the 2027 prospectus
