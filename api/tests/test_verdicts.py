@@ -42,6 +42,7 @@ def test_verdict_lists_every_check(client: TestClient, inbox: dict[str, str], se
         ("score", "pass"),
         ("subjects_1", "pass"),
     ]
+    assert body["checks"][1]["required"] == "Mathematics 60%"
     assert "institution decides" in body["note"]
 
 

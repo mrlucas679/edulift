@@ -2,18 +2,17 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { toMarks, useMarks } from '../src/marks';
 import { previewAps, useSubjects } from '../src/reference';
 import { space, text, useColors } from '../src/theme';
 import { Body, Button, Card, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
-
-type Row = { subject: string; percent: string };
 
 const MIN_SUBJECTS = 7; // six plus Life Orientation
 
 export default function ApsCalculator() {
   const colors = useColors();
   const subjects = useSubjects();
-  const [rows, setRows] = useState<Row[]>([]);
+  const [rows, setRows] = useMarks();
   const [filter, setFilter] = useState('');
   const preview = useMutation({ mutationFn: previewAps });
 
@@ -25,9 +24,7 @@ export default function ApsCalculator() {
         .slice(0, 6)
     : [];
 
-  const marks = Object.fromEntries(
-    rows.filter((r) => r.percent !== '').map((r) => [r.subject, Number(r.percent)]),
-  );
+  const marks = toMarks(rows);
   const ready = Object.keys(marks).length >= MIN_SUBJECTS;
 
   function setPercent(subject: string, value: string) {
