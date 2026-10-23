@@ -77,6 +77,26 @@ class HandoffIn(Strict):
     _url = field_validator("url")(official_url)
 
 
+class CriterionIn(Strict):
+    check: str
+    values: list[str] = []
+    number: int | None = None
+
+
+class OpportunityIn(Strict):
+    id: str
+    name: str
+    kind: Literal["bursary", "loan", "learnership", "work"]
+    provider: str
+    url: str
+    field: str | None = None
+    closes_on: date | None = None
+    criteria: list[CriterionIn] = []
+    source: str
+
+    _url = field_validator("url")(official_url)
+
+
 class CycleIn(Strict):
     intake_year: int
     opens_on: date
@@ -131,6 +151,7 @@ class Data(BaseModel):
     subjects: SubjectsFile
     fields: list[FieldIn]
     handoffs: list[HandoffIn]
+    opportunities: list[OpportunityIn] = []
     institutions: list[InstitutionIn]
 
     @model_validator(mode="after")
@@ -139,6 +160,7 @@ class Data(BaseModel):
         subjects = {s.id for s in self.subjects.subjects}
         fields = {f.id for f in self.fields}
         used = [self.subjects.source, *(h.source for h in self.handoffs)]
+        used += [o.source for o in self.opportunities]
         for inst in self.institutions:
             used += [inst.source, *(c.source for c in inst.cycles)]
             for p in inst.programmes:
@@ -149,6 +171,9 @@ class Data(BaseModel):
                     for option in group:
                         if option.subject not in subjects:
                             raise ValueError(f"{p.id}: unknown subject {option.subject}")
+        for o in self.opportunities:
+            if o.field and o.field not in fields:
+                raise ValueError(f"{o.id}: unknown field {o.field}")
         if missing := sorted(set(used) - sources):
             raise ValueError(f"unknown sources: {missing}")
         for f in self.fields:
@@ -166,6 +191,9 @@ def read(folder: Path) -> Data:
         subjects=load("subjects.yaml"),
         fields=load("fields.yaml"),
         handoffs=load("handoffs.yaml"),
+        opportunities=load("opportunities.yaml")
+        if (folder / "opportunities.yaml").exists()
+        else [],
         institutions=[
             yaml.safe_load(p.read_text(encoding="utf-8"))
             for p in sorted((folder / "institutions").glob("*.yaml"))
@@ -175,7 +203,7 @@ def read(folder: Path) -> Data:
 
 TABLES = [
     m.Requirement, m.Programme, m.Cycle, m.Institution,
-    m.Handoff, m.Subject, m.Field, m.Source,
+    m.Opportunity, m.Handoff, m.Subject, m.Field, m.Source,
 ]  # fmt: skip
 
 
@@ -193,6 +221,21 @@ def write(engine: Engine, data: Data) -> None:
             db.add(m.Subject(**s.model_dump(), source_id=data.subjects.source))
         for h in data.handoffs:
             db.add(m.Handoff(**h.model_dump(exclude={"source"}), source_id=h.source))
+        db.flush()
+        for o in data.opportunities:
+            db.add(
+                m.Opportunity(
+                    id=o.id,
+                    name=o.name,
+                    kind=o.kind,
+                    provider=o.provider,
+                    url=o.url,
+                    field_id=o.field,
+                    closes_on=o.closes_on,
+                    criteria=[c.model_dump() for c in o.criteria],
+                    source_id=o.source,
+                )
+            )
         db.flush()
         for inst in data.institutions:
             _write_institution(db, inst)

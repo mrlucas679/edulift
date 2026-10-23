@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { request } from './api';
 
-const source = z.object({
+export const source = z.object({
   title: z.string(),
   url: z.string(),
   publisher: z.string(),

@@ -105,6 +105,19 @@ export default function ProgrammeScreen() {
                     )}
                   </Card>
                 ))}
+                {alternatives.data && (['funding', 'work'] as const).map((group) => (
+                  <Card key={group}>
+                    <Title>{group === 'funding' ? 'Funding' : 'Work'}</Title>
+                    {alternatives.data[group].length === 0 && (
+                      <Body muted>Nothing matched what we hold. Check the official sites.</Body>
+                    )}
+                    {alternatives.data[group].map((item) => (
+                      <Body key={item.id}>
+                        {item.name}: {item.verdict === 'qualifies' ? 'meets the criteria we could check' : 'you may qualify, confirm with the provider'}
+                      </Body>
+                    ))}
+                  </Card>
+                ))}
               </>
             )}
 

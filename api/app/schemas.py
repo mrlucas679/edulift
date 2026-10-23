@@ -281,5 +281,31 @@ class RouteOut(BaseModel):
 
 
 class AlternativesOut(BaseModel):
-    # Empty when the programme itself already qualifies.
+    # All empty when the programme itself already qualifies.
     routes: list[RouteOut]
+    funding: list["MatchedOpportunityOut"]
+    work: list["MatchedOpportunityOut"]
+
+
+# Funding and work
+
+
+class OpportunityOut(Out):
+    id: str
+    name: str
+    kind: str
+    provider: str
+    url: str
+    closes_on: date | None
+    source: SourceOut
+
+
+class CriterionOut(BaseModel):
+    check: str
+    status: Literal["met", "not_met", "unknown"]
+
+
+class MatchedOpportunityOut(OpportunityOut):
+    # "may_qualify" means some criteria are unknown: confirm with the provider.
+    verdict: Literal["qualifies", "may_qualify"]
+    checks: list[CriterionOut]

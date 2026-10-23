@@ -28,6 +28,7 @@ from app.routers import (
     marks,
     me,
     onboarding,
+    opportunities,
     plan,
     reference,
     verdicts,
@@ -146,6 +147,7 @@ def create_app(
         marks.router,
         plan.router,
         alternatives.router,
+        opportunities.router,
     ):
         app.include_router(router, prefix="/v1")
     return app

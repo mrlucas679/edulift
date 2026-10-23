@@ -9,7 +9,9 @@ from app import models as m
 from app import rate_limit
 from app.deps import Db, DbEngine, SignedIn
 from app.errors import NotFoundError
+from app.opportunities import learner_facts, matched, open_opportunities, route
 from app.routers.marks import active_user, latest_marks
+from app.routers.opportunities import to_matched
 from app.schemas import AlternativesOut, CheckRequest, ProgrammeOut, RouteOut
 from app.verdicts import programme_verdict, subject_names
 from eligibility.plan_b import QUALIFIES, Candidate, Target, plan_b
@@ -33,7 +35,7 @@ def alternatives(
     today = date.today()
 
     if programme_verdict(db, target, marks, names, today).outcome in QUALIFIES:
-        return AlternativesOut(routes=[])
+        return AlternativesOut(routes=[], funding=[], work=[])
 
     profile = db.get(m.Profile, user.id)
     province = profile.province if profile and profile.province else ""
@@ -59,6 +61,13 @@ def alternatives(
         candidates,
         province,
     )
+    facts = learner_facts(db, user, today)
+    funding = route(matched(open_opportunities(db, ("bursary", "loan")), facts))
+    work_kinds = ("learnership", "work")
+    same_field = [
+        o for o in open_opportunities(db, work_kinds) if o.field_id in (None, target.field_id)
+    ]
+    work = route(matched(same_field, facts))
     return AlternativesOut(
         routes=[
             RouteOut(
@@ -71,5 +80,7 @@ def alternatives(
                 ],
             )
             for r in routes
-        ]
+        ],
+        funding=[to_matched(o, a.verdict, a.results) for o, a in funding],
+        work=[to_matched(o, a.verdict, a.results) for o, a in work],
     )
