@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
@@ -149,3 +149,15 @@ class HandoffOut(Out):
 class MetaOut(BaseModel):
     last_checked: date | None
     unchecked_sources: int
+
+
+class PreviewRequest(Request):
+    # subject id -> percent
+    marks: dict[str, Annotated[int, Field(ge=0, le=100)]] = Field(min_length=1, max_length=15)
+
+
+class PreviewScore(BaseModel):
+    institution_id: str
+    institution: str
+    scheme: str | None
+    score: int | None  # None: scheme not verified, check the institution's site
