@@ -20,7 +20,7 @@ from app.fake_auth import FakeAuth
 from app.logs import setup_logging
 from app.mail import ConsoleMailer, Mailer, SesMailer
 from app.request_id import new_id
-from app.routers import aps, auth, health, marks, me, onboarding, reference, verdicts
+from app.routers import aps, auth, health, marks, me, onboarding, plan, reference, verdicts
 
 log = logging.getLogger("edulift.request")
 
@@ -133,6 +133,7 @@ def create_app(
         verdicts.router,
         onboarding.router,
         marks.router,
+        plan.router,
     ):
         app.include_router(router, prefix="/v1")
     return app

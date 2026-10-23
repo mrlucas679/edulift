@@ -241,3 +241,30 @@ class CheckRequest(Request):
     marks: dict[str, Annotated[int, Field(ge=0, le=100)]] | None = Field(
         default=None, max_length=15
     )
+
+
+# My plan
+
+PLAN_LIMIT = 3
+
+
+class PlanIn(Request):
+    programme_ids: list[str] = Field(max_length=PLAN_LIMIT)
+
+    @model_validator(mode="after")
+    def unique_targets(self) -> "PlanIn":
+        if len(set(self.programme_ids)) != len(self.programme_ids):
+            raise ValueError("each programme can be on the plan once")
+        return self
+
+
+class PlanTargetOut(BaseModel):
+    programme_id: str
+    name: str
+    institution: str
+    verdict: VerdictOut | None  # None until marks are saved
+
+
+class PlanOut(BaseModel):
+    targets: list[PlanTargetOut]
+    limit: int = PLAN_LIMIT

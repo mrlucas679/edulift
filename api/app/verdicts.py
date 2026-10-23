@@ -1,0 +1,72 @@
+"""Builds a programme verdict from marks. The rules engine decides; this gathers its inputs."""
+
+import re
+from datetime import date
+
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app import models as m
+from app.routers.aps import UnknownSubjectError
+from app.schemas import CheckOut, VerdictOut
+from eligibility.verdict import Check, Option, Rules, evaluate
+
+
+def subject_names(db: Session, marks: dict[str, int]) -> dict[str, str]:
+    names = {sid: name for sid, name in db.execute(select(m.Subject.id, m.Subject.name))}
+    if unknown := sorted(set(marks) - set(names)):
+        raise UnknownSubjectError(f"Unknown subjects: {', '.join(unknown[:5])}")
+    return names
+
+
+def programme_verdict(
+    db: Session,
+    programme: m.Programme,
+    marks: dict[str, int],
+    names: dict[str, str],
+    today: date,
+) -> VerdictOut:
+    institution = db.get_one(m.Institution, programme.institution_id)
+    cycle = db.scalars(
+        select(m.Cycle)
+        .where(m.Cycle.institution_id == institution.id)
+        .order_by(m.Cycle.intake_year.desc())
+    ).first()
+    groups: dict[int, list[Option]] = {}
+    for r in programme.requirements:
+        groups.setdefault(r.group_no, []).append(Option(r.subject_id, r.min_percent))
+
+    rules = Rules(
+        min_aps=programme.min_aps,
+        scheme=institution.aps_scheme,
+        groups=list(groups.values()),
+        selection=programme.selection,
+        opens_on=cycle.opens_on if cycle else None,
+        closes_on=programme.closes_on or (cycle.closes_on if cycle else None),
+    )
+    v = evaluate(marks, rules, today)
+    return VerdictOut(
+        programme_id=programme.id,
+        outcome=v.outcome,
+        score=v.score,
+        scheme=institution.aps_scheme,
+        window=v.window,
+        checks=[_with_source(c, names, programme.source) for c in v.checks],
+    )
+
+
+def _with_source(check: Check, names: dict[str, str], source: m.Source) -> CheckOut:
+    # Every check comes from the programme's own prospectus, so each one carries its source.
+    return CheckOut(
+        name=check.name,
+        result=check.result,
+        required=_named_subjects(check.required, names),
+        yours=_named_subjects(check.yours, names),
+        source_url=source.url,
+        checked_on=source.checked_on,
+    )
+
+
+def _named_subjects(text: str, names: dict[str, str]) -> str:
+    # Subject ids read badly on screen; show names instead.
+    return re.sub(r"\b[a-z_]+\b", lambda w: names.get(w.group(), w.group()), text)

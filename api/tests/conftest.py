@@ -20,7 +20,7 @@ from app.mail import ConsoleMailer
 from app.main import create_app
 
 TABLES = [
-    "mark_records", "guardian_requests", "consents", "profiles",
+    "plan_targets", "mark_records", "guardian_requests", "consents", "profiles",
     "users", "rate_limit_hits", "programme_requirements", "programmes",
     "application_cycles", "institutions", "handoffs", "subjects", "fields", "sources",
 ]  # fmt: skip
