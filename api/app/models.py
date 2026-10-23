@@ -199,3 +199,13 @@ class Mark(Base):
     subject_id: Mapped[str] = mapped_column(ForeignKey("subjects.id"), primary_key=True)
     percent: Mapped[int] = mapped_column(Integer)
     entered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class PlanTarget(Base):
+    __tablename__ = "plan_targets"
+
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    programme_id: Mapped[str] = mapped_column(ForeignKey("programmes.id"), primary_key=True)
+    position: Mapped[int] = mapped_column(Integer)

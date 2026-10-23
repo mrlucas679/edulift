@@ -4,19 +4,10 @@ import { Linking, Pressable } from 'react-native';
 
 import { toMarks, useMarks } from '../../src/marks';
 import { checkProgramme, useProgramme, useSubjectNames, type Verdict } from '../../src/reference';
+import { usePlan, useSavePlan } from '../../src/plan';
 import { useSession } from '../../src/session';
 import { Body, Button, Card, ErrorNote, Heading, QueryState, Screen, SourceLine, Title } from '../../src/ui';
-
-const OUTCOMES: Record<string, string> = {
-  qualifies: 'You meet the published minimums.',
-  qualifies_selection: 'You meet the minimums. This programme selects, so a place isn’t guaranteed.',
-  qualifies_unconfirmed: 'You meet what we could confirm. Check the rest with the institution.',
-  aps_only: 'Your score is enough, but some subject marks are short.',
-  subjects_only: 'Your subjects are fine, but your score is short.',
-  not_eligible: 'Both your score and some subjects are short.',
-  closed: 'Applications for this intake have closed.',
-  incomplete: 'Add at least six subjects plus Life Orientation to get a result.',
-};
+import { OUTCOMES } from '../../src/verdicts';
 
 const RESULT = { pass: '✓ Met', fail: '✗ Short', unknown: '? Not confirmed' };
 
@@ -49,6 +40,10 @@ export default function ProgrammeScreen() {
   const [rows] = useMarks();
   const marks = toMarks(rows);
   const check = useMutation({ mutationFn: () => checkProgramme(id, marks, accessToken) });
+  const plan = usePlan(accessToken);
+  const savePlan = useSavePlan(accessToken);
+  const onPlan = plan.data?.targets.some((t) => t.programme_id === id) ?? false;
+  const planFull = (plan.data?.targets.length ?? 0) >= (plan.data?.limit ?? 3);
   const name = (subjectId: string) => subjects.data?.get(subjectId) ?? subjectId;
 
   return (
@@ -80,6 +75,26 @@ export default function ProgrammeScreen() {
             )}
             <ErrorNote error={check.error} />
             {check.data && <VerdictCard verdict={check.data} />}
+
+            {status === 'signed-in' && (
+              <>
+                <Title>My plan</Title>
+                {onPlan ? (
+                  <Body muted>This programme is on your plan.</Body>
+                ) : planFull ? (
+                  <Body muted>Your plan is full. Remove a programme to add this one.</Body>
+                ) : (
+                  <Button
+                    label="Add to my plan"
+                    busy={savePlan.isPending}
+                    onPress={() =>
+                      savePlan.mutate([...(plan.data?.targets.map((t) => t.programme_id) ?? []), id])
+                    }
+                  />
+                )}
+                <ErrorNote error={savePlan.error} />
+              </>
+            )}
           </>
         )}
       </QueryState>
