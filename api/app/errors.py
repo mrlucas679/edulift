@@ -17,6 +17,11 @@ class AppError(Exception):
     status_code = 500
     message = "Something went wrong on our side. Please try again."
 
+    def __init__(self, message: str | None = None) -> None:
+        super().__init__(message)
+        if message:
+            self.message = message
+
 
 class UnauthenticatedError(AppError):
     code = "unauthenticated"
