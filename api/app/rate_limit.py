@@ -8,10 +8,14 @@ from sqlalchemy import Engine, text
 from app.errors import RateLimitedError
 
 
+def now() -> datetime:
+    return datetime.now(UTC)
+
+
 def check(engine: Engine, bucket: str, who: str, limit: int, window_seconds: int) -> None:
     key = hashlib.sha256(f"{bucket}:{who}".encode()).hexdigest()
-    now = int(datetime.now(UTC).timestamp())
-    window_start = datetime.fromtimestamp(now - now % window_seconds, UTC)
+    ts = int(now().timestamp())
+    window_start = datetime.fromtimestamp(ts - ts % window_seconds, UTC)
 
     # Own transaction so the hit counts even if the request fails.
     with engine.begin() as db:

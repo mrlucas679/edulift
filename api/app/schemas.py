@@ -228,3 +228,14 @@ class GuardianDecision(Request):
         if self.decision == "approve" and not (self.declaration and self.relationship):
             raise ValueError("approving needs the declaration and your relationship")
         return self
+
+
+class MarksIn(Request):
+    marks: dict[str, Annotated[int, Field(ge=0, le=100)]] = Field(min_length=1, max_length=15)
+
+
+class CheckRequest(Request):
+    # Leave out to use your saved marks.
+    marks: dict[str, Annotated[int, Field(ge=0, le=100)]] | None = Field(
+        default=None, max_length=15
+    )

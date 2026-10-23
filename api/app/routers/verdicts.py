@@ -12,7 +12,8 @@ from app import rate_limit
 from app.deps import Db, DbEngine, SignedIn
 from app.errors import NotFoundError
 from app.routers.aps import UnknownSubjectError
-from app.schemas import CheckOut, PreviewRequest, VerdictOut
+from app.routers.marks import active_user, latest_marks
+from app.schemas import CheckOut, CheckRequest, VerdictOut
 from eligibility.verdict import Option, Rules, evaluate
 
 router = APIRouter(prefix="/programmes", tags=["verdicts"])
@@ -20,14 +21,19 @@ router = APIRouter(prefix="/programmes", tags=["verdicts"])
 
 @router.post("/{programme_id}/check")
 def check(
-    programme_id: str, body: PreviewRequest, me: SignedIn, db: Db, engine: DbEngine
+    programme_id: str, body: CheckRequest, me: SignedIn, db: Db, engine: DbEngine
 ) -> VerdictOut:
     rate_limit.check(engine, "check:user", me.subject, limit=60, window_seconds=60)
     programme = db.get(m.Programme, programme_id)
     if programme is None:
         raise NotFoundError
+    marks = body.marks
+    if marks is None:
+        marks = latest_marks(db, active_user(db, me.subject).id)
+        if marks is None:
+            raise NotFoundError("Save your marks first.")
     names = {sid: name for sid, name in db.execute(select(m.Subject.id, m.Subject.name))}
-    if unknown := sorted(set(body.marks) - set(names)):
+    if unknown := sorted(set(marks) - set(names)):
         raise UnknownSubjectError(f"Unknown subjects: {', '.join(unknown[:5])}")
 
     institution = db.get_one(m.Institution, programme.institution_id)
@@ -48,7 +54,7 @@ def check(
         opens_on=cycle.opens_on if cycle else None,
         closes_on=programme.closes_on or (cycle.closes_on if cycle else None),
     )
-    v = evaluate(body.marks, rules, date.today())
+    v = evaluate(marks, rules, date.today())
     return VerdictOut(
         programme_id=programme.id,
         outcome=v.outcome,

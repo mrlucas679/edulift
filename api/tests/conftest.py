@@ -3,6 +3,7 @@
 import os
 from collections.abc import Iterator
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.engine import make_url
 
+from app import rate_limit
 from app.config import Settings
 from app.fake_auth import FakeAuth
 from app.mail import ConsoleMailer
@@ -41,6 +43,12 @@ def engine() -> Iterator[Engine]:
     engine = create_engine(url)
     yield engine
     engine.dispose()
+
+
+@pytest.fixture(autouse=True)
+def fixed_clock(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Rate limits count per fixed window; a test crossing a window edge would flake.
+    monkeypatch.setattr(rate_limit, "now", lambda: datetime(2026, 10, 23, 12, 0, 30, tzinfo=UTC))
 
 
 @pytest.fixture(autouse=True)
