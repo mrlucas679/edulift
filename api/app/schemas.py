@@ -161,3 +161,20 @@ class PreviewScore(BaseModel):
     institution: str
     scheme: str | None
     score: int | None  # None: scheme not verified, check the institution's site
+
+
+class CheckOut(BaseModel):
+    name: str
+    required: str
+    yours: str
+    result: Literal["pass", "fail", "unknown"]
+
+
+class VerdictOut(BaseModel):
+    programme_id: str
+    outcome: str
+    score: int | None
+    scheme: str | None
+    window: str
+    checks: list[CheckOut]
+    note: str = "Based on published minimums. The institution decides."
