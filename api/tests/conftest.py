@@ -1,0 +1,96 @@
+"""Tests hit a real Postgres, built by running our migrations, so those get tested too.
+
+Start it with `docker compose up -d` from the repo root, or point TEST_DATABASE_URL
+somewhere else. The database named in the URL is dropped and recreated each run.
+"""
+
+import os
+from collections.abc import Iterator
+from dataclasses import dataclass
+from pathlib import Path
+
+import pytest
+from alembic import command
+from alembic.config import Config
+from fastapi.testclient import TestClient
+from sqlalchemy import Engine, create_engine, text
+from sqlalchemy.engine import make_url
+
+from app.adapters.fake_identity import FakeIdentityProvider
+from app.config import Settings
+from app.main import create_app
+
+LOCAL_TEST_DB = "postgresql+psycopg://edulift:edulift_local_only@127.0.0.1:5433/edulift_test"
+
+
+@pytest.fixture(scope="session")
+def engine() -> Iterator[Engine]:
+    url = make_url(os.environ.get("TEST_DATABASE_URL", LOCAL_TEST_DB))
+    admin = create_engine(url.set(database="postgres"), isolation_level="AUTOCOMMIT")
+    with admin.connect() as db:
+        db.execute(text(f'DROP DATABASE IF EXISTS "{url.database}" WITH (FORCE)'))
+        db.execute(text(f'CREATE DATABASE "{url.database}"'))
+    admin.dispose()
+
+    alembic = Config(str(Path(__file__).parents[1] / "alembic.ini"))
+    alembic.attributes["database_url"] = url.render_as_string(hide_password=False)
+    command.upgrade(alembic, "head")
+
+    engine = create_engine(url)
+    yield engine
+    engine.dispose()
+
+
+@pytest.fixture(autouse=True)
+def empty_tables(engine: Engine) -> None:
+    with engine.begin() as db:
+        db.execute(text("TRUNCATE users, rate_limit_hits"))
+
+
+@pytest.fixture
+def inbox() -> dict[str, str]:
+    """Where the fake provider 'emails' sign-in codes: address -> latest code."""
+    return {}
+
+
+@pytest.fixture
+def identity(inbox: dict[str, str]) -> FakeIdentityProvider:
+    return FakeIdentityProvider(send_code=inbox.__setitem__)
+
+
+def make_client(engine: Engine, identity: FakeIdentityProvider, **overrides: object) -> TestClient:
+    values: dict[str, object] = {
+        "edulift_env": "test",
+        "database_url": engine.url.render_as_string(hide_password=False),
+        "identity_provider": "fake",
+        "_env_file": None,
+    }
+    settings = Settings(**(values | overrides))  # type: ignore[arg-type]
+    app = create_app(settings, identity=identity, engine=engine)
+    return TestClient(app, raise_server_exceptions=False)
+
+
+@pytest.fixture
+def client(engine: Engine, identity: FakeIdentityProvider) -> TestClient:
+    return make_client(engine, identity)
+
+
+@dataclass(frozen=True)
+class Session:
+    access_token: str
+    refresh_token: str
+
+    @property
+    def headers(self) -> dict[str, str]:
+        return {"Authorization": f"Bearer {self.access_token}"}
+
+
+def sign_in(client: TestClient, inbox: dict[str, str], email: str) -> Session:
+    session = client.post("/v1/auth/start", json={"email": email}).json()["session"]
+    body = {"email": email, "code": inbox[email], "session": session}
+    tokens = client.post("/v1/auth/verify", json=body).json()
+    return Session(tokens["access_token"], tokens["refresh_token"])
+
+
+def wrong_code(right: str) -> str:
+    return "111111" if right == "000000" else "000000"

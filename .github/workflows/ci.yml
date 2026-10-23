@@ -1,0 +1,83 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: edulift
+          POSTGRES_PASSWORD: ci_only
+          POSTGRES_DB: edulift
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U edulift" --health-interval 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql+psycopg://edulift:ci_only@127.0.0.1:5432/edulift_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run mypy app eligibility tests alembic
+      - run: uv run pytest
+      - name: Known vulnerabilities in dependencies
+        run: |
+          uv export --frozen --no-dev --no-hashes --no-emit-project --format requirements-txt \
+            > /tmp/requirements.txt
+          uvx --python 3.12 pip-audit -r /tmp/requirements.txt
+
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    env:
+      EXPO_PUBLIC_API_URL: http://127.0.0.1:8020
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npx expo lint
+      # Two known high advisories sit in Expo's build tooling (braces via Metro, node-forge
+      # via update signing) with no fixed release yet; see docs/09-security-and-popia.md.
+      # Anything critical, or any high outside those two packages, fails the build.
+      - name: Dependency audit
+        run: |
+          npm audit --omit=dev --audit-level=critical
+          npm audit --omit=dev --json > /tmp/audit.json || true
+          node -e '
+            const known = new Set(["braces", "node-forge"]);
+            const v = require("/tmp/audit.json").vulnerabilities ?? {};
+            const roots = Object.values(v).filter(x => x.severity === "high" &&
+              x.via.some(a => typeof a === "object"));
+            const fresh = roots.filter(x => !known.has(x.name)).map(x => x.name);
+            if (fresh.length) { console.error("New high advisories:", fresh); process.exit(1); }'
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
