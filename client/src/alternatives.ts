@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { request } from './api';
+import { matched } from './opportunities';
 
 const programme = z.object({
   id: z.string(),
@@ -22,6 +23,8 @@ const alternatives = z.object({
       empty_reason: z.string(),
     }),
   ),
+  funding: z.array(matched),
+  work: z.array(matched),
 });
 export type Alternatives = z.infer<typeof alternatives>;
 

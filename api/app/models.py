@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Any
 
 from sqlalchemy import (
     ARRAY,
@@ -12,6 +13,7 @@ from sqlalchemy import (
     Text,
     func,
 )
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -209,3 +211,19 @@ class PlanTarget(Base):
     )
     programme_id: Mapped[str] = mapped_column(ForeignKey("programmes.id"), primary_key=True)
     position: Mapped[int] = mapped_column(Integer)
+
+
+class Opportunity(Base):
+    __tablename__ = "opportunities"
+
+    id: Mapped[str] = mapped_column(String(80), primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    kind: Mapped[str] = mapped_column(String(20))  # bursary, loan, learnership, work
+    provider: Mapped[str] = mapped_column(Text)
+    url: Mapped[str] = mapped_column(Text)
+    field_id: Mapped[str | None] = mapped_column(ForeignKey("fields.id"))
+    closes_on: Mapped[date | None] = mapped_column(Date)
+    criteria: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
+
+    source: Mapped[Source] = relationship(lazy="joined")
