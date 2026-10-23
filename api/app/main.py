@@ -5,18 +5,16 @@ import logging
 import time
 from collections.abc import Awaitable, Callable
 
-import boto3
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import Engine
 from sqlalchemy.orm import sessionmaker
 
 from app.auth import Auth
-from app.cognito import CognitoAuth
 from app.config import Settings
 from app.db import new_engine
 from app.errors import add_handlers, error_response
-from app.fake_auth import FakeAuth
+from app.identity import identity_for
 from app.logs import setup_logging
 from app.mail import Mailer, mailer_for
 from app.request_id import new_id
@@ -47,19 +45,7 @@ SECURITY_HEADERS = {
 
 
 def _auth(settings: Settings) -> Auth:
-    if settings.identity_provider == "cognito":
-        return CognitoAuth(
-            boto3.client("cognito-idp", region_name=settings.aws_region),
-            user_pool_id=settings.cognito_user_pool_id,
-            app_client_id=settings.cognito_app_client_id,
-            region=settings.aws_region,
-        )
-
-    def print_code(_email: str, code: str) -> None:
-        # Local only; no email in the log.
-        log.warning("local sign-in code: %s", code)
-
-    return FakeAuth(send_code=print_code)
+    return identity_for(settings)
 
 
 def _mailer(settings: Settings) -> Mailer:

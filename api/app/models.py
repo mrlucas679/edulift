@@ -280,3 +280,14 @@ class ReminderSent(Base):
     target_id: Mapped[str] = mapped_column(String(80))
     threshold_days: Mapped[int] = mapped_column(Integer)
     sent_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class AuditEvent(Base):
+    __tablename__ = "audit_events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    # Cleared when the learner is deleted, so the record survives without the person.
+    user_id: Mapped[str | None] = mapped_column(String(64), index=True)
+    action: Mapped[str] = mapped_column(String(30))
+    target: Mapped[str] = mapped_column(String(120), server_default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
