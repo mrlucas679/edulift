@@ -56,7 +56,8 @@ export class EduLiftStack extends Stack {
       allocatedStorage: 20,
       maxAllocatedStorage: 50,
       storageEncrypted: true,
-      backupRetention: Duration.days(7),
+      // The free AWS plan caps this at 1 day. Raise it to 7 once the account is upgraded.
+      backupRetention: Duration.days(1),
       deletionProtection: true,
       removalPolicy: RemovalPolicy.SNAPSHOT,
       parameters: { 'rds.force_ssl': '1' },
