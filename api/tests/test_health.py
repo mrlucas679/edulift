@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 
-from app.adapters.fake_identity import FakeIdentityProvider
 from app.config import Settings
+from app.fake_auth import FakeAuth
 from app.main import create_app
 
 
@@ -18,7 +18,7 @@ def test_says_so_when_the_database_is_down() -> None:
         edulift_env="test", database_url=nowhere, identity_provider="fake", _env_file=None
     )
     engine = create_engine(nowhere, connect_args={"connect_timeout": 1})
-    identity = FakeIdentityProvider(send_code=lambda *_: None)
+    identity = FakeAuth(send_code=lambda *_: None)
     app = create_app(settings, identity=identity, engine=engine)
 
     response = TestClient(app).get("/v1/health")

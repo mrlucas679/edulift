@@ -1,16 +1,14 @@
 import pytest
 from sqlalchemy import Engine
 
-from app.adapters.fake_identity import FakeIdentityProvider
 from app.config import Settings
+from app.fake_auth import FakeAuth
 from tests.conftest import make_client
 
 SECRET = "s" * 40
 
 
-def test_requests_that_skip_cloudfront_are_refused(
-    engine: Engine, identity: FakeIdentityProvider
-) -> None:
+def test_requests_that_skip_cloudfront_are_refused(engine: Engine, identity: FakeAuth) -> None:
     client = make_client(engine, identity, origin_secret=SECRET)
     body = {"email": "a@example.org"}
 
@@ -23,9 +21,7 @@ def test_requests_that_skip_cloudfront_are_refused(
     assert allowed.status_code == 200
 
 
-def test_health_check_still_works_without_the_header(
-    engine: Engine, identity: FakeIdentityProvider
-) -> None:
+def test_health_check_still_works_without_the_header(engine: Engine, identity: FakeAuth) -> None:
     client = make_client(engine, identity, origin_secret=SECRET)
     assert client.get("/v1/health").status_code == 200
 

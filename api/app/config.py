@@ -6,15 +6,14 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Everything comes from environment variables. Secrets have no defaults."""
+    """From env vars. Secrets have no defaults."""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     edulift_env: Literal["local", "test", "demo"]
     identity_provider: Literal["cognito", "fake"]
 
-    # Locally you set DATABASE_URL. On AWS the password comes from the secret RDS manages
-    # and rotates, so we get the pieces and put the URL together ourselves.
+    # DATABASE_URL locally; separate parts on AWS (password from the RDS secret).
     database_url: str = ""
     db_host: str = ""
     db_port: int = 5432
@@ -26,11 +25,9 @@ class Settings(BaseSettings):
     cognito_user_pool_id: str = ""
     cognito_app_client_id: str = ""
     cors_origins: str = ""
-    # How many proxies sit in front of us and append to X-Forwarded-For
-    # (CloudFront + the load balancer = 2). 0 locally: use the socket address.
+    # Proxies in front of us: 2 on AWS (CloudFront + load balancer), 0 locally.
     trusted_proxy_hops: int = Field(default=0, ge=0, le=5)
-    # CloudFront sends this header to us. Anything arriving without it went around
-    # CloudFront, straight at the load balancer, and could have faked its own IP.
+    # Sent by CloudFront. Requests without it skipped CloudFront.
     origin_secret: str = ""
 
     @model_validator(mode="after")

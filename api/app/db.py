@@ -5,17 +5,17 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 
 
-def make_engine(url: str) -> Engine:
+def new_engine(url: str) -> Engine:
     return create_engine(url, pool_pre_ping=True, pool_size=5, max_overflow=5)
 
 
 def transaction(factory: sessionmaker[Session]) -> Iterator[Session]:
-    """One transaction per request: committed if the handler returns, rolled back if not."""
+    # One transaction per request.
     with factory() as session, session.begin():
         yield session
 
 
-def database_up(engine: Engine) -> bool:
+def db_ok(engine: Engine) -> bool:
     try:
         with engine.connect() as db:
             db.execute(text("SELECT 1"))

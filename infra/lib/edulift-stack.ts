@@ -19,8 +19,7 @@ type Props = StackProps & { senderEmail: string; githubRepo: string };
 const API_PORT = 8000;
 
 export class EduLiftStack extends Stack {
-  // Fixed here so synth never has to ask AWS which zones exist. That keeps the account
-  // id out of a committed context file and lets CI synth without credentials.
+  // Fixed so synth needs no AWS lookup.
   override get availabilityZones(): string[] {
     return ['af-south-1a', 'af-south-1b'];
   }
@@ -28,9 +27,7 @@ export class EduLiftStack extends Stack {
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id, props);
 
-    // Network. Public subnets for the load balancer and API tasks, isolated subnets for
-    // the database. No NAT gateway: tasks get public IPs instead, which saves ~$35/month,
-    // and their security group only accepts traffic from inside the VPC.
+    // No NAT gateway: tasks use public IPs but only accept VPC traffic.
     const vpc = new ec2.Vpc(this, 'Network', {
       maxAzs: 2,
       natGateways: 0,
@@ -45,7 +42,7 @@ export class EduLiftStack extends Stack {
     });
     apiTasks.addIngressRule(ec2.Peer.ipv4(vpc.vpcCidrBlock), ec2.Port.tcp(API_PORT), 'load balancer');
 
-    // Database. Not reachable from the internet, encrypted, TLS required, backed up daily.
+    // Private, encrypted, TLS only.
     const database = new rds.DatabaseInstance(this, 'Database', {
       engine: rds.DatabaseInstanceEngine.postgres({ version: rds.PostgresEngineVersion.VER_16 }),
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T4G, ec2.InstanceSize.MICRO),
@@ -56,7 +53,7 @@ export class EduLiftStack extends Stack {
       allocatedStorage: 20,
       maxAllocatedStorage: 50,
       storageEncrypted: true,
-      // The free AWS plan caps this at 1 day. Raise it to 7 once the account is upgraded.
+      // Free plan max. Raise to 7 after upgrading.
       backupRetention: Duration.days(1),
       deletionProtection: true,
       removalPolicy: RemovalPolicy.SNAPSHOT,
@@ -65,8 +62,7 @@ export class EduLiftStack extends Stack {
     database.connections.allowDefaultPortFrom(apiTasks);
     const dbSecret = database.secret!;
 
-    // Sign-in. Email codes only; nobody is given a password. Self sign-up is off because
-    // our API creates users itself after rate-limiting the request.
+    // Email codes only. The API creates users after rate limiting.
     const users = new cognito.UserPool(this, 'Users', {
       featurePlan: cognito.FeaturePlan.ESSENTIALS,
       signInAliases: { email: true },
@@ -92,13 +88,11 @@ export class EduLiftStack extends Stack {
       refreshTokenValidity: Duration.days(30),
     });
 
-    // CloudFront adds this header on its way to the API. The API refuses anything
-    // without it, so nobody can go around CloudFront and fake their IP.
+    // The API refuses requests without this CloudFront header.
     const originSecret = new secrets.Secret(this, 'OriginSecret', {
       generateSecretString: { excludePunctuation: true, passwordLength: 48 },
     });
 
-    // API on ECS Express Mode.
     const image = new DockerImageAsset(this, 'ApiImage', {
       directory: path.join(__dirname, '..', '..', 'api'),
       platform: Platform.LINUX_AMD64,
@@ -116,7 +110,6 @@ export class EduLiftStack extends Stack {
     const taskRole = new iam.Role(this, 'ApiTaskRole', {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
     });
-    // The only AWS calls the API makes today. Bedrock gets added when the AI work lands.
     users.grant(taskRole, 'cognito-idp:AdminGetUser', 'cognito-idp:AdminCreateUser');
 
     const infrastructureRole = new iam.Role(this, 'ApiInfrastructureRole', {
@@ -174,16 +167,14 @@ export class EduLiftStack extends Stack {
     });
     api.node.addDependency(executionRole, taskRole, infrastructureRole, database);
 
-    // Web app and API behind one CloudFront URL, so the browser never makes a
-    // cross-origin call and there's exactly one place HTTPS is handled.
+    // Web and API share one CloudFront URL.
     const site = new s3.Bucket(this, 'Site', {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       encryption: s3.BucketEncryption.S3_MANAGED,
       enforceSSL: true,
       removalPolicy: RemovalPolicy.RETAIN,
     });
-    // Expo builds a single-page app: any path without a file extension gets index.html.
-    // Done here rather than with error pages, which would also swallow API 404s.
+    // SPA routing without hiding API 404s.
     const spaRewrite = new cloudfront.Function(this, 'SpaRewrite', {
       runtime: cloudfront.FunctionRuntime.JS_2_0,
       code: cloudfront.FunctionCode.fromInline(
@@ -215,7 +206,7 @@ export class EduLiftStack extends Stack {
       },
     });
 
-    // GitHub Actions deploys with short-lived credentials, only from main of our repo.
+    // GitHub Actions, main branch only.
     const github = new iam.OidcProviderNative(this, 'GitHub', {
       url: 'https://token.actions.githubusercontent.com',
       clientIds: ['sts.amazonaws.com'],

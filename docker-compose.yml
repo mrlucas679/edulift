@@ -1,4 +1,4 @@
-# Local development and tests only. Production uses Amazon RDS (ADR-0005).
+# Local dev and tests only.
 services:
   postgres:
     image: postgres:16-alpine

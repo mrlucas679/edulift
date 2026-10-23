@@ -3,7 +3,7 @@ import logging
 import pytest
 from fastapi.testclient import TestClient
 
-from app.logging_config import JsonFormatter
+from app.logs import JsonFormatter
 from tests.conftest import sign_in
 
 

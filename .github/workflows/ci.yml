@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: mobile
+        working-directory: client
     env:
       EXPO_PUBLIC_API_URL: http://127.0.0.1:8020
     steps:
@@ -53,12 +53,12 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: mobile/package-lock.json
+          cache-dependency-path: client/package-lock.json
       - run: npm ci
       - run: npx tsc --noEmit
       - run: npx expo lint
       # Two known high advisories sit in Expo's build tooling (braces via Metro, node-forge
-      # via update signing) with no fixed release yet; see docs/09-security-and-popia.md.
+      # via update signing) with no fixed release yet.
       # Anything critical, or any high outside those two packages, fails the build.
       - name: Dependency audit
         run: |

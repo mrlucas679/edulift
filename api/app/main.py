@@ -11,14 +11,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import Engine
 from sqlalchemy.orm import sessionmaker
 
-from app.adapters.cognito_identity import CognitoIdentityProvider
-from app.adapters.fake_identity import FakeIdentityProvider
+from app.auth import Auth
+from app.cognito import CognitoAuth
 from app.config import Settings
-from app.db import make_engine
-from app.errors import add_error_handlers, error_response
-from app.identity import IdentityProvider
-from app.logging_config import configure_logging
-from app.request_id import new_request_id
+from app.db import new_engine
+from app.errors import add_handlers, error_response
+from app.fake_auth import FakeAuth
+from app.logs import setup_logging
+from app.request_id import new_id
 from app.routers import auth, health, me
 
 log = logging.getLogger("edulift.request")
@@ -31,9 +31,9 @@ SECURITY_HEADERS = {
 }
 
 
-def _identity_provider(settings: Settings) -> IdentityProvider:
+def _auth(settings: Settings) -> Auth:
     if settings.identity_provider == "cognito":
-        return CognitoIdentityProvider(
+        return CognitoAuth(
             boto3.client("cognito-idp", region_name=settings.aws_region),
             user_pool_id=settings.cognito_user_pool_id,
             app_client_id=settings.cognito_app_client_id,
@@ -41,34 +41,34 @@ def _identity_provider(settings: Settings) -> IdentityProvider:
         )
 
     def print_code(_email: str, code: str) -> None:
-        # Local only. The address stays out of the log on purpose.
+        # Local only; no email in the log.
         log.warning("local sign-in code: %s", code)
 
-    return FakeIdentityProvider(send_code=print_code)
+    return FakeAuth(send_code=print_code)
 
 
 def create_app(
     settings: Settings | None = None,
-    identity: IdentityProvider | None = None,
+    identity: Auth | None = None,
     engine: Engine | None = None,
 ) -> FastAPI:
     if settings is None:
-        configure_logging()
+        setup_logging()
         settings = Settings()  # reads the environment
 
     app = FastAPI(
         title="EduLift API",
-        # No public API docs on the deployed service.
+        # No docs in demo.
         docs_url=None if settings.deployed else "/docs",
         redoc_url=None,
         openapi_url=None if settings.deployed else "/openapi.json",
     )
     app.state.settings = settings
-    app.state.engine = engine or make_engine(settings.sqlalchemy_url)
+    app.state.engine = engine or new_engine(settings.sqlalchemy_url)
     app.state.sessions = sessionmaker(bind=app.state.engine, expire_on_commit=False)
-    app.state.identity = identity or _identity_provider(settings)
+    app.state.identity = identity or _auth(settings)
 
-    add_error_handlers(app)
+    add_handlers(app)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.allowed_origins,
@@ -78,12 +78,12 @@ def create_app(
     )
 
     @app.middleware("http")
-    async def stamp_and_log(
+    async def around_request(
         request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
-        request_id = new_request_id()
+        request_id = new_id()
         started = time.perf_counter()
-        # The load balancer's health check is the one caller that never passes CloudFront.
+        # Health checks come straight from the load balancer.
         if (
             settings.origin_secret
             and request.url.path != "/v1/health"
@@ -98,7 +98,7 @@ def create_app(
         response.headers.update(SECURITY_HEADERS)
         if settings.deployed:
             response.headers["Strict-Transport-Security"] = "max-age=31536000"
-        # Log the route template, not the raw path, so ids in URLs stay out of logs.
+        # Route template, not the raw path.
         route = getattr(request.scope.get("route"), "path", "unmatched")
         took_ms = round((time.perf_counter() - started) * 1000)
         log.info(

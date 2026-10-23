@@ -2,7 +2,7 @@ import jwt
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, text
 
-from app.adapters.fake_identity import ISSUER, FakeIdentityProvider
+from app.fake_auth import ISSUER, FakeAuth
 from tests.conftest import sign_in
 
 
@@ -27,8 +27,8 @@ def test_unsigned_token_is_refused(client: TestClient) -> None:
     assert client.get("/v1/me", headers={"Authorization": f"Bearer {unsigned}"}).status_code == 401
 
 
-def test_expired_token_is_refused(client: TestClient, identity: FakeIdentityProvider) -> None:
-    expired = identity.expired_token_for("someone")
+def test_expired_token_is_refused(client: TestClient, identity: FakeAuth) -> None:
+    expired = identity.expired_token("someone")
     assert client.get("/v1/me", headers={"Authorization": f"Bearer {expired}"}).status_code == 401
 
 

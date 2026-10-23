@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine
 
-from app.adapters.fake_identity import FakeIdentityProvider
+from app.fake_auth import FakeAuth
 from tests.conftest import make_client, sign_in, wrong_code
 
 
@@ -104,9 +104,7 @@ def test_one_machine_cannot_cycle_through_addresses(client: TestClient) -> None:
     assert statuses[30] == 429
 
 
-def test_spoofed_forwarded_for_does_not_dodge_the_limit(
-    engine: Engine, identity: FakeIdentityProvider
-) -> None:
+def test_spoofed_forwarded_for_does_not_dodge_the_limit(engine: Engine, identity: FakeAuth) -> None:
     # Behind CloudFront and the load balancer there are two trusted hops. Whatever the
     # caller writes at the front of the header must not change who we think they are.
     client = make_client(engine, identity, trusted_proxy_hops=2)

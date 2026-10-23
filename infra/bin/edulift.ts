@@ -10,14 +10,13 @@ const region = 'af-south-1';
 
 function required(key: string): string {
   const value = app.node.tryGetContext(key);
-  if (!value) throw new Error(`Pass -c ${key}=... (see infra/README.md)`);
+  if (!value) throw new Error(`Missing -c ${key}=...`);
   return value;
 }
 
 const senderEmail = required('senderEmail');
 
-// Deploy order matters: the sender address has to be verified (someone clicks the link
-// AWS emails) before Cognito will agree to send mail from it.
+// Deploy and verify the sender before the main stack.
 new SenderStack(app, 'EduLiftSender', { env: { account, region }, senderEmail });
 
 new EduLiftStack(app, 'EduLift', {
@@ -27,7 +26,7 @@ new EduLiftStack(app, 'EduLift', {
   terminationProtection: true,
 });
 
-// AWS Budgets is a global service that CloudFormation only offers in us-east-1.
+// Budgets only exists in us-east-1.
 new BudgetStack(app, 'EduLiftBudget', {
   env: { account, region: 'us-east-1' },
   alertEmail: required('budgetEmail'),

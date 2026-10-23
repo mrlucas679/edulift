@@ -20,8 +20,7 @@ export class BudgetStack extends Stack {
         budgetType: 'COST',
         timeUnit: 'MONTHLY',
         budgetLimit: { amount: props.monthlyUsd, unit: 'USD' },
-        // Counts only resources tagged project=edulift. The tag has to be switched on as
-        // a cost allocation tag in Billing once, or this budget sees nothing.
+        // Needs the project tag activated in Billing.
         costFilters: { TagKeyValue: ['user:project$edulift'] },
       },
       notificationsWithSubscribers: [alertAt(50, 'ACTUAL'), alertAt(80, 'ACTUAL'), alertAt(100, 'FORECASTED')],

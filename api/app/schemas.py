@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class Request(BaseModel):
-    # Unknown fields are an error, not something to quietly ignore.
+    # Reject unknown fields.
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
 

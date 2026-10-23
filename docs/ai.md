@@ -1,0 +1,78 @@
+# AI Layer
+
+AI turns a verdict the rules engine already produced into plain language. It never
+decides eligibility, never invents a requirement, date or fee, and never learns who the
+learner is (the bedrock explanations only decision).
+
+## Ports
+
+```python
+class ExplanationProvider(Protocol):
+    def explain(self, request: ExplanationRequest) -> ExplanationDraft: ...
+```
+
+- `BedrockExplanationProvider` — adapter around boto3 `bedrock-runtime` Converse.
+- `TemplateExplanationProvider` — deterministic text built from the checks; the fallback and the test default.
+- `ExplanationService` — consent check, rate limits, cache, call, validate, fallback, record `ai_requests`.
+
+Only `ExplanationProvider` is mocked in tests, never boto3 *(GOOS — only mock types you own)*.
+
+## What goes in
+
+Outcome class, programme name, institution name, qualification type, closing date, the
+check list (check, required, yours, result), source URLs, language (`en`). Reference text
+is passed as delimited data, never as instructions.
+
+**Never sent:** name, date of birth, email, province, user id, guardian data, notes, any
+free text the learner typed.
+
+## What comes out
+
+JSON validated with Pydantic: `{summary, next_step, plan_b_hint}`, each ≤ 300 characters.
+
+## Guardrails
+
+| Risk | Guard |
+|---|---|
+| Invented facts | Every number and date in the reply must appear in the input; otherwise template |
+| Overstated chances | Reject phrases like "you will be accepted", "guaranteed", "definitely" → template |
+| Prompt injection | No learner free text in; reference text as data in delimited fields |
+| Timeout / outage | 8 s timeout; any exception → template; no error shown |
+| Cost | 10/min and 20/day per learner; cache by (programme, outcome, check pattern); global daily budget alarm |
+| Offshore processing (POPIA s72) | Only non-identifying verdict data; `ai_explanations` consent opt-in, worded plainly; for 17-year-olds only if the guardian allowed it |
+
+## Configuration
+
+`BEDROCK_MODEL_ID`, `AI_TIMEOUT_SECONDS=8`, `AI_DAILY_LIMIT_PER_USER=20`,
+`AI_ENABLED=true|false`. With `AI_ENABLED=false` every explanation is the template.
+
+## Ask anything, CV / motivation letter, isiZulu / Sesotho (the ai scope decision)
+
+All AI calls go through one `AiGateway` (consent, limits, timeout, validation, usage
+record). Feature services on top:
+
+- **`AskService`** — retrieve first, then generate. The question is matched to our own
+  records with PostgreSQL full-text search over programmes, opportunities, institutions,
+  hand-offs and help articles (top 8). The model answers only from those records, passed
+  as delimited data, and returns `{answer, cited_record_ids[]}`. Rejected if it cites an id
+  not retrieved, states a number or date not in the retrieved data, or gives an
+  eligibility verdict; then: "I can't answer that from EduLift's data" + Khetha hand-off.
+  Links shown come only from the cited records' URLs. Not stored.
+- **`DraftingService`** — CV or motivation letter for a chosen programme or opportunity.
+  Input: the learner's typed facts (≤ 3000 chars) after stripping SA ID numbers, emails
+  and phone numbers, plus their stored marks. Output is labelled "Draft — check and edit
+  before you send". Rejected if it states a mark not in the stored marks. Stored only on Save.
+- **Translations** — fixed phrases (outcome classes, disclaimers, scam notice, consent
+  texts) come from human-reviewed string tables in `client/src/i18n/{en,zu,st}.json`;
+  only the explanation body is machine-translated and labelled so, with the English one
+  tap away.
+
+| Feature | Consent | Limits |
+|---|---|---|
+| Explain, translate | `ai_explanations` | 10/min, 20/day |
+| Ask | `ai_writing` | 10/min, 30/day |
+| CV / letter | `ai_writing` | 5/min, 10/day |
+
+`ai_writing` consent text: "To answer your questions and draft a CV or motivation letter,
+we send the words you type — not your name or contact details — to an AI service that may
+process them outside South Africa. Don't type your ID number or contact details."

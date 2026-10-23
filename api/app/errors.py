@@ -1,10 +1,4 @@
-"""Every error leaves the API in one shape:
-
-    {"error": {"code": ..., "message": ..., "request_id": ...}}
-
-The learner sees a plain message and a request id they can quote to us. The stack
-trace only goes to our logs.
-"""
+"""Every error: {"error": {"code", "message", "request_id"}}. No stack traces."""
 
 import logging
 
@@ -13,7 +7,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException
 
-from app.request_id import current_request_id
+from app.request_id import request_id
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +49,7 @@ class UpstreamUnavailableError(AppError):
 
 
 def error_response(status_code: int, code: str, message: str) -> JSONResponse:
-    body = {"error": {"code": code, "message": message, "request_id": current_request_id()}}
+    body = {"error": {"code": code, "message": message, "request_id": request_id()}}
     return JSONResponse(status_code=status_code, content=body)
 
 
@@ -70,7 +64,7 @@ async def _app_error(request: Request, exc: Exception) -> JSONResponse:
 async def _bad_input(request: Request, exc: Exception) -> JSONResponse:
     if not isinstance(exc, RequestValidationError):
         return await _unexpected(request, exc)
-    # Name the fields, never echo what was typed. It could be someone's personal details.
+    # Name the fields, never echo the values.
     fields = sorted({".".join(str(p) for p in err["loc"][1:]) or "body" for err in exc.errors()})
     return error_response(422, "validation_failed", "Please check: " + ", ".join(fields))
 
@@ -88,7 +82,7 @@ async def _unexpected(_: Request, exc: Exception) -> JSONResponse:
     return error_response(500, AppError.code, AppError.message)
 
 
-def add_error_handlers(app: FastAPI) -> None:
+def add_handlers(app: FastAPI) -> None:
     app.add_exception_handler(AppError, _app_error)
     app.add_exception_handler(RequestValidationError, _bad_input)
     app.add_exception_handler(HTTPException, _http_error)

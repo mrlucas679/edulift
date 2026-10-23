@@ -1,10 +1,10 @@
-"""Email-code sign-in. The app only ever talks to us; we talk to Cognito."""
+"""Email-code sign-in."""
 
 from fastapi import APIRouter, Response
 
 from app import rate_limit
-from app.dependencies import ClientIp, DbEngine, Identities, SignedIn
-from app.identity import TokenSet
+from app.auth import TokenSet
+from app.deps import ClientIp, DbEngine, Identities, SignedIn
 from app.schemas import (
     RefreshRequest,
     SignOutRequest,
@@ -32,11 +32,10 @@ def start(
     body: StartSignInRequest, ip: ClientIp, engine: DbEngine, identities: Identities
 ) -> StartSignInResponse:
     email = body.email.lower()
-    # Every call sends a real email, so throttle per address (stops someone flooding
-    # a victim's inbox) and per IP (stops one machine cycling through addresses).
+    # Each call sends an email: limit per address and per IP.
     rate_limit.check(engine, "start:email", email, limit=5, window_seconds=FIFTEEN_MINUTES)
     rate_limit.check(engine, "start:ip", ip, limit=30, window_seconds=FIFTEEN_MINUTES)
-    challenge = identities.start_sign_in(email)
+    challenge = identities.send_code(email)
     return StartSignInResponse(session=challenge.session)
 
 
@@ -44,9 +43,9 @@ def start(
 def verify(
     body: VerifyCodeRequest, ip: ClientIp, engine: DbEngine, identities: Identities
 ) -> TokenResponse:
-    # Cognito already caps wrong codes per session; this caps sessions per machine.
+    # Limit sessions per IP.
     rate_limit.check(engine, "verify:ip", ip, limit=30, window_seconds=FIFTEEN_MINUTES)
-    return _as_response(identities.verify_code(body.email.lower(), body.code, body.session))
+    return _as_response(identities.check_code(body.email.lower(), body.code, body.session))
 
 
 @router.post("/refresh")

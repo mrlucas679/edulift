@@ -1,8 +1,4 @@
-"""Tests hit a real Postgres, built by running our migrations, so those get tested too.
-
-Start it with `docker compose up -d` from the repo root, or point TEST_DATABASE_URL
-somewhere else. The database named in the URL is dropped and recreated each run.
-"""
+"""Tests run on real Postgres, built with our migrations."""
 
 import os
 from collections.abc import Iterator
@@ -16,8 +12,8 @@ from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.engine import make_url
 
-from app.adapters.fake_identity import FakeIdentityProvider
 from app.config import Settings
+from app.fake_auth import FakeAuth
 from app.main import create_app
 
 LOCAL_TEST_DB = "postgresql+psycopg://edulift:edulift_local_only@127.0.0.1:5433/edulift_test"
@@ -49,16 +45,16 @@ def empty_tables(engine: Engine) -> None:
 
 @pytest.fixture
 def inbox() -> dict[str, str]:
-    """Where the fake provider 'emails' sign-in codes: address -> latest code."""
+    # email -> latest code
     return {}
 
 
 @pytest.fixture
-def identity(inbox: dict[str, str]) -> FakeIdentityProvider:
-    return FakeIdentityProvider(send_code=inbox.__setitem__)
+def identity(inbox: dict[str, str]) -> FakeAuth:
+    return FakeAuth(send_code=inbox.__setitem__)
 
 
-def make_client(engine: Engine, identity: FakeIdentityProvider, **overrides: object) -> TestClient:
+def make_client(engine: Engine, identity: FakeAuth, **overrides: object) -> TestClient:
     values: dict[str, object] = {
         "edulift_env": "test",
         "database_url": engine.url.render_as_string(hide_password=False),
@@ -71,7 +67,7 @@ def make_client(engine: Engine, identity: FakeIdentityProvider, **overrides: obj
 
 
 @pytest.fixture
-def client(engine: Engine, identity: FakeIdentityProvider) -> TestClient:
+def client(engine: Engine, identity: FakeAuth) -> TestClient:
     return make_client(engine, identity)
 
 

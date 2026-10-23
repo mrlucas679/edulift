@@ -47,7 +47,7 @@ cd mobile && npx tsc --noEmit && npx expo lint
 
 ```
 api/        FastAPI service, Alembic migrations, tests
-mobile/     Expo app (Android and web)
+client/     Expo app (Android and web)
 docs/       product brief, requirements, architecture, decisions (docs/adr)
 data/       seed data, one YAML file per institution, every record sourced
 infra/      AWS setup
@@ -55,6 +55,6 @@ infra/      AWS setup
 
 ## Docs
 
-Start with [the product brief](docs/01-product-brief.md), then
-[requirements](docs/02-requirements.md) and [architecture](docs/03-architecture.md).
+Start with [the product brief](docs/product.md), then
+[requirements](docs/requirements.md) and [architecture](docs/architecture.md).
 Decisions and the reasons for them live in [docs/adr](docs/adr/README.md).

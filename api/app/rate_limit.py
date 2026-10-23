@@ -1,8 +1,4 @@
-"""Fixed-window rate limits kept in Postgres.
-
-In memory would be simpler, but with two API tasks behind the load balancer each one
-would hand out its own allowance. Counting in the database keeps the limit honest.
-"""
+"""Fixed-window rate limits in Postgres, shared by all API tasks."""
 
 import hashlib
 from datetime import UTC, datetime
@@ -17,7 +13,7 @@ def check(engine: Engine, bucket: str, who: str, limit: int, window_seconds: int
     now = int(datetime.now(UTC).timestamp())
     window_start = datetime.fromtimestamp(now - now % window_seconds, UTC)
 
-    # Own transaction on purpose: the hit has to count even if the request fails later.
+    # Own transaction so the hit counts even if the request fails.
     with engine.begin() as db:
         db.execute(
             text("DELETE FROM rate_limit_hits WHERE key = :key AND window_start < :start"),
