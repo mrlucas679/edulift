@@ -14,7 +14,8 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as secrets from 'aws-cdk-lib/aws-secretsmanager';
 import type { Construct } from 'constructs';
 
-type Props = StackProps & { senderEmail: string; githubRepo: string };
+// appUrl is the CloudFront URL, known after the first deploy.
+type Props = StackProps & { senderEmail: string; githubRepo: string; appUrl?: string };
 
 const API_PORT = 8000;
 
@@ -110,7 +111,18 @@ export class EduLiftStack extends Stack {
     const taskRole = new iam.Role(this, 'ApiTaskRole', {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
     });
-    users.grant(taskRole, 'cognito-idp:AdminGetUser', 'cognito-idp:AdminCreateUser');
+    users.grant(
+      taskRole,
+      'cognito-idp:AdminGetUser',
+      'cognito-idp:AdminCreateUser',
+      'cognito-idp:AdminDeleteUser',
+    );
+    taskRole.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ['ses:SendEmail'],
+        resources: [`arn:aws:ses:${this.region}:${this.account}:identity/${props.senderEmail}`],
+      }),
+    );
 
     const infrastructureRole = new iam.Role(this, 'ApiInfrastructureRole', {
       assumedBy: new iam.ServicePrincipal('ecs.amazonaws.com'),
@@ -157,6 +169,8 @@ export class EduLiftStack extends Stack {
           { name: 'DB_PORT', value: database.dbInstanceEndpointPort },
           { name: 'DB_NAME', value: 'edulift' },
           { name: 'TRUSTED_PROXY_HOPS', value: '2' },
+          { name: 'SENDER_EMAIL', value: props.senderEmail },
+          { name: 'APP_URL', value: props.appUrl ?? '' },
         ],
         secrets: [
           fromSecret('DB_USER', dbSecret, 'username'),

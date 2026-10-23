@@ -3,6 +3,7 @@
 import os
 from collections.abc import Iterator
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -12,11 +13,14 @@ from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.engine import make_url
 
+from app import rate_limit
 from app.config import Settings
 from app.fake_auth import FakeAuth
+from app.mail import ConsoleMailer
 from app.main import create_app
 
 TABLES = [
+    "mark_records", "guardian_requests", "consents", "profiles",
     "users", "rate_limit_hits", "programme_requirements", "programmes",
     "application_cycles", "institutions", "handoffs", "subjects", "fields", "sources",
 ]  # fmt: skip
@@ -42,6 +46,12 @@ def engine() -> Iterator[Engine]:
 
 
 @pytest.fixture(autouse=True)
+def fixed_clock(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Rate limits count per fixed window; a test crossing a window edge would flake.
+    monkeypatch.setattr(rate_limit, "now", lambda: datetime(2026, 10, 23, 12, 0, 30, tzinfo=UTC))
+
+
+@pytest.fixture(autouse=True)
 def empty_tables(engine: Engine) -> None:
     with engine.begin() as db:
         db.execute(text(f"TRUNCATE {', '.join(TABLES)}"))
@@ -58,21 +68,29 @@ def identity(inbox: dict[str, str]) -> FakeAuth:
     return FakeAuth(send_code=inbox.__setitem__)
 
 
-def make_client(engine: Engine, identity: FakeAuth, **overrides: object) -> TestClient:
+def make_client(
+    engine: Engine, identity: FakeAuth, mailer: ConsoleMailer | None = None, **overrides: object
+) -> TestClient:
     values: dict[str, object] = {
         "edulift_env": "test",
         "database_url": engine.url.render_as_string(hide_password=False),
         "identity_provider": "fake",
+        "app_url": "http://localhost:8081",
         "_env_file": None,
     }
     settings = Settings(**(values | overrides))  # type: ignore[arg-type]
-    app = create_app(settings, identity=identity, engine=engine)
+    app = create_app(settings, identity=identity, engine=engine, mailer=mailer)
     return TestClient(app, raise_server_exceptions=False)
 
 
 @pytest.fixture
-def client(engine: Engine, identity: FakeAuth) -> TestClient:
-    return make_client(engine, identity)
+def mailer() -> ConsoleMailer:
+    return ConsoleMailer()
+
+
+@pytest.fixture
+def client(engine: Engine, identity: FakeAuth, mailer: ConsoleMailer) -> TestClient:
+    return make_client(engine, identity, mailer)
 
 
 @dataclass(frozen=True)

@@ -4,5 +4,6 @@ type: university
 province: Gauteng
 apply_url: https://www.wits.ac.za/undergraduate/apply-to-wits/
 route: direct
-source: wits-apply
+aps_scheme: wits_best7
+source: wits-entry
 # cycles and programmes: add once checked against the 2027 prospectus

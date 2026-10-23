@@ -143,3 +143,59 @@ class Handoff(Base):
     purpose: Mapped[str] = mapped_column(Text)
     url: Mapped[str] = mapped_column(Text)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
+
+
+# Learner data. Always filtered by the signed-in user's id.
+
+
+class Profile(Base):
+    __tablename__ = "profiles"
+
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    first_name: Mapped[str | None] = mapped_column(String(60))
+    birth_date: Mapped[date] = mapped_column(Date)
+    province: Mapped[str | None] = mapped_column(String(30))
+    certificate: Mapped[str | None] = mapped_column(String(10))
+
+
+class Consent(Base):
+    __tablename__ = "consents"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    purpose: Mapped[str] = mapped_column(String(20))
+    granted_by: Mapped[str] = mapped_column(String(10))  # learner or guardian
+    policy_version: Mapped[str] = mapped_column(String(20))
+    granted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    withdrawn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class GuardianRequest(Base):
+    __tablename__ = "guardian_requests"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    guardian_name: Mapped[str] = mapped_column(String(80))
+    guardian_email: Mapped[str] = mapped_column(String(254))
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True)  # sha256, never the token
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    status: Mapped[str] = mapped_column(String(10), default="pending")
+    purposes: Mapped[list[str]] = mapped_column(ARRAY(Text), default=list)
+    relationship: Mapped[str | None] = mapped_column(String(20))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class Mark(Base):
+    __tablename__ = "mark_records"
+    __table_args__ = (CheckConstraint("percent BETWEEN 0 AND 100", name="mark_percent_range"),)
+
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    period: Mapped[str] = mapped_column(String(20), primary_key=True)
+    subject_id: Mapped[str] = mapped_column(ForeignKey("subjects.id"), primary_key=True)
+    percent: Mapped[int] = mapped_column(Integer)
+    entered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

@@ -29,12 +29,19 @@ class Settings(BaseSettings):
     trusted_proxy_hops: int = Field(default=0, ge=0, le=5)
     # Sent by CloudFront. Requests without it skipped CloudFront.
     origin_secret: str = ""
+    # Where guardian links point, e.g. https://xyz.cloudfront.net
+    app_url: str = ""
+    sender_email: str = ""
 
     @model_validator(mode="after")
     def _check(self) -> Self:
         if self.edulift_env == "demo":
             if self.identity_provider == "fake":
                 raise ValueError("the fake sign-in provider must never run in demo")
+            if not self.sender_email:
+                raise ValueError("demo needs SENDER_EMAIL")
+            if self.app_url and not self.app_url.startswith("https://"):
+                raise ValueError("APP_URL must be https in demo")
             if len(self.origin_secret) < 32:  # noqa: PLR2004
                 raise ValueError("demo needs ORIGIN_SECRET (32+ characters)")
         if self.identity_provider == "cognito" and not (

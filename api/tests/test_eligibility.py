@@ -1,0 +1,162 @@
+from datetime import date
+
+import pytest
+
+from eligibility.aps import best6, score
+from eligibility.marks import level
+from eligibility.verdict import Option, Rules, evaluate
+
+TODAY = date(2026, 10, 23)
+
+# Made-up learner from the hackathon brief.
+THANDI = {
+    "english_hl": 72, "mathematics": 68, "physical_sciences": 70, "life_sciences": 65,
+    "geography": 74, "isizulu_fal": 60, "life_orientation": 90,
+}  # fmt: skip
+
+
+@pytest.mark.parametrize(
+    ("percent", "expected"),
+    [(0, 1), (29, 1), (30, 2), (39, 2), (40, 3), (49, 3), (50, 4), (59, 4),
+     (60, 5), (69, 5), (70, 6), (79, 6), (80, 7), (100, 7)],
+)  # fmt: skip
+def test_level_boundaries(percent: int, expected: int) -> None:
+    assert level(percent) == expected
+
+
+@pytest.mark.parametrize("percent", [-1, 101])
+def test_level_rejects_impossible_marks(percent: int) -> None:
+    with pytest.raises(ValueError, match="out of range"):
+        level(percent)
+
+
+def test_best6_ignores_life_orientation_and_the_seventh_subject() -> None:
+    # 6+5+6+5+6+5 = 33; LO at 90% would be a 7 but must not count.
+    assert best6(THANDI) == 33
+
+
+def test_unverified_scheme_gives_no_score() -> None:
+    assert score("uct_health", THANDI) is None  # needs NBT results we don't collect
+    assert score(None, THANDI) is None
+
+
+def test_wits_scores_thandi_from_the_published_table() -> None:
+    # English 72 -> 6+2, Maths 68 -> 5+2, Physical 70 -> 6, Geography 74 -> 6,
+    # Life Sciences 65 -> 5, isiZulu 60 -> 5, LO 90 -> 4.  8+7+6+6+5+5+4 = 41
+    assert score("wits_best7", THANDI) == 41
+
+
+def test_wits_top_band_and_low_marks() -> None:
+    marks = {
+        "english_hl": 95, "mathematics": 59, "physical_sciences": 90, "life_sciences": 39,
+        "geography": 40, "history": 0, "life_orientation": 55,
+    }  # fmt: skip
+    # English 10, Maths 4 (no bonus below 60), Physical 8, Life Sci 0, Geo 3, History 0, LO 0
+    assert score("wits_best7", marks) == 25
+
+
+def test_wits_does_not_give_maths_literacy_the_bonus() -> None:
+    marks = {k: v for k, v in THANDI.items() if k != "mathematics"} | {"maths_literacy": 68}
+    assert score("wits_best7", marks) == 39
+
+
+def rules(**kw: object) -> Rules:
+    base: dict[str, object] = {
+        "min_aps": 30,
+        "scheme": "standard_best6",
+        "groups": [[Option("mathematics", 60)]],
+        "opens_on": date(2026, 4, 1),
+        "closes_on": date(2026, 12, 31),
+    }
+    return Rules(**(base | kw))  # type: ignore[arg-type]
+
+
+def test_qualifies() -> None:
+    v = evaluate(THANDI, rules(), TODAY)
+    assert (v.outcome, v.score) == ("qualifies", 33)
+    assert [c.result for c in v.checks] == ["pass", "pass"]
+
+
+def test_selection_programme_never_promises_a_place() -> None:
+    assert evaluate(THANDI, rules(selection=True), TODAY).outcome == "qualifies_selection"
+
+
+def test_score_met_but_subject_short_is_aps_only() -> None:
+    v = evaluate(THANDI, rules(groups=[[Option("mathematics", 70)]]), TODAY)
+    assert v.outcome == "aps_only"
+    assert v.checks[1].yours == "mathematics 68%"
+
+
+def test_subjects_met_but_score_short_is_subjects_only() -> None:
+    assert evaluate(THANDI, rules(min_aps=35), TODAY).outcome == "subjects_only"
+
+
+def test_both_short_is_not_eligible() -> None:
+    v = evaluate(THANDI, rules(min_aps=35, groups=[[Option("mathematics", 70)]]), TODAY)
+    assert v.outcome == "not_eligible"
+
+
+def test_any_alternative_in_a_group_is_enough() -> None:
+    group = [Option("mathematics", 80), Option("maths_literacy", 50), Option("geography", 70)]
+    assert evaluate(THANDI, rules(groups=[group]), TODAY).outcome == "qualifies"
+
+
+def test_subject_not_taken_fails_its_group() -> None:
+    v = evaluate(THANDI, rules(groups=[[Option("accounting", 50)]]), TODAY)
+    assert v.checks[1].yours == "not taken"
+    assert v.outcome == "aps_only"
+
+
+def test_unknown_minimum_is_never_a_pass_or_fail() -> None:
+    v = evaluate(THANDI, rules(min_aps=None), TODAY)
+    assert v.checks[0].result == "unknown"
+    assert v.outcome == "qualifies_unconfirmed"
+
+
+def test_too_few_subjects_is_incomplete() -> None:
+    v = evaluate({"mathematics": 90, "english_hl": 90, "life_orientation": 90}, rules(), TODAY)
+    assert v.outcome == "incomplete"
+
+
+@pytest.mark.parametrize(
+    ("closes", "expected"),
+    [
+        (date(2026, 10, 22), "closed"),
+        (date(2026, 10, 23), "closing_soon"),
+        (date(2026, 11, 6), "closing_soon"),
+        (date(2026, 11, 7), "open"),
+        (None, "unknown"),
+    ],
+)
+def test_window_states(closes: date | None, expected: str) -> None:
+    assert evaluate(THANDI, rules(closes_on=closes), TODAY).window == expected
+
+
+def test_closed_window_wins_even_when_marks_qualify() -> None:
+    assert evaluate(THANDI, rules(closes_on=date(2026, 10, 1)), TODAY).outcome == "closed"
+
+
+def test_not_open_yet() -> None:
+    v = evaluate(THANDI, rules(opens_on=date(2026, 11, 1)), TODAY)
+    assert v.window == "not_open"
+
+
+# UCT's own worked examples from its 2027 NSC guidelines.
+UCT_EXAMPLE = {
+    "english_hl": 75, "isixhosa_fal": 70, "mathematics": 84, "physical_sciences": 86,
+    "cat": 79, "egd": 69, "life_orientation": 80,
+}  # fmt: skip
+
+
+def test_uct_600_matches_the_published_example() -> None:
+    assert score("uct_fps", UCT_EXAMPLE) == 463
+
+
+def test_uct_science_matches_the_published_example() -> None:
+    assert score("uct_science", UCT_EXAMPLE) == 633
+
+
+def test_uct_ignores_marks_under_40_and_always_counts_english() -> None:
+    marks = dict(UCT_EXAMPLE, english_hl=45, egd=39) | {"history": 90, "geography": 88}
+    # English 45 forced in; best five others: 90, 88, 86, 84, 79. EGD 39 scores 0.
+    assert score("uct_fps", marks) == 45 + 90 + 88 + 86 + 84 + 79

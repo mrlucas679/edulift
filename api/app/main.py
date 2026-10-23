@@ -18,8 +18,9 @@ from app.db import new_engine
 from app.errors import add_handlers, error_response
 from app.fake_auth import FakeAuth
 from app.logs import setup_logging
+from app.mail import ConsoleMailer, Mailer, SesMailer
 from app.request_id import new_id
-from app.routers import auth, health, me, reference
+from app.routers import aps, auth, health, marks, me, onboarding, reference, verdicts
 
 log = logging.getLogger("edulift.request")
 
@@ -47,10 +48,18 @@ def _auth(settings: Settings) -> Auth:
     return FakeAuth(send_code=print_code)
 
 
+def _mailer(settings: Settings) -> Mailer:
+    if settings.identity_provider == "cognito":
+        client = boto3.client("sesv2", region_name=settings.aws_region)
+        return SesMailer(client, settings.sender_email)
+    return ConsoleMailer()
+
+
 def create_app(
     settings: Settings | None = None,
     identity: Auth | None = None,
     engine: Engine | None = None,
+    mailer: Mailer | None = None,
 ) -> FastAPI:
     if settings is None:
         setup_logging()
@@ -67,6 +76,7 @@ def create_app(
     app.state.engine = engine or new_engine(settings.sqlalchemy_url)
     app.state.sessions = sessionmaker(bind=app.state.engine, expire_on_commit=False)
     app.state.identity = identity or _auth(settings)
+    app.state.mailer = mailer or _mailer(settings)
 
     add_handlers(app)
     app.add_middleware(
@@ -114,6 +124,15 @@ def create_app(
         )
         return response
 
-    for router in (health.router, auth.router, me.router, reference.router):
+    for router in (
+        health.router,
+        auth.router,
+        me.router,
+        reference.router,
+        aps.router,
+        verdicts.router,
+        onboarding.router,
+        marks.router,
+    ):
         app.include_router(router, prefix="/v1")
     return app
