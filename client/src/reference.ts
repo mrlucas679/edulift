@@ -110,3 +110,21 @@ export const useSubjectNames = () =>
     select: (rows) => new Map(rows.map((s) => [s.id, s.name])),
     staleTime: Infinity,
   });
+
+const previewRow = z.object({
+  institution_id: z.string(),
+  institution: z.string(),
+  scheme: z.string().nullable(),
+  score: z.number().nullable(),
+});
+export type PreviewRow = z.infer<typeof previewRow>;
+
+export const useSubjects = () =>
+  useQuery({
+    queryKey: ['subjects'],
+    queryFn: () => request('/v1/subjects', z.array(subject)),
+    staleTime: Infinity,
+  });
+
+export const previewAps = (marks: Record<string, number>) =>
+  request('/v1/aps/preview', z.array(previewRow), { method: 'POST', body: { marks } });
