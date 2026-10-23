@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 
 
 class Request(BaseModel):
@@ -178,3 +178,64 @@ class VerdictOut(BaseModel):
     window: str
     checks: list[CheckOut]
     note: str = "Based on published minimums. The institution decides."
+
+
+# Onboarding
+
+Purpose = Literal["account", "ai_explanations", "ai_writing", "reminders"]
+
+
+class ProfileIn(Request):
+    first_name: str | None = Field(default=None, max_length=60)
+    birth_date: date
+    province: str | None = Field(default=None, max_length=30)
+    certificate: Literal["nsc", "ieb", "sacai"] | None = None
+
+
+class ConsentRequest(Request):
+    purpose: Purpose
+    granted: bool
+
+
+class MeDetail(BaseModel):
+    id: str
+    status: Literal["onboarding", "pending_guardian", "active", "restricted"]
+    created_at: datetime
+    first_name: str | None
+    birth_date: date | None
+    consents: list[str]
+
+
+class GuardianRequestIn(Request):
+    guardian_name: str = Field(min_length=1, max_length=80)
+    guardian_email: EmailStr = Field(max_length=254)
+
+
+class GuardianView(BaseModel):
+    learner_first_name: str
+    guardian_name: str
+    optional_purposes: list[str]
+
+
+class GuardianDecision(Request):
+    decision: Literal["approve", "decline"]
+    relationship: Literal["parent", "legal_guardian"] | None = None
+    declaration: bool = False
+    purposes: list[Purpose] = []
+
+    @model_validator(mode="after")
+    def _approve_needs_declaration(self) -> "GuardianDecision":
+        if self.decision == "approve" and not (self.declaration and self.relationship):
+            raise ValueError("approving needs the declaration and your relationship")
+        return self
+
+
+class MarksIn(Request):
+    marks: dict[str, Annotated[int, Field(ge=0, le=100)]] = Field(min_length=1, max_length=15)
+
+
+class CheckRequest(Request):
+    # Leave out to use your saved marks.
+    marks: dict[str, Annotated[int, Field(ge=0, le=100)]] | None = Field(
+        default=None, max_length=15
+    )

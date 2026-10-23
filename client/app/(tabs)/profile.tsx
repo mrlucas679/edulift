@@ -2,12 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 
+import { useMe } from '../../src/account';
 import { ApiError, meResponse, request } from '../../src/api';
 import { useSession } from '../../src/session';
 import { Body, Button, ErrorNote, Heading, Loading, Screen } from '../../src/ui';
 
 export default function Profile() {
   const { status, accessToken, signOut } = useSession();
+  const details = useMe();
   const me = useQuery({
     queryKey: ['me', accessToken],
     queryFn: () => request('/v1/me', meResponse, { accessToken }),
@@ -37,6 +39,12 @@ export default function Profile() {
       <Heading>Profile</Heading>
       {me.isPending && <Loading />}
       {me.data && <Body muted>Account {me.data.id}</Body>}
+      {details.data && details.data.status !== 'active' && (
+        <Button label="Finish setting up" onPress={() => router.push('/onboarding')} />
+      )}
+      {details.data?.status === 'active' && (
+        <Button label="My choices" onPress={() => router.push('/onboarding')} />
+      )}
       {me.isError && !rejected && <ErrorNote error={me.error} />}
       <Button label="Sign out" onPress={signOut} />
     </Screen>

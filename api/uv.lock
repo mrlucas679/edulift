@@ -122,6 +122,9 @@ wheels = [
 cognito-idp = [
     { name = "mypy-boto3-cognito-idp" },
 ]
+sesv2 = [
+    { name = "mypy-boto3-sesv2" },
+]
 
 [[package]]
 name = "botocore"
@@ -265,7 +268,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "boto3-stubs", extra = ["cognito-idp"] },
+    { name = "boto3-stubs", extra = ["cognito-idp", "sesv2"] },
     { name = "httpx2" },
     { name = "mypy" },
     { name = "pytest" },
@@ -289,7 +292,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "boto3-stubs", extras = ["cognito-idp"] },
+    { name = "boto3-stubs", extras = ["cognito-idp", "sesv2"] },
     { name = "httpx2" },
     { name = "mypy" },
     { name = "pytest" },
@@ -510,6 +513,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/30/aa/92d39c3b291997cbaa10c98e567a2ad42ed9d5fd9bf1e1cdb011b14d2314/mypy_boto3_cognito_idp-1.43.108.tar.gz", hash = "sha256:7870f241049df1c807b10ac06d62fd751483802172435e297a36c897b7dee1de", size = 55876, upload-time = "2026-10-02T21:05:43.131Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cc/15/167d0a33aea4d9b638f56d5b8c7bd88d1da3fcde52b0865ee7241ca3d4de/mypy_boto3_cognito_idp-1.43.108-py3-none-any.whl", hash = "sha256:63b728a83a520cce327aabb33f8a82fdf5e923a637d1b4240375979ba57fdfde", size = 62201, upload-time = "2026-10-02T21:05:40.87Z" },
+]
+
+[[package]]
+name = "mypy-boto3-sesv2"
+version = "1.43.110"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/1a/ea/7c18bbb390a809c9d83283813d7562c4117cd13d39a3f6bcb3181b8ec67c/mypy_boto3_sesv2-1.43.110.tar.gz", hash = "sha256:72ac73bab29fc1bad5c185fdf505db6d5a5fd64b9d5e13f53e41457f43d840ff", size = 49850, upload-time = "2026-10-08T22:26:42.97Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d7/2b/06d3482009a7f51501910609d0a1c170dd4ad44e5e14d17a43aeffd833c4/mypy_boto3_sesv2-1.43.110-py3-none-any.whl", hash = "sha256:26ad1faf751aa0ef7c7e3ef65d171d9221b4b766f03d35460b7ffb4ddf780445", size = 55700, upload-time = "2026-10-08T22:26:40.447Z" },
 ]
 
 [[package]]

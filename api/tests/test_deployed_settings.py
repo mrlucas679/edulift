@@ -35,6 +35,7 @@ def test_demo_refuses_to_start_without_an_origin_secret() -> None:
             cognito_user_pool_id="pool",
             cognito_app_client_id="client",
             database_url="postgresql+psycopg://x@y/z",
+            sender_email="a@example.org",
             _env_file=None,
         )
 
@@ -57,3 +58,17 @@ def test_database_url_built_from_parts_escapes_the_password() -> None:
 def test_a_database_is_required() -> None:
     with pytest.raises(ValueError, match="DATABASE_URL"):
         Settings(edulift_env="test", identity_provider="fake", _env_file=None)
+
+
+def test_demo_needs_a_sender_and_https_link() -> None:
+    with pytest.raises(ValueError, match="SENDER_EMAIL"):
+        Settings(
+            edulift_env="demo",
+            identity_provider="cognito",
+            aws_region="af-south-1",
+            cognito_user_pool_id="pool",
+            cognito_app_client_id="client",
+            database_url="postgresql+psycopg://x@y/z",
+            origin_secret="s" * 40,
+            _env_file=None,
+        )

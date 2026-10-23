@@ -3,11 +3,21 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { toMarks, useMarks } from '../src/marks';
+import { saveMarks, useMe } from '../src/account';
 import { previewAps, useSubjects } from '../src/reference';
+import { useSession } from '../src/session';
 import { space, text, useColors } from '../src/theme';
 import { Body, Button, Card, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
 
 const MIN_SUBJECTS = 7; // six plus Life Orientation
+
+type Period = 'gr11_final' | 'gr12_june' | 'gr12_prelim' | 'gr12_final';
+const PERIODS: [Period, string][] = [
+  ['gr11_final', 'Grade 11 final'],
+  ['gr12_june', 'Grade 12 June'],
+  ['gr12_prelim', 'Grade 12 prelim'],
+  ['gr12_final', 'Grade 12 final'],
+];
 
 export default function ApsCalculator() {
   const colors = useColors();
@@ -15,6 +25,10 @@ export default function ApsCalculator() {
   const [rows, setRows] = useMarks();
   const [filter, setFilter] = useState('');
   const preview = useMutation({ mutationFn: previewAps });
+  const { accessToken } = useSession();
+  const me = useMe();
+  const [period, setPeriod] = useState<Period>('gr11_final');
+  const save = useMutation({ mutationFn: () => saveMarks(accessToken, period, toMarks(rows)) });
 
   const chosen = new Set(rows.map((r) => r.subject));
   const name = (id: string) => subjects.data?.find((s) => s.id === id)?.name ?? id;
@@ -97,6 +111,17 @@ export default function ApsCalculator() {
           </Body>
         </Card>
       ))}
+      {me.data?.status === 'active' && ready && (
+        <>
+          <Title>Save these marks</Title>
+          {PERIODS.map(([value, label]) => (
+            <Button key={value} label={period === value ? `✓ ${label}` : label} onPress={() => setPeriod(value)} />
+          ))}
+          <Button label="Save to my account" onPress={() => save.mutate()} busy={save.isPending} />
+          <ErrorNote error={save.error} />
+          {save.isSuccess && <Body muted>Saved.</Body>}
+        </>
+      )}
       {preview.data && (
         <Body muted>
           Each university counts marks differently. A score is a guide; the institution decides.
