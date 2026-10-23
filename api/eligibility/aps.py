@@ -37,9 +37,37 @@ def wits7(marks: dict[str, int]) -> int:
     return lo + sum(sorted(others, reverse=True)[:6])
 
 
+# UCT: 2027 NSC guidelines for admission (uct.ac.za), checked 2026-10-23.
+UCT_MIN_PERCENT = 40
+ENGLISH = ("english_hl", "english_fal")
+
+
+def _uct_aps(marks: dict[str, int], required: tuple[str, ...]) -> int:
+    """Best six percentages including English and the required subjects; under 40% scores 0."""
+    pts = {s: (p if p >= UCT_MIN_PERCENT else 0) for s, p in without_lo(marks).items()}
+    english = max((s for s in ENGLISH if s in pts), key=lambda s: pts[s], default=None)
+    must = [s for s in (english, *required) if s in pts]
+    rest = sorted((v for s, v in pts.items() if s not in must and s not in ENGLISH), reverse=True)
+    return sum(pts[s] for s in must) + sum(rest[: 6 - len(must)])
+
+
+def uct600(marks: dict[str, int]) -> int:
+    """Commerce, Engineering, Humanities and Law: the FPS is the APS, out of 600."""
+    return _uct_aps(marks, ())
+
+
+def uct_science(marks: dict[str, int]) -> int:
+    """Science: APS with Maths and Physical Sciences, plus both again. Out of 800."""
+    core = ("mathematics", "physical_sciences")
+    bonus = sum(marks[s] for s in core if marks.get(s, 0) >= UCT_MIN_PERCENT)
+    return _uct_aps(marks, core) + bonus
+
+
 SCHEMES: dict[str, Callable[[dict[str, int]], int]] = {
     "standard_best6": best6,
     "wits_best7": wits7,
+    "uct_fps": uct600,
+    "uct_science": uct_science,
 }
 
 

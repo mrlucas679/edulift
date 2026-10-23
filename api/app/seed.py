@@ -118,7 +118,7 @@ class InstitutionIn(Strict):
     route: Literal["direct", "cao", "cas"]
     fee_cents: int | None = None
     max_choices: int | None = None
-    aps_scheme: Literal["standard_best6", "wits_best7", "uct_fps"] | None = None
+    aps_scheme: Literal["standard_best6", "wits_best7", "uct_fps", "uct_science"] | None = None
     source: str
     cycles: list[CycleIn] = []
     programmes: list[ProgrammeIn] = []

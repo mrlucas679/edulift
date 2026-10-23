@@ -36,7 +36,7 @@ def test_best6_ignores_life_orientation_and_the_seventh_subject() -> None:
 
 
 def test_unverified_scheme_gives_no_score() -> None:
-    assert score("uct_fps", THANDI) is None
+    assert score("uct_health", THANDI) is None  # needs NBT results we don't collect
     assert score(None, THANDI) is None
 
 
@@ -139,3 +139,24 @@ def test_closed_window_wins_even_when_marks_qualify() -> None:
 def test_not_open_yet() -> None:
     v = evaluate(THANDI, rules(opens_on=date(2026, 11, 1)), TODAY)
     assert v.window == "not_open"
+
+
+# UCT's own worked examples from its 2027 NSC guidelines.
+UCT_EXAMPLE = {
+    "english_hl": 75, "isixhosa_fal": 70, "mathematics": 84, "physical_sciences": 86,
+    "cat": 79, "egd": 69, "life_orientation": 80,
+}  # fmt: skip
+
+
+def test_uct_600_matches_the_published_example() -> None:
+    assert score("uct_fps", UCT_EXAMPLE) == 463
+
+
+def test_uct_science_matches_the_published_example() -> None:
+    assert score("uct_science", UCT_EXAMPLE) == 633
+
+
+def test_uct_ignores_marks_under_40_and_always_counts_english() -> None:
+    marks = dict(UCT_EXAMPLE, english_hl=45, egd=39) | {"history": 90, "geography": 88}
+    # English 45 forced in; best five others: 90, 88, 86, 84, 79. EGD 39 scores 0.
+    assert score("uct_fps", marks) == 45 + 90 + 88 + 86 + 84 + 79
