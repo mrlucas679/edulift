@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
+import { Linking, Pressable } from 'react-native';
 
 import { toMarks, useMarks } from '../../src/marks';
 import { checkProgramme, useProgramme, useSubjectNames, type Verdict } from '../../src/reference';
@@ -28,6 +29,11 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
           <Body>{RESULT[c.result]}</Body>
           <Body muted>Needs: {c.required}</Body>
           <Body muted>Yours: {c.yours}</Body>
+          <Pressable accessibilityRole="link" onPress={() => Linking.openURL(c.source_url)}>
+            <Body muted>
+              Source: {c.source_url} · {c.checked_on ? `checked ${c.checked_on}` : 'date not confirmed'}
+            </Body>
+          </Pressable>
         </Card>
       ))}
       <Body muted>{verdict.note}</Body>
