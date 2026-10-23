@@ -5,6 +5,7 @@ import { Linking, Pressable } from 'react-native';
 import { toMarks, useMarks } from '../../src/marks';
 import { checkProgramme, useProgramme, useSubjectNames, type Verdict } from '../../src/reference';
 import { useAlternatives } from '../../src/alternatives';
+import { useSaved, useStartApplication, useToggleSaved } from '../../src/tracking';
 import { usePlan, useSavePlan } from '../../src/plan';
 import { useSession } from '../../src/session';
 import { Body, Button, Card, ErrorNote, Heading, QueryState, Screen, SourceLine, Title } from '../../src/ui';
@@ -42,6 +43,10 @@ export default function ProgrammeScreen() {
   const marks = toMarks(rows);
   const check = useMutation({ mutationFn: () => checkProgramme(id, marks, accessToken) });
   const alternatives = useAlternatives(id, accessToken);
+  const saved = useSaved(accessToken);
+  const toggleSaved = useToggleSaved(accessToken);
+  const startApplication = useStartApplication(accessToken);
+  const isSaved = saved.data?.some((s) => s.target_id === id) ?? false;
   const plan = usePlan(accessToken);
   const savePlan = useSavePlan(accessToken);
   const onPlan = plan.data?.targets.some((t) => t.programme_id === id) ?? false;
@@ -123,6 +128,24 @@ export default function ProgrammeScreen() {
 
             {status === 'signed-in' && (
               <>
+                <Title>Save and track</Title>
+                <Button
+                  label={isSaved ? 'Remove from saved' : 'Save'}
+                  busy={toggleSaved.isPending}
+                  onPress={() => toggleSaved.mutate({ kind: 'programme', id, on: !isSaved })}
+                />
+                <Button
+                  label="Track application"
+                  busy={startApplication.isPending}
+                  onPress={() =>
+                    startApplication.mutate(
+                      { target_kind: 'programme', target_id: id },
+                      { onSuccess: (app) => router.push(`/application/${app.id}`) },
+                    )
+                  }
+                />
+                <ErrorNote error={toggleSaved.error ?? startApplication.error} />
+
                 <Title>My plan</Title>
                 {onPlan ? (
                   <Body muted>This programme is on your plan.</Body>

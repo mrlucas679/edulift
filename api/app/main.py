@@ -22,6 +22,7 @@ from app.mail import ConsoleMailer, Mailer, SesMailer
 from app.request_id import new_id
 from app.routers import (
     alternatives,
+    applications,
     aps,
     auth,
     health,
@@ -31,6 +32,7 @@ from app.routers import (
     opportunities,
     plan,
     reference,
+    saved,
     verdicts,
 )
 
@@ -148,6 +150,8 @@ def create_app(
         plan.router,
         alternatives.router,
         opportunities.router,
+        saved.router,
+        applications.router,
     ):
         app.include_router(router, prefix="/v1")
     return app

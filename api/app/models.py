@@ -11,6 +11,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
     func,
 )
 from sqlalchemy.dialects.postgresql import JSONB
@@ -227,3 +228,53 @@ class Opportunity(Base):
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
 
     source: Mapped[Source] = relationship(lazy="joined")
+
+
+class SavedItem(Base):
+    __tablename__ = "saved_items"
+    __table_args__ = (UniqueConstraint("user_id", "target_kind", "target_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    target_kind: Mapped[str] = mapped_column(String(20))  # programme, opportunity
+    target_id: Mapped[str] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class Application(Base):
+    __tablename__ = "applications"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    target_kind: Mapped[str] = mapped_column(String(20))
+    target_id: Mapped[str] = mapped_column(String(80))
+    status: Mapped[str] = mapped_column(String(20), server_default="planning")
+    external_reference: Mapped[str | None] = mapped_column(String(60))
+    submitted_on: Mapped[date | None] = mapped_column(Date)
+    offer_deadline: Mapped[date | None] = mapped_column(Date)
+    notes: Mapped[str] = mapped_column(Text, server_default="")
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class ChecklistItem(Base):
+    __tablename__ = "checklist_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    application_id: Mapped[int] = mapped_column(
+        ForeignKey("applications.id", ondelete="CASCADE"), index=True
+    )
+    label: Mapped[str] = mapped_column(Text)
+    done: Mapped[bool] = mapped_column(Boolean, server_default="false")
+    sort_order: Mapped[int] = mapped_column(Integer)
+
+
+class ReminderSent(Base):
+    __tablename__ = "reminders_sent"
+    __table_args__ = (UniqueConstraint("user_id", "target_kind", "target_id", "threshold_days"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    target_kind: Mapped[str] = mapped_column(String(20))
+    target_id: Mapped[str] = mapped_column(String(80))
+    threshold_days: Mapped[int] = mapped_column(Integer)
+    sent_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

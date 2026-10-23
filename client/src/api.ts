@@ -35,7 +35,7 @@ export const meResponse = z.object({
 });
 export type Me = z.infer<typeof meResponse>;
 
-type Options = { method?: 'GET' | 'POST' | 'PUT'; body?: unknown; accessToken?: string | null };
+type Options = { method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'; body?: unknown; accessToken?: string | null };
 
 export async function request<T>(path: string, schema: z.ZodType<T>, options: Options = {}) {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
