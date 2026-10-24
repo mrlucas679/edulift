@@ -182,7 +182,7 @@ const batchRow = z.object({ programme_id: z.string(), outcome: z.string() });
 export function useBatchChecks(accessToken: string | null) {
   return useQuery({
     queryKey: ['batch-checks', accessToken],
-    queryFn: () => request('/v1/programmes/checks', z.array(batchRow), { method: 'POST', body: {}, accessToken }),
+    queryFn: () => request('/v1/programmes/me/outcomes', z.array(batchRow), { method: 'POST', body: {}, accessToken }),
     enabled: accessToken !== null,
     retry: false,
   });

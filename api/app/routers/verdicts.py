@@ -47,7 +47,7 @@ class BatchOut(BaseModel):
     outcome: str
 
 
-@router.post("/checks")
+@router.post("/me/outcomes")
 def check_all(body: CheckRequest, me: SignedIn, db: Db, engine: DbEngine) -> list[BatchOut]:
     """One verdict per programme, for the Study list badges. Marks are not stored."""
     rate_limit.check(engine, "check:user", me.subject, limit=60, window_seconds=60)
