@@ -33,6 +33,7 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
       {verdict.checks.some((c) => c.name.startsWith('nbt_') && c.result === 'unknown') && (
         <Button label="Add my NBT results to check this" onPress={() => router.push('/my-marks')} />
       )}
+      <Button label="Why this result" onPress={() => router.push(`/why/${verdict.programme_id}`)} />
       <Body muted>{verdict.note}</Body>
     </>
   );
