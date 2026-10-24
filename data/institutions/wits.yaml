@@ -920,3 +920,139 @@ programmes:
   - - subject: physical_sciences
       min: 70
   notes: '3 yrs. Waitlisted, subject to place availability: APS 40-42.'
+- id: wits.bachelor-of-arts-part-time
+  name: Bachelor of Arts (Part-Time)
+  qualification: degree
+  field: humanities
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - &id002
+    - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: Part-time. 3 yrs. Intake in January and July, opening 1 March and closing
+    31 May. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-arts-with-law-part-time
+  name: Bachelor of Arts with Law (Part-Time)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - - subject: mathematics
+      min: 40
+    - subject: maths_literacy
+      min: 50
+  notes: Part-time. 3 yrs. Mathematics level 3 or Maths Literacy level 4. Intake in
+    January and July. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-commerce-part-time
+  name: Bachelor of Commerce (Part-Time)
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 38
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - &id003
+    - subject: mathematics
+      min: 60
+  notes: Part-time. 3 yrs.  Part-time students are not eligible for NSFAS or campus
+    residence.
+- id: wits.bachelor-of-commerce-with-law-part-time
+  name: Bachelor of Commerce with Law (Part-Time)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  notes: Part-time. 3 yrs.  Part-time students are not eligible for NSFAS or campus
+    residence.
+- id: wits.bachelor-of-science-in-engineering-in-chemical-engineering-part-time
+  name: Bachelor of Science in Engineering in Chemical Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - &id004
+    - subject: physical_sciences
+      min: 60
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-civil-engineering-part-time
+  name: Bachelor of Science in Engineering in Civil Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-electrical-engineering-part-time
+  name: Bachelor of Science in Engineering in Electrical Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-aeronautical-engineering-part-ti
+  name: Bachelor of Science in Engineering in Aeronautical Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-industrial-engineering-part-time
+  name: Bachelor of Science in Engineering in Industrial Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-mechanical-engineering-part-time
+  name: Bachelor of Science in Engineering in Mechanical Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
