@@ -51,7 +51,7 @@ export default function SignIn() {
         </Pressable>
       </Card>
       <Body muted>Using a shared or school computer? Sign out when you’re done.</Body>
-      <Pressable accessibilityRole="link" onPress={() => router.push('/privacy')} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
+      <Pressable accessibilityRole="link" onPress={() => router.push('/how-we-use')} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>How we use your data</Text>
       </Pressable>
     </Screen>

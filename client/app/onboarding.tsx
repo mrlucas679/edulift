@@ -176,8 +176,17 @@ function Guardian() {
   );
 }
 
+const PURPOSE_TITLES: Record<string, string> = {
+  account: 'Save my account',
+  ai_explanations: 'Explain my results with AI',
+  ai_writing: 'Help me write a CV or letter',
+  reminders: 'Deadline reminders by email',
+  nbt_results: 'Use my NBT results',
+};
+
 function Consents({ me }: { me: MeDetail }) {
   const { accessToken } = useSession();
+  const colors = useColors();
   const queryClient = useQueryClient();
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -198,7 +207,8 @@ function Consents({ me }: { me: MeDetail }) {
 
   return (
     <>
-      <Heading>Your choices</Heading>
+      <Heading>You decide what we use</Heading>
+      <Body muted>Change any of these later in Settings.</Body>
       {me.reconfirm.length > 0 && (
         <>
           <Body>Your guardian made these choices when you were 17. Now you’re 18, so please confirm each one yourself.</Body>
@@ -224,17 +234,24 @@ function Consents({ me }: { me: MeDetail }) {
         <Card key={purpose}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <View style={{ flex: 1 }}>
-              <Body>{text}</Body>
+              <Title>{PURPOSE_TITLES[purpose] ?? purpose}</Title>
+              {purpose === 'account' && <Body muted>Needed to save</Body>}
+              <Body muted>{text}</Body>
             </View>
-            <Switch
-              accessibilityLabel={text}
-              value={me.consents.includes(purpose)}
-              disabled={pending !== null}
-              onValueChange={(on) => toggle(purpose, on)}
-            />
+            {purpose !== 'account' && (
+              <Switch
+                accessibilityLabel={PURPOSE_TITLES[purpose] ?? purpose}
+                value={me.consents.includes(purpose)}
+                disabled={pending !== null}
+                onValueChange={(on) => toggle(purpose, on)}
+              />
+            )}
           </View>
         </Card>
       ))}
+      <Pressable accessibilityRole="link" onPress={() => router.push('/privacy')} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>Read the full privacy notice</Text>
+      </Pressable>
       <ErrorNote error={error} />
     </>
   );
