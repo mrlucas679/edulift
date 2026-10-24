@@ -101,6 +101,8 @@ export default function PlanScreen() {
         <Heading>My plan</Heading>
         <Body muted>Sign in to keep up to three programmes and see where you stand on each.</Body>
         <Button label="Sign in" onPress={() => router.push('/sign-in')} />
+        <Button label="Save my plan" onPress={() => router.push('/save-plan')} />
+        <Button label="Save my plan" onPress={() => router.push('/save-plan')} />
       </Screen>
     );
   }
