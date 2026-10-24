@@ -4,7 +4,7 @@ import pytest
 
 from eligibility.aps import best6, score
 from eligibility.marks import level
-from eligibility.verdict import Band, Option, Rules, evaluate
+from eligibility.verdict import Band, Nbt, Option, Rules, evaluate
 
 TODAY = date(2026, 10, 23)
 
@@ -233,4 +233,66 @@ def test_wps_band_is_unconfirmed_not_a_fail() -> None:
              "life_sciences": 60, "isizulu_fal": 60}  # fmt: skip
     v = evaluate(marks, rules, TODAY)
     assert v.score == 410
+    assert v.outcome == "qualifies_unconfirmed"
+
+
+def _nbt_rules() -> Rules:
+    return Rules(
+        min_aps=None, scheme="uct_fps",
+        groups=[[Option("mathematics", 60)]],
+        nbt=[[Nbt("AL", "upper_intermediate")], [Nbt("QL", "upper_intermediate")]],
+    )  # fmt: skip
+
+
+def test_missing_nbt_is_unconfirmed_never_a_fail() -> None:
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 80, "geography": 80,
+             "life_sciences": 80, "isizulu_fal": 80}  # fmt: skip
+    v = evaluate(marks, _nbt_rules(), TODAY)
+    assert v.outcome == "qualifies_unconfirmed"
+    assert [c.result for c in v.checks[1:]] == ["pass", "unknown", "unknown"]
+
+
+def test_failed_subject_still_fails_when_nbt_is_unknown() -> None:
+    marks = {"english_hl": 80, "mathematics": 40, "physical_sciences": 80, "geography": 80,
+             "life_sciences": 80, "isizulu_fal": 80}  # fmt: skip
+    assert evaluate(marks, _nbt_rules(), TODAY).outcome == "aps_only"
+
+
+def test_nbt_rule_reads_as_text() -> None:
+    v = evaluate(
+        dict.fromkeys(
+            [
+                "english_hl",
+                "mathematics",
+                "physical_sciences",
+                "geography",
+                "life_sciences",
+                "isizulu_fal",
+            ],
+            80,
+        ),
+        _nbt_rules(),
+        TODAY,
+    )
+    assert v.checks[-1].required == "NBT QL upper_intermediate"
+
+
+def test_fps_nbt_band_cannot_be_judged() -> None:
+    rules = Rules(
+        min_aps=None,
+        scheme="uct_fps",
+        bands=[Band("guaranteed", 500, [[Option("mathematics", 80)]], metric="FPS_NBT")],
+    )
+    marks = dict.fromkeys(
+        [
+            "english_hl",
+            "mathematics",
+            "physical_sciences",
+            "geography",
+            "life_sciences",
+            "isizulu_fal",
+        ],
+        90,
+    )
+    v = evaluate(marks, rules, TODAY)
     assert v.outcome == "qualifies_unconfirmed"

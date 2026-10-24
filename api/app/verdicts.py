@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app import models as m
 from app.routers.aps import UnknownSubjectError
 from app.schemas import CheckOut, VerdictOut
-from eligibility.verdict import Band, Check, Option, Rules, evaluate
+from eligibility.verdict import Band, Check, Nbt, Option, Rules, evaluate
 
 
 def subject_names(db: Session, marks: dict[str, int]) -> dict[str, str]:
@@ -41,6 +41,7 @@ def programme_verdict(
             score=b.score,
             applies_to=b.applies_to,
             groups=[[Option(o["subject"], o["min"]) for o in g] for g in b.requirements],
+            nbt=_nbt_groups(b.nbt),
         )
         for b in programme.fps_bands
     ]
@@ -50,6 +51,7 @@ def programme_verdict(
         groups=list(groups.values()),
         selection=programme.selection,
         bands=bands,
+        nbt=_nbt_groups(programme.nbt),
         opens_on=cycle.opens_on if cycle else None,
         closes_on=programme.closes_on or (cycle.closes_on if cycle else None),
     )
@@ -62,6 +64,10 @@ def programme_verdict(
         window=v.window,
         checks=[_with_source(c, names, programme.source) for c in v.checks],
     )
+
+
+def _nbt_groups(groups: list[list[dict[str, str]]]) -> list[list[Nbt]]:
+    return [[Nbt(n["component"], n["level"]) for n in g] for g in groups]
 
 
 def _with_source(check: Check, names: dict[str, str], source: m.Source) -> CheckOut:

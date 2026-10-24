@@ -118,6 +118,7 @@ class Programme(Base):
     field_id: Mapped[str] = mapped_column(ForeignKey("fields.id"))
     min_aps: Mapped[int | None] = mapped_column(Integer)
     aps_scheme: Mapped[str | None] = mapped_column(String(30))
+    nbt: Mapped[list[Any]] = mapped_column(JSONB, default=list)  # [[{"component", "level"}]]
     selection: Mapped[bool] = mapped_column(Boolean, default=False)
     closes_on: Mapped[date | None] = mapped_column(Date)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
@@ -148,11 +149,12 @@ class FpsBand(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     programme_id: Mapped[str] = mapped_column(ForeignKey("programmes.id", ondelete="CASCADE"))
     label: Mapped[str] = mapped_column(String(20))
-    metric: Mapped[str] = mapped_column(String(3))
+    metric: Mapped[str] = mapped_column(String(7))
     score: Mapped[int] = mapped_column(Integer)
     applies_to: Mapped[str] = mapped_column(String(20))
     # [[{"subject": ..., "min": ...}], ...]; each inner list is one group of alternatives
     requirements: Mapped[list[Any]] = mapped_column(JSONB, default=list)
+    nbt: Mapped[list[Any]] = mapped_column(JSONB, default=list)
 
 
 class Handoff(Base):

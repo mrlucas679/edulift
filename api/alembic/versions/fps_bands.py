@@ -19,15 +19,20 @@ depends_on: str | Sequence[str] | None = None
 
 def upgrade() -> None:
     op.add_column("programmes", sa.Column("aps_scheme", sa.String(length=30), nullable=True))
+    op.add_column(
+        "programmes",
+        sa.Column("nbt", postgresql.JSONB(), nullable=False, server_default="[]"),
+    )
     op.create_table(
         "fps_bands",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("programme_id", sa.String(length=80), nullable=False),
         sa.Column("label", sa.String(length=20), nullable=False),
-        sa.Column("metric", sa.String(length=3), nullable=False),
+        sa.Column("metric", sa.String(length=7), nullable=False),
         sa.Column("score", sa.Integer(), nullable=False),
         sa.Column("applies_to", sa.String(length=20), nullable=False),
         sa.Column("requirements", postgresql.JSONB(), nullable=False),
+        sa.Column("nbt", postgresql.JSONB(), nullable=False, server_default="[]"),
         sa.ForeignKeyConstraint(["programme_id"], ["programmes.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -35,4 +40,5 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     op.drop_table("fps_bands")
+    op.drop_column("programmes", "nbt")
     op.drop_column("programmes", "aps_scheme")

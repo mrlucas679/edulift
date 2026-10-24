@@ -24,6 +24,15 @@ class Option:
     min_percent: int
 
 
+NBT_LEVELS = ("basic", "intermediate", "upper_intermediate", "proficient")
+
+
+@dataclass(frozen=True)
+class Nbt:
+    component: str  # "AL", "QL" or "MAT"
+    level: str  # one of NBT_LEVELS
+
+
 @dataclass(frozen=True)
 class Band:
     label: str
@@ -31,6 +40,7 @@ class Band:
     groups: list[list[Option]]
     applies_to: str = "all"  # "targeted_redress" bands are not judged yet
     metric: str = "FPS"  # "WPS" needs the disadvantage factor, which we do not collect
+    nbt: list[list[Nbt]] = field(default_factory=list)  # we hold no NBT results yet
 
 
 @dataclass(frozen=True)
@@ -42,6 +52,7 @@ class Rules:
     opens_on: date | None = None
     closes_on: date | None = None
     bands: list[Band] = field(default_factory=list)  # highest score first
+    nbt: list[list[Nbt]] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -70,6 +81,7 @@ def evaluate(marks: dict[str, int], rules: Rules, today: date) -> Verdict:
         return _banded(aps, marks, rules, window)
     checks = [_score_check(aps, rules.min_aps)]
     checks += [_group_check(i, g, marks) for i, g in enumerate(rules.groups, start=1)]
+    checks += [_nbt_check(i, g) for i, g in enumerate(rules.nbt, start=1)]
     return Verdict(_outcome(checks, rules.selection, window), aps, checks, window)
 
 
@@ -99,6 +111,15 @@ def _describe(group: list[Option]) -> str:
     return " or ".join(f"{o.subject} {o.min_percent}%" for o in group)
 
 
+def _describe_nbt(group: list[Nbt]) -> str:
+    return " or ".join(f"NBT {n.component} {n.level}" for n in group)
+
+
+def _nbt_check(n: int, group: list[Nbt]) -> Check:
+    # Never pass or fail: we hold no NBT results, so the rule stays unconfirmed.
+    return Check(f"nbt_{n}", _describe_nbt(group), "no NBT result", "unknown")
+
+
 def _group_check(n: int, group: list[Option], marks: dict[str, int]) -> Check:
     required = _describe(group)
     taken = [o for o in group if o.subject in marks]
@@ -114,11 +135,19 @@ def _banded(aps: int | None, marks: dict[str, int], rules: Rules, window: Window
         if band.applies_to != "all":
             continue
         parts = [f"{band.metric} {band.score}"] + [_describe(g) for g in band.groups]
-        if band.metric != "FPS":
-            checks.append(Check(band.label, " and ".join(parts), f"FPS {aps}", "unknown"))
-            continue
-        met = aps >= band.score and all(_group_met(g, marks) for g in band.groups)
-        result: Result = "pass" if met else "fail"
+        parts += [_describe_nbt(g) for g in band.nbt]
+        groups_met = all(_group_met(g, marks) for g in band.groups)
+        result: Result
+        if band.metric == "FPS_NBT":  # score includes NBT points, so it cannot be computed
+            result = "unknown"
+        elif not groups_met:
+            result = "fail"
+        elif band.metric == "WPS":  # adds the disadvantage factor, so a low FPS may still reach it
+            result = "unknown"
+        elif aps < band.score:
+            result = "fail"
+        else:
+            result = "unknown" if band.nbt else "pass"  # NBT results are not held
         checks.append(Check(band.label, " and ".join(parts), f"FPS {aps}", result))
     if window == "closed":
         return Verdict("closed", aps, checks, window)
@@ -140,6 +169,6 @@ def _outcome(checks: list[Check], selection: bool, window: str) -> Outcome:
         return "not_eligible" if groups_fail else "subjects_only"
     if groups_fail:
         return "aps_only"
-    if score_check.result == "unknown":
+    if score_check.result == "unknown" or any(c.result == "unknown" for c in groups):
         return "qualifies_unconfirmed"
     return "qualifies_selection" if selection else "qualifies"

@@ -118,12 +118,18 @@ class OptionIn(Strict):
 FPS_SCHEMES = {"uct_fps", "uct_science"}
 
 
+class NbtIn(Strict):
+    component: Literal["AL", "QL", "MAT"]
+    level: Literal["basic", "intermediate", "upper_intermediate", "proficient"]
+
+
 class BandIn(Strict):
     label: Literal["guaranteed", "likely", "possible"]
-    metric: Literal["FPS", "WPS"] = "FPS"
+    metric: Literal["FPS", "WPS", "FPS_NBT"] = "FPS"
     score: int
     applies_to: Literal["all", "targeted_redress"] = "all"
     requirements: list[list[OptionIn]] = []
+    nbt: list[list[NbtIn]] = []
 
 
 class ProgrammeIn(Strict):
@@ -140,6 +146,7 @@ class ProgrammeIn(Strict):
     # Each inner list is one group of alternatives; every group must be met.
     requirements: list[list[OptionIn]] = []
     fps_bands: list[BandIn] = []
+    nbt: list[list[NbtIn]] = []
 
 
 class InstitutionIn(Strict):
@@ -298,6 +305,7 @@ def _write_institution(db: Session, inst: InstitutionIn) -> None:
                     score=band.score,
                     applies_to=band.applies_to,
                     requirements=[[o.model_dump() for o in g] for g in band.requirements],
+                    nbt=[[n.model_dump() for n in g] for g in band.nbt],
                 )
             )
 
