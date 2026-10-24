@@ -870,10 +870,10 @@ programmes:
   min_aps: 33
   requirements:
   - - subject: mathematics
-      min: 60
+      min: 70
   - *id021
   - *id020
-  notes: CAO KN-W-B5F. 4 yrs. Mathematics at level 6.
+  notes: CAO KN-W-B5F. 4 yrs. Mathematics at level 6 (70%).
 - id: ukzn.bachelor-of-business-science-in-investment-science
   name: Bachelor of Business Science in Investment Science
   qualification: degree
