@@ -13,6 +13,7 @@ export default function PrivacyScreen() {
       <Body>Download your data from your profile, or delete your account there. Deleting removes your data and your sign-in.</Body>
       <Title>Reminders</Title>
       <Body>We email you only if you choose reminders, and only before a deadline you saved or applied for.</Body>
+      <Body>NBT levels are optional and off until you choose to share them. We use them only to check admission rules that need them, we never send them to an AI service, and removing them or switching the option off deletes them.</Body>
     </Screen>
   );
 }

@@ -30,6 +30,9 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
           </Pressable>
         </Card>
       ))}
+      {verdict.checks.some((c) => c.name.startsWith('nbt_') && c.result === 'unknown') && (
+        <Button label="Add my NBT results to check this" onPress={() => router.push('/my-marks')} />
+      )}
       <Body muted>{verdict.note}</Body>
     </>
   );
