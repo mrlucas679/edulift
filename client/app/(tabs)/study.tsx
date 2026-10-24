@@ -51,8 +51,8 @@ export default function Study() {
     <Screen>
       <Heading>Study</Heading>
       <Card>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ flex: 1 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: space.sm }}>
+          <View style={{ flexGrow: 1, flexShrink: 1, minWidth: 180 }}>
             <Title>APS 32 at most universities</Title>
             <Body muted>Wits and UCT count differently</Body>
           </View>
