@@ -1,6 +1,7 @@
 import { App, Tags } from 'aws-cdk-lib';
 
 import { BudgetStack } from '../lib/budget-stack';
+import { EdgeStack } from '../lib/edge-stack';
 import { EduLiftStack } from '../lib/edulift-stack';
 import { SenderStack } from '../lib/sender-stack';
 
@@ -19,11 +20,19 @@ const senderEmail = required('senderEmail');
 // Deploy and verify the sender before the main stack.
 new SenderStack(app, 'EduLiftSender', { env: { account, region }, senderEmail });
 
+// WAF for CloudFront must live in us-east-1.
+const edge = new EdgeStack(app, 'EduLiftEdge', {
+  env: { account, region: 'us-east-1' },
+  crossRegionReferences: true,
+});
+
 new EduLiftStack(app, 'EduLift', {
   env: { account, region },
   senderEmail,
   appUrl: app.node.tryGetContext('appUrl'),
   githubRepo: 'mrlucas679/edulift',
+  webAclArn: edge.webAclArn,
+  crossRegionReferences: true,
   terminationProtection: true,
 });
 
