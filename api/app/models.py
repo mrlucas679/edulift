@@ -256,7 +256,9 @@ class PlanTarget(Base):
     user_id: Mapped[str] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
-    programme_id: Mapped[str] = mapped_column(ForeignKey("programmes.id"), primary_key=True)
+    programme_id: Mapped[str] = mapped_column(
+        ForeignKey("programmes.id", ondelete="CASCADE"), primary_key=True
+    )
     position: Mapped[int] = mapped_column(Integer)
 
 
