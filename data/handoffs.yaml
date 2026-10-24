@@ -15,7 +15,7 @@
   source: sayouth-site
 - id: seta-agriseta
   name: AgriSETA
-  purpose: Learnerships and skills programmes for the agricultural sector sector.
+  purpose: Learnerships and skills programmes for the agricultural sector.
   url: https://www.agriseta.co.za/
   source: seta-agriseta
 - id: seta-bankseta
