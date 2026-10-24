@@ -72,12 +72,38 @@ def uct_health(marks: dict[str, int]) -> int:
     return _uct_aps(marks, ("mathematics", "physical_sciences"))
 
 
+# UKZN: undergraduate prospectus 2027, p.17. Eight points for 90-100%. Six or fewer subjects
+# count in full. With more, English, Maths (or Maths Literacy) and the best four others count.
+UKZN_EXCELLENCE_FROM = 90
+UKZN_EXCELLENCE_POINTS = 8
+UKZN_COUNT_ALL_UP_TO = 6
+UKZN_OTHERS = 4
+
+
+def _ukzn_points(percent: int) -> int:
+    return UKZN_EXCELLENCE_POINTS if percent >= UKZN_EXCELLENCE_FROM else level(percent)
+
+
+def ukzn_aps(marks: dict[str, int]) -> int:
+    pts = {s: _ukzn_points(p) for s, p in without_lo(marks).items()}
+    if len(pts) <= UKZN_COUNT_ALL_UP_TO:
+        return sum(pts.values())
+    english = max((pts[s] for s in ENGLISH if s in pts), default=0)
+    maths = max((pts[s] for s in ("mathematics", "maths_literacy") if s in pts), default=0)
+    rest = sorted(
+        (v for s, v in pts.items() if s not in (*ENGLISH, "mathematics", "maths_literacy")),
+        reverse=True,
+    )
+    return english + maths + sum(rest[:4])
+
+
 SCHEMES: dict[str, Callable[[dict[str, int]], int]] = {
     "standard_best6": best6,
     "wits_best7": wits7,
     "uct_fps": uct600,
     "uct_science": uct_science,
     "uct_health": uct_health,
+    "ukzn_aps": ukzn_aps,
 }
 
 
