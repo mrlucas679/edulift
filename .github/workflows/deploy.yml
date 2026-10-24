@@ -1,0 +1,66 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: af-south-1
+
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Deploy the stacks
+        working-directory: infra
+        run: |
+          npm ci --ignore-scripts
+          npx cdk deploy --all --require-approval never \
+            -c senderEmail=${{ vars.SENDER_EMAIL }} \
+            -c budgetEmail=${{ vars.BUDGET_EMAIL }} \
+            -c appUrl=${{ vars.APP_URL }}
+
+      - name: Read the site outputs
+        id: out
+        run: |
+          site=$(aws cloudformation describe-stacks --stack-name EduLift \
+            --query "Stacks[0].Outputs[?OutputKey=='SiteUrl'].OutputValue" --output text)
+          bucket=$(aws cloudformation describe-stacks --stack-name EduLift \
+            --query "Stacks[0].Outputs[?OutputKey=='SiteBucket'].OutputValue" --output text)
+          dist=$(aws cloudformation describe-stacks --stack-name EduLift \
+            --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" --output text)
+          echo "site=$site" >> "$GITHUB_OUTPUT"
+          echo "bucket=$bucket" >> "$GITHUB_OUTPUT"
+          echo "dist=$dist" >> "$GITHUB_OUTPUT"
+
+      - name: Build the web app against the deployed API
+        working-directory: client
+        env:
+          EXPO_PUBLIC_API_URL: ${{ steps.out.outputs.site }}
+        run: |
+          npm ci --ignore-scripts
+          npx expo export -p web
+
+      - name: Publish the web app
+        working-directory: client
+        run: |
+          aws s3 sync dist "s3://${{ steps.out.outputs.bucket }}" --delete
+          aws cloudfront create-invalidation --distribution-id "${{ steps.out.outputs.dist }}" --paths "/*"
