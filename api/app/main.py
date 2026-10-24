@@ -54,7 +54,21 @@ SECURITY_HEADERS = {
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "no-referrer",
     "Cache-Control": "no-store",
+    "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
 }
+WRITE_METHODS = frozenset({"POST", "PUT", "PATCH", "DELETE"})
+
+
+def _has_body(request: Request) -> bool:
+    return (
+        int(request.headers.get("content-length", "0") or 0) > 0
+        or "transfer-encoding" in request.headers
+    )
+
+
+def _is_json(request: Request) -> bool:
+    return request.headers.get("content-type", "").split(";")[0].strip() == "application/json"
 
 
 def _auth(settings: Settings) -> Auth:
@@ -148,6 +162,8 @@ def create_app(
             )
         ):
             response: Response = error_response(403, "not_allowed", "That isn't allowed.")
+        elif request.method in WRITE_METHODS and _has_body(request) and not _is_json(request):
+            response = error_response(415, "unsupported_media_type", "Send JSON.")
         else:
             response = await call_next(request)
         response.headers["X-Request-Id"] = request_id

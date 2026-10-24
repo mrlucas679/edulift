@@ -15,7 +15,7 @@ import * as secrets from 'aws-cdk-lib/aws-secretsmanager';
 import type { Construct } from 'constructs';
 
 // appUrl is the CloudFront URL, known after the first deploy.
-type Props = StackProps & { senderEmail: string; githubRepo: string; appUrl?: string };
+type Props = StackProps & { senderEmail: string; githubRepo: string; appUrl?: string; webAclArn: string };
 
 const API_PORT = 8000;
 
@@ -86,7 +86,8 @@ export class EduLiftStack extends Stack {
       enableTokenRevocation: true,
       accessTokenValidity: Duration.hours(1),
       idTokenValidity: Duration.hours(1),
-      refreshTokenValidity: Duration.days(30),
+      refreshTokenValidity: Duration.hours(8),
+      refreshTokenRotationGracePeriod: Duration.seconds(10),
     });
 
     // The API refuses requests without this CloudFront header.
@@ -195,13 +196,27 @@ export class EduLiftStack extends Stack {
         "function handler(event) { var r = event.request; if (!r.uri.includes('.')) { r.uri = '/index.html'; } return r; }",
       ),
     });
+    const webHeaders = new cloudfront.ResponseHeadersPolicy(this, 'WebHeaders', {
+      securityHeadersBehavior: {
+        contentSecurityPolicy: {
+          contentSecurityPolicy:
+            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+          override: true,
+        },
+        strictTransportSecurity: { accessControlMaxAge: Duration.days(365), includeSubdomains: true, override: true },
+        contentTypeOptions: { override: true },
+        frameOptions: { frameOption: cloudfront.HeadersFrameOption.DENY, override: true },
+        referrerPolicy: { referrerPolicy: cloudfront.HeadersReferrerPolicy.NO_REFERRER, override: true },
+      },
+    });
     const distribution = new cloudfront.Distribution(this, 'Cdn', {
+      webAclId: props.webAclArn,
       defaultRootObject: 'index.html',
       priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
       defaultBehavior: {
         origin: origins.S3BucketOrigin.withOriginAccessControl(site),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        responseHeadersPolicy: cloudfront.ResponseHeadersPolicy.SECURITY_HEADERS,
+        responseHeadersPolicy: webHeaders,
         functionAssociations: [
           { function: spaRewrite, eventType: cloudfront.FunctionEventType.VIEWER_REQUEST },
         ],
