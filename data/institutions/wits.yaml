@@ -6,4 +6,148 @@ apply_url: https://www.wits.ac.za/undergraduate/apply-to-wits/
 route: direct
 aps_scheme: wits_best7
 source: wits-entry
-# cycles and programmes: add once checked against the 2027 prospectus
+programmes:
+- id: wits.bachelor-of-commerce-bcom-in-the-fields-of-general-politics-philosophy
+  name: Bachelor of Commerce (BCom) in the fields of General, Politics, Philosophy
+    and Economics, or Information Systems
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 38
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 35-37, with English Level 6 AND Mathematics Level
+    6, subject to place availability.
+- id: wits.bachelor-of-accounting-science-baccsci
+  name: Bachelor of Accounting Science (BAccSci)
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 44
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  notes: 3 yrs. Waitlisted at APS 39-43, with English Level 6 AND Mathematics Level
+    6, subject to place availability.
+- id: wits.bachelor-of-commerce-bcom-in-the-field-of-accounting
+  name: Bachelor of Commerce (BCom) in the field of Accounting
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 38
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 35-37, with English Level 6 AND Mathematics Level
+    6, subject to place availability.
+- id: wits.bachelor-of-economic-science-beconsci
+  name: Bachelor of Economic Science (BEconSci)
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 80
+  notes: 3 yrs. Waitlisted at APS 39-41, with English Level 5 AND Mathematics Level
+    7, subject to place availability.
+- id: wits.bachelor-of-commerce-bcom-in-the-field-of-financial-sciences
+  name: Bachelor of Commerce (BCom) in the field of Financial Sciences
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 80
+  notes: 3 yrs. Waitlisted at APS 39-41, with English Level 5 AND Mathematics Level
+    7, subject to place availability.
+- id: wits.bachelor-of-commerce-bcom-in-the-field-of-law
+  name: Bachelor of Commerce (BCom) in the field of Law
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 35-42, with English Level 6 AND Mathematics Level
+    6, subject to place availability.
+- id: wits.two-year-llb-for-graduates-only
+  name: Two-year LLB (for graduates only)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  notes: 2 yrs. Subject to assessment criteria and place availability. Open to Wits
+    BA Law or BCom Law graduates. No matric APS calculation.
+- id: wits.three-year-llb-for-graduates-only
+  name: Three-year LLB (for graduates only)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  notes: 2 yrs. Subject to assessment criteria and place availability. Needs a 65%
+    average in the final year of an undergraduate degree, which is not judged. No
+    matric APS calculation.
+- id: wits.four-year-llb
+  name: Four-year LLB
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 46
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 70
+    - subject: english_fal
+      min: 70
+  - - subject: mathematics
+      min: 60
+    - subject: maths_literacy
+      min: 70
+  notes: 4 yrs. Waitlisted at APS 40-45, with English Level 6 AND Mathematics Level
+    5 OR Maths Literacy Level 6, subject to place availability.
