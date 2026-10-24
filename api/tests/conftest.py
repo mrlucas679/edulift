@@ -23,7 +23,7 @@ TABLES = [
     "document_drafts",
     "ai_requests", "reminders_sent", "checklist_items", "applications", "saved_items",
     "plan_targets", "opportunities", "mark_records", "guardian_requests", "consents", "profiles",
-    "users", "rate_limit_hits", "fps_bands", "programme_requirements", "programmes",
+    "users", "rate_limit_hits", "nbt_records", "fps_bands", "programme_requirements", "programmes",
     "application_cycles", "institutions", "handoffs", "subjects", "fields", "sources",
 ]  # fmt: skip
 LOCAL_TEST_DB = "postgresql+psycopg://edulift:edulift_local_only@127.0.0.1:5433/edulift_test"

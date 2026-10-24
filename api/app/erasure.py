@@ -22,6 +22,12 @@ def export_learner(db: Session, user_id: str) -> dict[str, Any]:
     ):
         marks.setdefault(period, {})[subject] = percent
     saved = db.scalars(select(m.SavedItem).where(m.SavedItem.user_id == user_id))
+    nbt = {
+        c: lvl
+        for c, lvl in db.execute(
+            select(m.NbtRecord.component, m.NbtRecord.level).where(m.NbtRecord.user_id == user_id)
+        )
+    }
     plan = db.scalars(
         select(m.PlanTarget.programme_id)
         .where(m.PlanTarget.user_id == user_id)
@@ -49,6 +55,7 @@ def export_learner(db: Session, user_id: str) -> dict[str, Any]:
             for c in consents
         ],
         "marks": marks,
+        "nbt": nbt,
         "saved": [{"target_kind": s.target_kind, "target_id": s.target_id} for s in saved],
         "plan": list(plan),
         "applications": [_application(db, a) for a in applications],

@@ -230,6 +230,26 @@ class Mark(Base):
     entered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class NbtRecord(Base):
+    """A learner's NBT level per component. Kept only while nbt_results consent is given."""
+
+    __tablename__ = "nbt_records"
+    __table_args__ = (
+        CheckConstraint("component IN ('AL', 'QL', 'MAT')", name="nbt_component"),
+        CheckConstraint(
+            "level IN ('basic', 'intermediate', 'upper_intermediate', 'proficient')",
+            name="nbt_level",
+        ),
+    )
+
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    component: Mapped[str] = mapped_column(String(3), primary_key=True)
+    level: Mapped[str] = mapped_column(String(20))
+    entered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class PlanTarget(Base):
     __tablename__ = "plan_targets"
 

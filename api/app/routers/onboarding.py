@@ -195,6 +195,8 @@ def set_consent(body: ConsentRequest, me: SignedIn, db: Db) -> MeDetail:
         learner_profile = db.get(m.Profile, user.id)
         if body.purpose == "reminders" and learner_profile is not None:
             learner_profile.contact_email = None
+        if body.purpose == "nbt_results":
+            db.execute(delete(m.NbtRecord).where(m.NbtRecord.user_id == user.id))
         db.execute(
             update(m.Consent)
             .where(
