@@ -9,7 +9,7 @@ import { font, space, text, touchTarget, useColors } from '../src/theme';
 import { Body, Button, ErrorNote, Field, Heading, QueryState, Screen, Title } from '../src/ui';
 
 export default function Settings() {
-  const { accessToken } = useSession();
+  const { accessToken, status, signOut } = useSession();
   const me = useMe();
   const queryClient = useQueryClient();
   const colors = useColors();
@@ -90,10 +90,15 @@ export default function Settings() {
           />
         </View>
 
+        <Title>Language</Title>
+        <Body>App language: English</Body>
+
         <Title>Account</Title>
-        <Body>Parent approval: {me.data?.status === 'pending_guardian' ? 'waiting' : me.data?.status === 'restricted' ? 'withdrawn, browsing only' : 'not needed or given'}</Body>
-        <Button label="Read the privacy notice" onPress={() => router.push('/privacy')} />
+        <Body>Email: you sign in with a code sent to your email</Body>
+        <Body>Parent approval: {me.data?.status === 'pending_guardian' ? 'waiting' : me.data?.status === 'restricted' ? 'withdrawn, browsing only' : 'not needed (18+)'}</Body>
+        <Button label="Privacy notice" onPress={() => router.push('/privacy')} />
         <Button label="Download or delete my data" onPress={() => router.push('/my-data')} />
+        {status === 'signed-in' && <Button label="Sign out" onPress={() => signOut()} />}
         <ErrorNote error={error} />
       </QueryState>
       <Pressable accessibilityRole="button" onPress={() => router.back()} style={{ minHeight: touchTarget, justifyContent: 'center' }}>
