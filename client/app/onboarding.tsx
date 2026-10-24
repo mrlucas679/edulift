@@ -239,14 +239,12 @@ function Consents({ me }: { me: MeDetail }) {
               {purpose === 'account' && <Body muted>Needed to save</Body>}
               <Body muted>{text}</Body>
             </View>
-            {purpose !== 'account' && (
-              <Switch
-                accessibilityLabel={PURPOSE_TITLES[purpose] ?? purpose}
-                value={me.consents.includes(purpose)}
-                disabled={pending !== null}
-                onValueChange={(on) => toggle(purpose, on)}
-              />
-            )}
+            <Switch
+              accessibilityLabel={PURPOSE_TITLES[purpose] ?? purpose}
+              value={me.consents.includes(purpose)}
+              disabled={pending !== null}
+              onValueChange={(on) => toggle(purpose, on)}
+            />
           </View>
         </Card>
       ))}
