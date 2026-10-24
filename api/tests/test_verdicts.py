@@ -63,3 +63,14 @@ def test_unknown_programme_is_404(client: TestClient, inbox: dict[str, str], see
         "/v1/programmes/nope/check", json={"marks": THANDI}, headers=session.headers
     )
     assert response.status_code == 404
+
+
+def test_batch_verdicts_cover_every_programme(
+    client: TestClient, inbox: dict[str, str], seeded: None
+) -> None:
+    session = sign_in(client, inbox, "batch@example.org")
+    body = client.post("/v1/programmes/checks", json={"marks": THANDI}, headers=session.headers).json()
+    assert isinstance(body, list)
+    assert {row["programme_id"] for row in body} == {
+        p["id"] for p in client.get("/v1/programmes").json()["items"]
+    }

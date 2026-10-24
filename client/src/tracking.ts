@@ -27,6 +27,7 @@ export type Application = z.infer<typeof application>;
 
 export const saved = z.object({
   target_kind: z.string(),
+  kind: z.string().nullable(),
   target_id: z.string(),
   name: z.string(),
   closes_on: z.string().nullable(),

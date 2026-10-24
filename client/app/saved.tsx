@@ -47,6 +47,9 @@ export default function SavedScreen() {
     if (tab === 'all') return true;
     return tab === 'courses' ? item.target_kind === 'programme' : item.target_kind === 'opportunity';
   });
+  const WORK = ['learnership', 'work', 'internship'];
+  const label = (item: (typeof all)[number]) =>
+    item.target_kind === 'programme' ? 'COURSE' : WORK.includes(item.kind ?? '') ? 'WORK' : 'FUNDING';
 
   return (
     <Screen>
@@ -79,7 +82,7 @@ export default function SavedScreen() {
               }}
             >
               <Pressable accessibilityRole="button" accessibilityLabel={`Open ${item.name}`} onPress={open}>
-                <Body muted>{item.target_kind === 'programme' ? 'COURSE' : 'FUNDING OR WORK'}</Body>
+                <Body muted>{label(item)}</Body>
                 <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>{item.name}</Text>
                 <Body muted>{item.closes_on ? `Closes ${item.closes_on}` : 'Closing date not published'}</Body>
               </Pressable>

@@ -12,6 +12,9 @@ import { SessionProvider } from '../src/session';
 import { useColors } from '../src/theme';
 import { Loading } from '../src/ui';
 
+// The logo screen opens first. It moves on by itself, or on Start.
+export const unstable_settings = { initialRouteName: 'splash' };
+
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
 });

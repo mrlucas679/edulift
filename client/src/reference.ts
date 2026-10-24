@@ -175,3 +175,15 @@ export const useFields = () =>
     queryFn: () => request('/v1/fields', z.array(field)),
     staleTime: Infinity,
   });
+
+const batchRow = z.object({ programme_id: z.string(), outcome: z.string() });
+
+// One outcome per programme for the signed-in learner's saved marks.
+export function useBatchChecks(accessToken: string | null) {
+  return useQuery({
+    queryKey: ['batch-checks', accessToken],
+    queryFn: () => request('/v1/programmes/checks', z.array(batchRow), { method: 'POST', body: {}, accessToken }),
+    enabled: accessToken !== null,
+    retry: false,
+  });
+}

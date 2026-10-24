@@ -4,7 +4,8 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { font, space, text, touchTarget, useColors } from '../../src/theme';
 
-import { useInstitutions, useProgrammes } from '../../src/reference';
+import { useBatchChecks, useInstitutions, useProgrammes } from '../../src/reference';
+import { useSession } from '../../src/session';
 import { KindChips } from '../../src/opportunity-views';
 import { Body, Card, Empty, Field, Heading, QueryState, Screen, Title } from '../../src/ui';
 
@@ -29,6 +30,17 @@ export default function Study() {
   const [level, setLevel] = useState<string | null>(null);
   const q = useDebounced(search.trim());
   const colors = useColors();
+  const { status, accessToken } = useSession();
+  const batch = useBatchChecks(status === 'signed-in' ? accessToken : null);
+  const outcomeOf = new Map((batch.data ?? []).map((r) => [r.programme_id, r.outcome]));
+  const BADGE: Record<string, string> = {
+    qualifies: 'You qualify',
+    qualifies_selection: 'You qualify',
+    qualifies_unconfirmed: 'Check',
+    aps_only: 'Subjects short',
+    subjects_only: 'Score short',
+    not_eligible: 'Not eligible',
+  };
   const institutions = useInstitutions();
   const programmes = useProgrammes({ q, field: 'it', qualification: level ?? undefined });
 
@@ -60,10 +72,19 @@ export default function Study() {
       <QueryState query={programmes} empty={programmes.data?.items.length === 0}>
         {programmes.data?.items.map((p) => (
           <Card key={p.id} label={p.name} onPress={() => router.push(`/programme/${p.id}`)}>
-            <Title>{p.name}</Title>
-            <Body muted>
-              {LEVELS[p.qualification] ?? p.qualification} · {p.institution_id.toUpperCase()}
-            </Body>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.sm }}>
+              <View style={{ flex: 1 }}>
+                <Title>{p.name}</Title>
+                <Body muted>
+                  {LEVELS[p.qualification] ?? p.qualification} · {p.institution_id.toUpperCase()}
+                </Body>
+              </View>
+              {outcomeOf.get(p.id) && BADGE[outcomeOf.get(p.id) ?? ''] && (
+                <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink, borderWidth: 1, borderColor: colors.border, borderRadius: 999, paddingHorizontal: space.sm, paddingVertical: 2 }}>
+                  {BADGE[outcomeOf.get(p.id) ?? '']}
+                </Text>
+              )}
+            </View>
           </Card>
         ))}
       </QueryState>

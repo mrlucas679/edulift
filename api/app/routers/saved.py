@@ -21,6 +21,8 @@ class SavedIn(BaseModel):
 
 class SavedOut(BaseModel):
     target_kind: str
+    # Opportunity kind (bursary, loan, learnership, work); None for programmes.
+    kind: str | None
     target_id: str
     name: str
     closes_on: date | None
@@ -28,8 +30,12 @@ class SavedOut(BaseModel):
 
 def _out(db: Session, row: m.SavedItem) -> SavedOut:
     name, closes = target_summary(db, row.target_kind, row.target_id)
+    kind = None
+    if row.target_kind == "opportunity":
+        kind = db.scalar(select(m.Opportunity.kind).where(m.Opportunity.id == row.target_id))
     return SavedOut(
         target_kind=row.target_kind,
+        kind=kind,
         target_id=row.target_id,
         name=name,
         closes_on=closes,
