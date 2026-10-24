@@ -798,3 +798,11 @@
   provider: NFVF International
   url: https://www.zabursaries.co.za/international-scholarships-bursaries-south-africa/nfvf-international-bursary/
   source: zabursaries-listings
+- id: funza-lushaka-bursary
+  name: Funza Lushaka bursary (teaching)
+  kind: bursary
+  provider: Department of Basic Education
+  url: https://www.education.gov.za/Programmes/FunzaLushaka.aspx
+  field: education
+  closes_on: 2027-01-31
+  source: dbe-funza-lushaka
