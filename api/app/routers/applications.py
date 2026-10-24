@@ -10,6 +10,7 @@ from app import models as m
 from app.deps import Db, SignedIn
 from app.errors import NotFoundError
 from app.routers.marks import active_user
+from app.schemas import Request
 from app.tracking import (
     DEFAULT_CHECKLIST,
     deadline_soon,
@@ -23,7 +24,7 @@ router = APIRouter(prefix="/me/applications", tags=["applications"])
 Status = Literal["planning", "submitted", "offer", "waitlist", "declined", "withdrawn"]
 
 
-class ApplicationIn(BaseModel):
+class ApplicationIn(Request):
     target_kind: Literal["programme", "opportunity"]
     target_id: str = Field(min_length=1, max_length=80)
 

@@ -54,7 +54,7 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: client/package-lock.json
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npx tsc --noEmit
       - run: npx expo lint
       # Two known high advisories sit in Expo's build tooling (braces via Metro, node-forge
@@ -94,7 +94,7 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: infra/package-lock.json
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npx tsc
       - run: npx cdk synth --quiet -c senderEmail=ci@example.org -c budgetEmail=ci@example.org
         env:
