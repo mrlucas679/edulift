@@ -24,6 +24,7 @@ from app.db import new_engine
 ALLOWED_SUFFIXES = (".ac.za", ".gov.za", ".edu.za")
 ALLOWED_HOSTS = {
     "bankseta.org.za",
+    "mqa.org.za",
     "sayouth.mobi",
     "www.agriseta.co.za",
     "www.bankseta.org.za",
