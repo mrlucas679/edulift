@@ -115,7 +115,9 @@ def test_guardian_approval_activates_with_chosen_purposes(
     token = guardian_link(client, minor, mailer)
     assert mailer.sent[-1][0] == "parent@example.org"
     assert client.get(f"/v1/guardian/{token}").json()["learner_first_name"] == "Thandi"
-    assert client.post(f"/v1/guardian/{token}", json=APPROVE).status_code == 204
+    approved = client.post(f"/v1/guardian/{token}", json=APPROVE)
+    assert approved.status_code == 200
+    assert approved.json()["withdraw_token"]
 
     me = client.get("/v1/me/details", headers=minor.headers).json()
     assert me["status"] == "active"
@@ -189,3 +191,13 @@ def test_nbt_results_is_optional_and_off_until_granted(client: TestClient, adult
 
 def test_minor_needs_the_guardian_for_nbt_results(client: TestClient, minor: Signed) -> None:
     assert consent(client, minor, "nbt_results") == 403
+
+
+def test_guardian_gets_the_withdraw_link_and_an_export(
+    client: TestClient, minor: Signed, mailer: ConsoleMailer
+) -> None:
+    token = guardian_link(client, minor, mailer)
+    withdraw = client.post(f"/v1/guardian/{token}", json=APPROVE).json()["withdraw_token"]
+    export = client.get(f"/v1/guardian/withdraw/{withdraw}/export")
+    assert export.status_code == 200
+    assert "profile" in export.json()
