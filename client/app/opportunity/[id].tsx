@@ -1,5 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Linking } from 'react-native';
+import { Linking, Text, View } from 'react-native';
+
+import { font, space, text, touchTarget, useColors } from '../../src/theme';
 
 import { KIND_LABELS, useMyOpportunities, useOpportunity } from '../../src/opportunities';
 import { safeHost } from '../../src/links';
@@ -14,6 +16,7 @@ export default function OpportunityScreen() {
   const mine = useMyOpportunities(null, status === 'signed-in' ? accessToken : null);
   const match = mine.data?.find((m) => m.id === id);
   const host = safeHost(opportunity.data?.url);
+  const colors = useColors();
 
   return (
     <Screen>
@@ -28,14 +31,18 @@ export default function OpportunityScreen() {
 
             {match && (
               <>
-                <Title>Your check</Title>
+                <Body muted>DO YOU QUALIFY?</Body>
                 <Body>{VERDICT_TEXT[match.verdict]}</Body>
                 {match.checks.map((c) => (
-                  <Card key={c.check}>
-                    <Body>
-                      {c.check.replace(/_/g, ' ')}: {c.status === 'met' ? '✓ Met' : c.status === 'not_met' ? '✗ Not met' : '? Check with provider'}
-                    </Body>
-                  </Card>
+                  <View key={c.check} style={{ flexDirection: 'row', gap: space.md, minHeight: touchTarget }}>
+                    <Text style={{ fontFamily: font.bold, fontSize: text.h3, color: colors.ink }}>
+                      {c.status === 'met' ? '✓' : c.status === 'not_met' ? '✗' : '?'}
+                    </Text>
+                    <View style={{ flex: 1 }}>
+                      <Body>{c.check.replace(/_/g, ' ')}</Body>
+                      <Body muted>{c.status === 'met' ? 'Met' : c.status === 'not_met' ? 'Not met' : 'Check with the provider'}</Body>
+                    </View>
+                  </View>
                 ))}
               </>
             )}
@@ -45,8 +52,8 @@ export default function OpportunityScreen() {
 
             {host ? (
               <>
-                <Body muted>You are going to {host}. EduLift never submits for you.</Body>
-                <Button label={`Open ${host}`} onPress={() => Linking.openURL(opportunity.data.url)} />
+                <Body muted>EduLift never submits for you. You are going to {host}.</Body>
+                <Button label={`Apply on ${host}`} onPress={() => Linking.openURL(opportunity.data.url)} />
               </>
             ) : (
               <Body muted>We don’t have a safe link for this yet. Check with the provider.</Body>
