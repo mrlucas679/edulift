@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { useGenerateDraft, useSaveDraft } from '../src/assist';
 import { useSession } from '../src/session';
+import { t } from '../src/i18n';
 import { Body, Button, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
 
 type Kind = 'cv' | 'motivation_letter';
@@ -55,7 +56,7 @@ export default function DraftScreen() {
 
       {text !== '' && (
         <>
-          <Title>Draft — check and edit before you send.</Title>
+          <Title>{t('draftLabel')}</Title>
           <Field label="Draft" value={text} onChangeText={setText} maxLength={10000} multiline />
           <Button
             label={saved ? 'Saved' : 'Save draft'}

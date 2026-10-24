@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { useAsk } from '../src/assist';
 import { useSession } from '../src/session';
+import { t } from '../src/i18n';
 import { Body, Button, Card, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
 
 function safeHost(url: string | null): string | null {
@@ -34,7 +35,7 @@ export default function AskScreen() {
   return (
     <Screen>
       <Heading>Ask about programmes</Heading>
-      <Body muted>Answers come only from EduLift’s own records, and each one links to where it came from.</Body>
+      <Body muted>{t('askDisclaimer')}</Body>
       <Field label="Your question" value={question} onChangeText={setQuestion} maxLength={300} multiline />
       <Button
         label="Ask"
