@@ -322,3 +322,193 @@ programmes:
   - - subject: mathematics
       min: 60
   notes: 3 yrs. Waitlisted at APS 30-35, subject to place availability.
+- id: wits.bachelor-of-health-sciences-bhsci-biomedical-sciences-biokinetics-heal
+  name: 'Bachelor of Health Sciences (BHSci): Biomedical Sciences, Biokinetics, Health
+    Systems Sciences'
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+    - subject: physical_sciences
+      min: 60
+  notes: '3 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants.'
+- id: wits.bachelor-of-clinical-medical-practice-bcmp
+  name: Bachelor of Clinical Medical Practice (BCMP)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+    - subject: maths_literacy
+      min: 80
+  - - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: '3 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants.'
+- id: wits.bachelor-of-medicine-and-bachelor-of-surgery-mbbch
+  name: Bachelor of Medicine and Bachelor of Surgery (MBBCh)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+    - subject: physical_sciences
+      min: 60
+  notes: '6 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Two entry points:
+    first year (Grade 12) and third year (GEMP graduates). GEMP is not loaded.'
+- id: wits.bachelor-of-dental-science-bds
+  name: Bachelor of Dental Science (BDS)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+  notes: '5 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Requires job-shadowing
+    of a dentist, dental therapist or oral hygienist. Not judged.'
+- id: wits.bachelor-of-oral-health-sciences-bohs
+  name: Bachelor of Oral Health Sciences (BOHS)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+    - subject: maths_literacy
+      min: 80
+  - - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: '3 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Requires job-shadowing
+    certificate (16 hours). Not judged.'
+- id: wits.bachelor-of-nursing-bnurs
+  name: Bachelor of Nursing (BNurs)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: '4 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants.'
+- id: wits.bachelor-of-pharmacy-bpharm
+  name: Bachelor of Pharmacy (BPharm)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+    - subject: physical_sciences
+      min: 60
+  notes: '4 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants.'
+- id: wits.bachelor-of-science-in-occupational-therapy-bsc-ot
+  name: Bachelor of Science in Occupational Therapy (BSc(OT))
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: '4 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Requires job-shadowing
+    of an occupational therapist and a physiotherapist (16 hours). Not judged.'
+- id: wits.bachelor-of-science-in-physiotherapy-bsc-physiotherapy
+  name: Bachelor of Science in Physiotherapy (BSc(Physiotherapy))
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+    - subject: physical_sciences
+      min: 60
+  notes: '4 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Requires job-shadowing
+    (16 hours). Not judged.'
