@@ -1,6 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Linking, Pressable } from 'react-native';
+import { Linking, Pressable, Text, View } from 'react-native';
+
+import { space, text, touchTarget, useColors } from '../../src/theme';
 
 import { toMarks, useMarks } from '../../src/marks';
 import { checkProgramme, useProgramme, useSubjectNames, type Verdict } from '../../src/reference';
@@ -12,28 +14,47 @@ import { useSession } from '../../src/session';
 import { Body, Button, Card, ErrorNote, Heading, QueryState, Screen, SourceLine, Title } from '../../src/ui';
 import { OUTCOMES } from '../../src/verdicts';
 
-const RESULT = { pass: '✓ Met', fail: '✗ Short', unknown: '? Not confirmed' };
+const RESULT = { pass: '✓', fail: '✗', unknown: '?' };
+// Short outcome label for the banner chip, as on the wireframe.
+const BANNER: Record<string, string> = {
+  qualifies: 'You qualify',
+  qualifies_selection: 'You qualify',
+  qualifies_unconfirmed: 'Not confirmed',
+  aps_only: 'Score met · subjects short',
+  subjects_only: 'Subjects met · score short',
+  not_eligible: 'Not eligible',
+  closed: 'Closed',
+};
 
 function VerdictCard({ verdict }: { verdict: Verdict }) {
+  const colors = useColors();
   return (
     <>
-      <Title>{OUTCOMES[verdict.outcome] ?? verdict.outcome}</Title>
+      <Card>
+        <Body>{BANNER[verdict.outcome] ?? verdict.outcome}</Body>
+        <Body>{OUTCOMES[verdict.outcome] ?? verdict.outcome}</Body>
+      </Card>
+      <Body muted>EVERY CHECK</Body>
       {verdict.checks.map((c) => (
-        <Card key={c.name}>
-          <Body>{RESULT[c.result]}</Body>
-          <Body muted>Needs: {c.required}</Body>
-          <Body muted>Yours: {c.yours}</Body>
-          <Pressable accessibilityRole="link" onPress={() => Linking.openURL(c.source_url)}>
-            <Body muted>
-              Source: {c.source_url} · {c.checked_on ? `checked ${c.checked_on}` : 'date not confirmed'}
-            </Body>
-          </Pressable>
-        </Card>
+        <Pressable
+          key={c.name}
+          accessibilityRole="link"
+          onPress={() => Linking.openURL(c.source_url)}
+          style={{ flexDirection: 'row', gap: space.md, minHeight: touchTarget }}
+        >
+          <Text style={{ fontSize: text.h3, color: colors.ink }}>{RESULT[c.result]}</Text>
+          <View style={{ flex: 1 }}>
+            <Body>{c.required}</Body>
+            <Body muted>Yours: {c.yours}</Body>
+          </View>
+        </Pressable>
       ))}
+      <Body muted>Based on your marks and published minimums. The institution decides who gets a place.</Body>
       {verdict.checks.some((c) => c.name.startsWith('nbt_') && c.result === 'unknown') && (
         <Button label="Add my NBT results to check this" onPress={() => router.push('/my-marks')} />
       )}
-      <Body muted>{verdict.note}</Body>
+      <Button label="See Plan B" onPress={() => router.push('/plan')} />
+      <Button label="Why this result" onPress={() => router.push(`/why/${verdict.programme_id}`)} />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import type { Matched, Opportunity } from './opportunities';
@@ -58,8 +59,24 @@ export function OpportunityCard({ item, matched }: { item: Opportunity | Matched
         {item.provider} · {KIND_LABELS[item.kind] ?? item.kind}
       </Body>
       {verdict && <Body>{VERDICT_TEXT[verdict]}</Body>}
-      {item.closes_on ? <Body muted>Closes {item.closes_on}</Body> : <Body muted>Closing date not published</Body>}
+      <OpportunityStatus closesOn={item.closes_on} />
     </Card>
+  );
+}
+
+// Open, closed or not published, from the closing date, as on the Work wireframe.
+export function OpportunityStatus({ closesOn }: { closesOn: string | null }) {
+  const colors = useColors();
+  const [loadedAt] = useState(() => Date.now());
+  if (!closesOn) return <Body muted>Closing date not published</Body>;
+  const open = new Date(closesOn).getTime() >= loadedAt;
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Body muted>Closes {closesOn}</Body>
+      <Text style={{ fontFamily: font.bold, fontSize: text.small, color: open ? colors.paper : colors.ink, backgroundColor: open ? colors.ink : colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 999, paddingHorizontal: space.sm, overflow: 'hidden' }}>
+        {open ? 'Open' : 'Closed'}
+      </Text>
+    </View>
   );
 }
 

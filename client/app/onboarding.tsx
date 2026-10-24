@@ -1,7 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
-import { Switch, View } from 'react-native';
+import { Pressable, Switch, Text, View } from 'react-native';
+
+import { font, space, text, touchTarget, useColors } from '../src/theme';
 
 import { ApiError } from '../src/api';
 import { askGuardian, PURPOSES, saveProfile, setConsent, useMe, type MeDetail } from '../src/account';
@@ -75,9 +77,11 @@ function Birthday({ onTooYoung }: { onTooYoung: () => void }) {
 
   return (
     <>
-      <Heading>About you · step 1 of 2</Heading>
+      <StepBar step={1} />
+      <Heading>About you</Heading>
       <Body muted>We only ask what we need to match you. We never ask for your ID number, income or race.</Body>
       <Field label="First name" value={name} onChangeText={setName} maxLength={60} autoComplete="given-name" />
+      <Title>When were you born?</Title>
       <Field
         label="Date of birth (YYYY-MM-DD)"
         value={birth}
@@ -86,6 +90,10 @@ function Birthday({ onTooYoung }: { onTooYoung: () => void }) {
         inputMode="numeric"
         maxLength={10}
       />
+      <Card>
+        <Title>Why we ask for the date, not your age</Title>
+        <Body muted>So the app knows when you turn 18 without asking again. We don’t use it for anything else.</Body>
+      </Card>
       <Title>Province you live in</Title>
       <Body muted>Used to show nearby colleges first. We never limit you to one province.</Body>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -107,49 +115,79 @@ function Birthday({ onTooYoung }: { onTooYoung: () => void }) {
 
 function Guardian() {
   const { accessToken } = useSession();
+  const colors = useColors();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [relation, setRelation] = useState<'parent' | 'legal_guardian'>('parent');
   const [sent, setSent] = useState(false);
   const send = useAction(async () => {
     await askGuardian(accessToken, { guardian_name: name.trim(), guardian_email: email.trim() });
     setSent(true);
   });
 
+  if (sent) {
+    return (
+      <>
+        <Heading>Request sent to {email.trim().replace(/^(.).*(@.*)$/, '$1•••$2')}</Heading>
+        <Body muted>When your parent or guardian taps Approve, your account opens and your plan is saved.</Body>
+        <Card>
+          <Title>Status</Title>
+          <Body muted>Sent just now · link works for 72 hours</Body>
+          <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink }}>Waiting</Text>
+        </Card>
+        <Card>
+          <Title>What happens next</Title>
+          <Body>1. They open the email and read what we store.</Body>
+          <Body>2. They confirm they’re your parent or guardian.</Body>
+          <Body>3. They tap Approve. You’ll get a notification.</Body>
+        </Card>
+        <Button label="Keep using as a guest" onPress={() => router.replace('/(tabs)')} />
+        <Button label="Resend the email" onPress={send.run} busy={send.busy} />
+        <Pressable accessibilityRole="button" onPress={() => setSent(false)} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>Use a different email</Text>
+        </Pressable>
+      </>
+    );
+  }
+
   return (
     <>
-      <Heading>Ask a parent or guardian</Heading>
-      <Body muted>
-        You’re 17, so the law needs a parent or guardian to agree before we keep your details.
-        We’ll email them a link. Nothing else is saved until they say yes.
-      </Body>
-      <Field label="Their name" value={name} onChangeText={setName} maxLength={80} />
-      <Field
-        label="Their email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        inputMode="email"
-        maxLength={254}
-      />
-      <ErrorNote error={send.error} />
-      <Button
-        label={sent ? 'Send again' : 'Send the email'}
-        onPress={send.run}
-        busy={send.busy}
-        disabled={!name.trim() || !email.trim()}
-      />
-      {sent && (
-        <Body muted>
-          Sent. Ask them to check their inbox, and spam. The link lasts 72 hours. Come back here once they’ve said yes.
-        </Body>
-      )}
+      <Heading>You can still use everything</Heading>
+      <Body muted>Check your APS, see Plan A and Plan B, and find funding and work — right now.</Body>
+      <Card>
+        <Title>Keep going as a guest</Title>
+        <Body muted>Your marks stay on this phone. Nothing about you is saved on our servers.</Body>
+        <Button label="Continue as a guest" onPress={() => router.replace('/(tabs)')} />
+      </Card>
+      <Card>
+        <Title>Save your plan with a parent’s OK</Title>
+        <Body muted>To save across phones, track applications and get reminders, a parent or guardian approves by email.</Body>
+        <Field label="Parent or guardian’s email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" inputMode="email" maxLength={254} />
+        <Field label="Their name" value={name} onChangeText={setName} maxLength={80} />
+        <Body>They are my</Body>
+        <View style={{ flexDirection: 'row', gap: space.sm }}>
+          <Chip label="Parent" selected={relation === 'parent'} onPress={() => setRelation('parent')} />
+          <Chip label="Legal guardian" selected={relation === 'legal_guardian'} onPress={() => setRelation('legal_guardian')} />
+        </View>
+        <ErrorNote error={send.error} />
+        <Button label="Send approval request" onPress={send.run} busy={send.busy} disabled={!name.trim() || !email.trim()} />
+        <Body muted>We only use their email to send this request.</Body>
+      </Card>
     </>
   );
 }
 
+const PURPOSE_TITLES: Record<string, string> = {
+  account: 'Save my account',
+  ai_explanations: 'Explain my results with AI',
+  ai_writing: 'Help me write a CV or letter',
+  reminders: 'Deadline reminders by email',
+  nbt_results: 'Use my NBT results',
+};
+
 function Consents({ me }: { me: MeDetail }) {
   const { accessToken } = useSession();
+  const colors = useColors();
   const queryClient = useQueryClient();
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -170,7 +208,8 @@ function Consents({ me }: { me: MeDetail }) {
 
   return (
     <>
-      <Heading>Your choices</Heading>
+      <Heading>You decide what we use</Heading>
+      <Body muted>Change any of these later in Settings.</Body>
       {me.reconfirm.length > 0 && (
         <>
           <Body>Your guardian made these choices when you were 17. Now you’re 18, so please confirm each one yourself.</Body>
@@ -196,10 +235,12 @@ function Consents({ me }: { me: MeDetail }) {
         <Card key={purpose}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <View style={{ flex: 1 }}>
-              <Body>{text}</Body>
+              <Title>{PURPOSE_TITLES[purpose] ?? purpose}</Title>
+              {purpose === 'account' && <Body muted>Needed to save</Body>}
+              <Body muted>{text}</Body>
             </View>
             <Switch
-              accessibilityLabel={text}
+              accessibilityLabel={PURPOSE_TITLES[purpose] ?? purpose}
               value={me.consents.includes(purpose)}
               disabled={pending !== null}
               onValueChange={(on) => toggle(purpose, on)}
@@ -207,14 +248,30 @@ function Consents({ me }: { me: MeDetail }) {
           </View>
         </Card>
       ))}
+      <Pressable accessibilityRole="link" onPress={() => router.push('/privacy')} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>Read the full privacy notice</Text>
+      </Pressable>
       <ErrorNote error={error} />
     </>
   );
 }
 
 
+// Three segments across the top of the onboarding steps, filled up to the current step.
+function StepBar({ step }: { step: 1 | 2 | 3 }) {
+  const colors = useColors();
+  return (
+    <View style={{ flexDirection: 'row', gap: space.sm }}>
+      {[1, 2, 3].map((n) => (
+        <View key={n} style={{ flex: 1, height: 4, borderRadius: 2, backgroundColor: n <= step ? colors.ink : colors.border }} />
+      ))}
+    </View>
+  );
+}
+
 function Interests({ onDone }: { onDone: () => void }) {
   const { accessToken } = useSession();
+  const colors = useColors();
   const queryClient = useQueryClient();
   const fields = useFields();
   const me = useMe();
@@ -232,8 +289,9 @@ function Interests({ onDone }: { onDone: () => void }) {
   const topLevel = (fields.data ?? []).filter((f) => f.parent_id === null);
   return (
     <>
-      <Heading>What would you enjoy? · step 2 of 2</Heading>
-      <Body muted>Pick up to 3. This only changes the order of results, never what you qualify for.</Body>
+      <StepBar step={2} />
+      <Heading>What would you enjoy?</Heading>
+      <Body muted>Pick up to 3. This only changes the order of results — never what you qualify for.</Body>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
         {topLevel.map((f) => (
           <Chip key={f.id} label={f.name} selected={picked.includes(f.id)} onPress={() => toggle(f.id)} />
@@ -242,7 +300,9 @@ function Interests({ onDone }: { onDone: () => void }) {
       <Body muted>{picked.length} of 3 picked</Body>
       <ErrorNote error={save.error} />
       <Button label="Continue" onPress={save.run} busy={save.busy} disabled={picked.length === 0} />
-      <Button label="Not sure yet, skip" onPress={onDone} />
+      <Pressable accessibilityRole="button" onPress={onDone} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>Not sure yet — skip</Text>
+      </Pressable>
     </>
   );
 }
@@ -289,9 +349,11 @@ export default function Onboarding() {
           <Consents me={me.data} />
           {me.data.status === 'active' && (
             <>
-              <Title>You’re set up · step 2 of 2</Title>
-              <Body muted>Next, add your marks. You can change them any time.</Body>
+              <StepBar step={3} />
+              <Heading>Add your marks</Heading>
+              <Body muted>Add your marks so we can match you. You can change them any time.</Body>
               <Button label="Add my marks" onPress={() => router.replace('/my-marks')} />
+              <Button label="Go to my home" onPress={() => router.replace('/(tabs)')} />
             </>
           )}
         </>

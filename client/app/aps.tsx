@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -10,6 +11,24 @@ import { space, text, useColors } from '../src/theme';
 import { Body, Button, Card, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
 
 const MIN_SUBJECTS = 7; // six plus Life Orientation
+
+type Preview = { scheme: string | null; score: number | null }[];
+
+// Shows "score / maximum" for the first institution on this scheme.
+function summaryFor(rows: Preview, scheme: string, max: number | null): string {
+  const hit = rows.find((r) => r.scheme === scheme);
+  if (!hit || hit.score === null) return '[score]';
+  return max === null ? String(hit.score) : `${hit.score} / ${max}`;
+}
+
+function SummaryLine({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.summary}>
+      <Body muted>{label}</Body>
+      <Title>{value}</Title>
+    </View>
+  );
+}
 
 type Period = 'gr11_final' | 'gr12_june' | 'gr12_prelim' | 'gr12_final';
 const PERIODS: [Period, string][] = [
@@ -50,7 +69,11 @@ export default function ApsCalculator() {
   return (
     <Screen>
       <Heading>APS calculator</Heading>
-      <Body muted>Try your marks without an account. Nothing is saved.</Body>
+      <Body muted>No account needed. Nothing you type is saved.</Body>
+      <View style={styles.row}>
+        <View style={styles.grow}><Body muted>Subject</Body></View>
+        <View style={styles.markCol}><Body muted>Mark %</Body></View>
+      </View>
 
       <Field
         label="Add a subject"
@@ -96,21 +119,29 @@ export default function ApsCalculator() {
 
       {!ready && <Body muted>Add at least {MIN_SUBJECTS} subjects, including Life Orientation.</Body>}
       <Button
-        label="Work out my score"
-        onPress={() => preview.mutate(marks)}
+        label="See courses I qualify for"
+        onPress={() => {
+          preview.mutate(marks);
+          router.push('/scores');
+        }}
         busy={preview.isPending}
         disabled={!ready}
       />
       <ErrorNote error={preview.error} />
 
-      {preview.data?.map((p) => (
-        <Card key={p.institution_id}>
-          <Title>{p.institution}</Title>
-          <Body muted>
-            {p.score === null ? 'Check your score on their site.' : `Your score: ${p.score}`}
-          </Body>
+      {preview.data && (
+        <Card>
+          <SummaryLine
+            label="Most universities · best 6, no LO"
+            value={summaryFor(preview.data, 'standard_best6', 42)}
+          />
+          <SummaryLine label="Wits · best 7 incl. LO" value={summaryFor(preview.data, 'wits_best7', null)} />
+          <SummaryLine label="UCT · % points, best 6" value={summaryFor(preview.data, 'uct_fps', 600)} />
         </Card>
-      ))}
+      )}
+      <Pressable accessibilityRole="link" onPress={() => router.push('/help')}>
+        <Body>How APS works</Body>
+      </Pressable>
       {me.data?.status === 'active' && ready && (
         <>
           <Title>Save these marks</Title>
@@ -134,6 +165,8 @@ export default function ApsCalculator() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'flex-end', gap: space.md },
   grow: { flex: 1 },
+  markCol: { width: 96 },
+  summary: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: space.sm },
   option: { fontSize: text.body, paddingVertical: space.sm },
   remove: { fontSize: text.small, paddingVertical: space.md },
 });

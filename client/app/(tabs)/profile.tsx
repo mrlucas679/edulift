@@ -1,12 +1,13 @@
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useMe } from '../../src/account';
 import { usePlan } from '../../src/plan';
 import { useSession } from '../../src/session';
 import { useSaved, useApplications } from '../../src/tracking';
+import { latestMarks, useSavedMarks } from '../../src/saved-marks';
 import { font, space, text, touchTarget, useColors } from '../../src/theme';
-import { Body, Button, Heading, Loading, Screen, Title } from '../../src/ui';
+import { Body, Button, Heading, Loading, Screen } from '../../src/ui';
 
 function Row({ label, detail, onPress }: { label: string; detail?: string; onPress: () => void }) {
   const colors = useColors();
@@ -15,11 +16,11 @@ function Row({ label, detail, onPress }: { label: string; detail?: string; onPre
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
-      style={[styles.row, { borderColor: colors.border, backgroundColor: colors.surface }]}
+      style={[styles.row, { borderColor: colors.border }]}
     >
-      <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>{label}</Text>
+      <Text style={{ fontFamily: font.regular, fontSize: text.body, color: colors.ink }}>{label}</Text>
       <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>
-        {detail ?? '›'}
+        {detail ? `${detail} ›` : '›'}
       </Text>
     </Pressable>
   );
@@ -31,6 +32,9 @@ export default function Profile() {
   const plan = usePlan(status === 'signed-in' ? accessToken : null);
   const saved = useSaved(status === 'signed-in' ? accessToken : null);
   const applications = useApplications(status === 'signed-in' ? accessToken : null);
+  const marksData = useSavedMarks();
+  const marks = Object.keys(latestMarks(marksData.data) ?? {}).length;
+  const colors = useColors();
 
   if (status === 'restoring') return <Loading />;
 
@@ -52,17 +56,23 @@ export default function Profile() {
   }
 
   const name = me.data?.first_name ?? 'You';
+  const routes = plan.data?.targets.length ?? 0;
   return (
     <Screen>
-      <Heading>{name}</Heading>
-      <Body muted>Your marks, plan and applications.</Body>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.md }}>
+        <View style={[styles.avatar, { borderColor: colors.border }]}>
+          <Text style={{ fontFamily: font.bold, fontSize: text.h3, color: colors.ink }}>{name.charAt(0).toUpperCase()}</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Heading>{name}</Heading>
+          <Body muted>Gauteng · NSC · marks from Grade 12 June</Body>
+        </View>
+      </View>
 
-      <Title>My plan</Title>
-      <Row label="My plan" detail={plan.data ? `${plan.data.targets.length} of 3` : undefined} onPress={() => router.push('/plan')} />
-      <Row label="My marks" onPress={() => router.push('/my-marks')} />
+      <Body muted>MY PLAN</Body>
+      <Row label="My marks" detail={marks ? `${marks} subjects` : undefined} onPress={() => router.push('/my-marks')} />
       <Row label="My scores" onPress={() => router.push('/scores')} />
-
-      <Title>Tracking</Title>
+      <Row label="My plan A and B" detail={`${routes} routes`} onPress={() => router.push('/plan')} />
       <Row
         label="My applications"
         detail={applications.data ? `${applications.data.length} tracked` : undefined}
@@ -70,7 +80,7 @@ export default function Profile() {
       />
       <Row label="Saved" detail={saved.data ? `${saved.data.length} items` : undefined} onPress={() => router.push('/saved')} />
 
-      <Title>Account</Title>
+      <Body muted>ACCOUNT</Body>
       <Row label="Settings and choices" onPress={() => router.push('/settings')} />
       <Row label="My data" onPress={() => router.push('/my-data')} />
       <Row label="Help and talk to a person" onPress={() => router.push('/help')} />
@@ -82,12 +92,20 @@ export default function Profile() {
 const styles = StyleSheet.create({
   row: {
     minHeight: touchTarget,
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: space.lg,
+    borderBottomWidth: 1,
+    paddingVertical: space.md,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: space.md,
+  },
+  avatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

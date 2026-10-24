@@ -1,4 +1,7 @@
-import { Linking } from 'react-native';
+import { Linking, Pressable, Text, View } from 'react-native';
+import { useState } from 'react';
+
+import { font, space, text, touchTarget, useColors } from '../src/theme';
 
 import { safeHost } from '../src/links';
 import { useHandoffs } from '../src/reference';
@@ -12,6 +15,25 @@ const GUIDES = [
   { title: 'What to do if you don’t get in', body: 'Look at Plan B: easier entry, other institutions, TVET, funding and work. Then apply again next intake.' },
 ];
 
+function GuideRow({ title, body }: { title: string; body: string }) {
+  const colors = useColors();
+  const [open, setOpen] = useState(false);
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ expanded: open }}
+      onPress={() => setOpen((o) => !o)}
+      style={{ minHeight: touchTarget, paddingVertical: space.sm, borderBottomWidth: 1, borderColor: colors.border }}
+    >
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Text style={{ fontFamily: font.regular, fontSize: text.body, color: colors.ink, flex: 1 }}>{title}</Text>
+        <Text style={{ fontSize: text.body, color: colors.inkMuted }}>{open ? '⌄' : '›'}</Text>
+      </View>
+      {open && <Body muted>{body}</Body>}
+    </Pressable>
+  );
+}
+
 export default function Help() {
   const handoffs = useHandoffs();
   return (
@@ -19,17 +41,14 @@ export default function Help() {
       <Heading>Help</Heading>
 
       <Body muted>Draft guides. Each one is checked against its source before launch.</Body>
-      <Title>Guides</Title>
+      <Body muted>GUIDES</Body>
       {GUIDES.map((g) => (
-        <Card key={g.title}>
-          <Title>{g.title}</Title>
-          <Body>{g.body}</Body>
-        </Card>
+        <GuideRow key={g.title} title={g.title} body={g.body} />
       ))}
 
       <ScamNotice />
 
-      <Title>Talk to a person</Title>
+      <Body muted>TALK TO A PERSON</Body>
       <Body muted>These are the official helplines and services. Use the contact details on their sites.</Body>
       <QueryState query={handoffs}>
         {handoffs.data?.map((h) => (

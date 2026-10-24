@@ -1,4 +1,7 @@
 import { router } from 'expo-router';
+import { ScrollView, Pressable, Text, View } from 'react-native';
+
+import { font, space, text, touchTarget, useColors } from '../../src/theme';
 
 import { useMe } from '../../src/account';
 import { useApplications } from '../../src/tracking';
@@ -6,6 +9,12 @@ import { usePlan } from '../../src/plan';
 import { useDeadlines } from '../../src/reference';
 import { useSession } from '../../src/session';
 import { Body, Button, Card, Empty, Heading, QueryState, Screen, Title } from '../../src/ui';
+
+function greeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  return hour < 18 ? 'Good afternoon' : 'Good evening';
+}
 
 function daysLabel(days: number) {
   if (days === 0) return 'Closes today';
@@ -26,10 +35,12 @@ export default function Home() {
   const nextStepItem = nextStep?.checklist.find((c) => !c.done);
   const firstName = me.data?.first_name;
 
+  const colors = useColors();
   return (
     <Screen>
-      <Heading>{firstName ? `Good day, ${firstName}` : 'Your next step after matric'}</Heading>
-      {nextDeadline && <Body>Your next deadline {daysLabel(nextDeadline.days_left).toLowerCase()}.</Body>}
+      <Heading>{firstName ? `${greeting()}, ${firstName}` : 'Your next step after matric'}</Heading>
+      {nextDeadline && <Body>Your next deadline closes in {nextDeadline.days_left} days.</Body>}
+      {signedIn && <Button label="Update my marks" onPress={() => router.push('/my-marks')} />}
 
       {!signedIn && (
         <>
@@ -41,34 +52,53 @@ export default function Home() {
 
       {signedIn && openRoutes.length > 0 && (
         <Card onPress={() => router.push('/plan')} label="Open your Plan B">
-          <Title>Your Plan B is ready</Title>
-          <Body muted>
-            {openRoutes.length} programme{openRoutes.length === 1 ? '' : 's'} on your plan need another route.
-          </Body>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Title>Your Plan B is ready</Title>
+            <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.paper, backgroundColor: colors.ink, paddingHorizontal: space.sm, borderRadius: 999, overflow: 'hidden' }}>
+              {openRoutes.length} route{openRoutes.length === 1 ? '' : 's'}
+            </Text>
+          </View>
+          <Body muted>Some programmes on your plan need another route. See the options.</Body>
+          <Pressable accessibilityRole="link" onPress={() => router.push('/plan')} style={{ minHeight: touchTarget, justifyContent: 'center' }}>
+            <Body>See my plan</Body>
+          </Pressable>
         </Card>
       )}
 
       {signedIn && nextStep && nextStepItem && (
         <Card onPress={() => router.push(`/application/${nextStep.id}`)} label="Open your next step">
-          <Title>Your next step</Title>
+          <Body muted>YOUR NEXT STEP</Body>
           <Body>{nextStepItem.label} for {nextStep.name}</Body>
         </Card>
       )}
 
-      <Title>Upcoming deadlines</Title>
+      <Card>
+        <Body muted>Tip: no real bursary, college or job asks you to pay to apply.</Body>
+      </Card>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Body muted>UPCOMING DEADLINES</Body>
+        <Pressable accessibilityRole="link" onPress={() => router.push('/study')}>
+          <Body>See all</Body>
+        </Pressable>
+      </View>
       <QueryState query={deadlines} empty={deadlines.data?.length === 0}>
-        {deadlines.data?.slice(0, 6).map((d) => (
-          <Card
-            key={`${d.institution_id}-${d.intake_year}`}
-            label={`${d.institution}, ${daysLabel(d.days_left)}`}
-            onPress={() => router.push(`/institution/${d.institution_id}`)}
-          >
-            <Title>{d.institution}</Title>
-            <Body muted>
-              {d.intake_year} intake · closes {d.closes_on} · {daysLabel(d.days_left)}
-            </Body>
-          </Card>
-        ))}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space.md }}>
+          {deadlines.data?.slice(0, 6).map((d) => (
+            <View key={`${d.institution_id}-${d.intake_year}`} style={{ width: 220 }}>
+              <Card
+                label={`${d.institution}, ${daysLabel(d.days_left)}`}
+                onPress={() => router.push(`/institution/${d.institution_id}`)}
+              >
+                <Title>{d.institution}</Title>
+                <Body muted>Closes {d.closes_on}</Body>
+                <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.paper, backgroundColor: colors.ink, alignSelf: 'flex-start', paddingHorizontal: space.sm, borderRadius: 999, overflow: 'hidden' }}>
+                  {daysLabel(d.days_left)}
+                </Text>
+              </Card>
+            </View>
+          ))}
+        </ScrollView>
       </QueryState>
       {deadlines.data?.length === 0 && (
         <Empty message="No application windows are loaded yet. Check each institution's site." />

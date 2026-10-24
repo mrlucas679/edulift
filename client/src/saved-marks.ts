@@ -5,8 +5,8 @@ import { request } from './api';
 import { useSession } from './session';
 
 export const PERIODS = [
-  { id: 'gr11_final', label: 'Grade 11 final' },
-  { id: 'gr12_june', label: 'Grade 12 June' },
+  { id: 'gr11_final', label: 'Gr 11 final' },
+  { id: 'gr12_june', label: 'Gr 12 June' },
   { id: 'gr12_prelim', label: 'Prelims' },
   { id: 'gr12_final', label: 'Final NSC' },
 ] as const;
