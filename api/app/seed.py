@@ -37,6 +37,7 @@ ALLOWED_HOSTS = {
     "www.hwseta.org.za",
     "www.inseta.org.za",
     "www.lgseta.org.za",
+    "www.merseta.org.za",
     "www.mict.org.za",
     "www.mqa.org.za",
     "www.nsfas.org.za",

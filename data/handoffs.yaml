@@ -103,3 +103,8 @@
   purpose: Learnerships and skills programmes for the wholesale and retail sector.
   url: https://www.wrseta.org.za/
   source: seta-wrseta
+- id: seta-merseta
+  name: MerSETA
+  purpose: Learnerships and skills programmes for the manufacturing, engineering and related services sector.
+  url: https://www.merseta.org.za/
+  source: seta-merseta
