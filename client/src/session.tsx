@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
 
-import { ApiError, request, startResponse, tokenResponse } from './api';
+import { ApiError, request, setAccessRefresher, startResponse, tokenResponse } from './api';
 import { forgetRefreshToken, loadRefreshToken, saveRefreshToken } from './tokens';
 
 type Session = {
@@ -20,6 +20,29 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<Session['status']>('restoring');
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [pending, setPending] = useState<{ email: string; session: string } | null>(null);
+
+  useEffect(() => {
+    setAccessRefresher(async () => {
+      const refreshToken = await loadRefreshToken();
+      if (!refreshToken) return null;
+      try {
+        const tokens = await request('/v1/auth/refresh', tokenResponse, {
+          method: 'POST',
+          body: { refresh_token: refreshToken },
+        });
+        if (tokens.refresh_token) await saveRefreshToken(tokens.refresh_token);
+        setAccessToken(tokens.access_token);
+        return tokens.access_token;
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 401) {
+          await forgetRefreshToken();
+          setAccessToken(null);
+          setStatus('signed-out');
+        }
+        return null;
+      }
+    });
+  }, []);
 
   // Restore the session on launch.
   useEffect(() => {

@@ -57,6 +57,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npx tsc --noEmit
       - run: npx expo lint
+      - run: npm test
       # Two known high advisories sit in Expo's build tooling (braces via Metro, node-forge
       # via update signing) with no fixed release yet.
       # Anything critical, or any high outside those two packages, fails the build.

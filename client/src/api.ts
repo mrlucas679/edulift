@@ -35,9 +35,20 @@ export const meResponse = z.object({
 });
 export type Me = z.infer<typeof meResponse>;
 
-type Options = { method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'; body?: unknown; accessToken?: string | null };
+type Options = {
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  body?: unknown;
+  accessToken?: string | null;
+  retried?: boolean;
+};
 
-export async function request<T>(path: string, schema: z.ZodType<T>, options: Options = {}) {
+let refreshAccess: (() => Promise<string | null>) | null = null;
+
+export function setAccessRefresher(refresh: () => Promise<string | null>) {
+  refreshAccess = refresh;
+}
+
+export async function request<T>(path: string, schema: z.ZodType<T>, options: Options = {}): Promise<T> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (options.accessToken) headers.Authorization = `Bearer ${options.accessToken}`;
 
@@ -56,6 +67,10 @@ export async function request<T>(path: string, schema: z.ZodType<T>, options: Op
   const json: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (response.status === 401 && options.accessToken && refreshAccess && !options.retried) {
+      const fresh = await refreshAccess();
+      if (fresh) return request(path, schema, { ...options, accessToken: fresh, retried: true });
+    }
     const parsed = errorBody.safeParse(json);
     if (parsed.success) {
       const { code, message, request_id } = parsed.data.error;
