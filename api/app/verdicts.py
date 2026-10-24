@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app import models as m
 from app.routers.aps import UnknownSubjectError
 from app.schemas import CheckOut, VerdictOut
-from eligibility.verdict import Band, Check, Nbt, Option, Rules, evaluate
+from eligibility.verdict import Band, Check, Floor, Nbt, Option, Rules, evaluate
 
 
 def subject_names(db: Session, marks: dict[str, int]) -> dict[str, str]:
@@ -52,6 +52,7 @@ def programme_verdict(
         selection=programme.selection,
         bands=bands,
         nbt=_nbt_groups(programme.nbt),
+        floor=Floor(programme.floor["count"], programme.floor["min"]) if programme.floor else None,
         opens_on=cycle.opens_on if cycle else None,
         closes_on=programme.closes_on or (cycle.closes_on if cycle else None),
     )

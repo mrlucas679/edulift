@@ -4,7 +4,7 @@ import pytest
 
 from eligibility.aps import best6, score
 from eligibility.marks import level
-from eligibility.verdict import Band, Nbt, Option, Rules, evaluate
+from eligibility.verdict import Band, Floor, Nbt, Option, Rules, evaluate
 
 TODAY = date(2026, 10, 23)
 
@@ -36,7 +36,7 @@ def test_best6_ignores_life_orientation_and_the_seventh_subject() -> None:
 
 
 def test_unverified_scheme_gives_no_score() -> None:
-    assert score("uct_health", THANDI) is None  # needs NBT results we don't collect
+    assert score("uct_unknown", THANDI) is None
     assert score(None, THANDI) is None
 
 
@@ -296,3 +296,62 @@ def test_fps_nbt_band_cannot_be_judged() -> None:
     )
     v = evaluate(marks, rules, TODAY)
     assert v.outcome == "qualifies_unconfirmed"
+
+
+def _health_rules(min_aps: int = 450, floor: Floor | None = None) -> Rules:
+    return Rules(
+        min_aps=min_aps,
+        scheme="uct_health",
+        groups=[
+            [Option("mathematics", 70)],
+            [Option("physical_sciences", 70)],
+            [Option("english_hl", 65), Option("english_fal", 65)],
+        ],
+        floor=floor or Floor(3, 70),
+        bands=[Band("guaranteed", 810, [], metric="FPS_NBT", nbt=[[Nbt("AL", "proficient")]])],
+    )
+
+
+def test_health_is_unconfirmed_when_every_subject_rule_holds() -> None:
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 80, "geography": 75,
+             "life_sciences": 75, "isizulu_fal": 75}  # fmt: skip
+    v = evaluate(marks, _health_rules(), TODAY)
+    assert v.outcome == "qualifies_unconfirmed"
+    assert v.score == 80 * 3 + 75 * 3
+
+
+def test_health_floor_fails_when_a_next_best_subject_is_short() -> None:
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 80, "geography": 69,
+             "life_sciences": 75, "isizulu_fal": 75}  # fmt: skip
+    v = evaluate(marks, _health_rules(), TODAY)
+    assert v.outcome == "subjects_only"
+
+
+def test_health_sub_minimum_aps_is_its_own_refusal() -> None:
+    # 65 + 70 + 70 + 75 + 75 + 75 = 430: below the sub-minimum of 450, floor still met.
+    marks = {"english_hl": 65, "mathematics": 70, "physical_sciences": 70, "geography": 75,
+             "life_sciences": 75, "isizulu_fal": 75}  # fmt: skip
+    v = evaluate(marks, _health_rules(min_aps=450), TODAY)
+    assert v.outcome == "aps_only"
+
+
+def test_health_floor_fails_below_three_other_subjects() -> None:
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 80, "geography": 80,
+             "life_sciences": 80, "isizulu_fal": 80}  # fmt: skip
+    rules = _health_rules(floor=Floor(4, 70))  # only three other subjects exist
+    assert evaluate(marks, rules, TODAY).outcome == "subjects_only"
+
+
+def test_uct_health_is_out_of_600() -> None:
+    marks = dict.fromkeys(
+        [
+            "english_hl",
+            "mathematics",
+            "physical_sciences",
+            "geography",
+            "life_sciences",
+            "isizulu_fal",
+        ],
+        50,
+    )
+    assert score("uct_health", marks) == 300

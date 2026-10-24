@@ -1349,3 +1349,282 @@ programmes:
         level: proficient
     - - component: QL
         level: intermediate
+- id: uct.bachelor-of-medicine-and-bachelor-of-surgery-mbchb
+  name: Bachelor of Medicine and Bachelor of Surgery (MBChB)
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 450
+  floor:
+    count: 3
+    min: 70
+  requirements:
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 810
+    applies_to: all
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+    - - component: MAT
+        level: proficient
+  - label: likely
+    metric: WPS
+    score: 807
+    applies_to: all
+    requirements: []
+    nbt:
+    - - &id023
+        component: AL
+        level: intermediate
+    - - &id024
+        component: QL
+        level: intermediate
+    - - &id025
+        component: MAT
+        level: intermediate
+  - label: possible
+    metric: FPS_NBT
+    score: 644
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 450. 240 places. Only the all-applicant bands are judged.
+    NBT results are not held, so an eligible learner gets 'unconfirmed'. Checked against
+    the prospectus page images on 2026-10-24, not second-person verified. Targeted-redress
+    thresholds differ by redress category; the lowest is shown here, and the prospectus
+    gives the others.
+- id: uct.bachelor-of-science-in-physiotherapy
+  name: Bachelor of Science in Physiotherapy
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 360
+  floor: &id026
+    count: 3
+    min: 60
+  requirements:
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 65
+    - subject: life_sciences
+      min: 65
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 730
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: likely
+    metric: WPS
+    score: 797
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: possible
+    metric: FPS_NBT
+    score: 580
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 360. 70 places. Only the all-applicant bands are judged.
+    NBT results are not held, so an eligible learner gets 'unconfirmed'. Checked against
+    the prospectus page images on 2026-10-24, not second-person verified. Targeted-redress
+    thresholds differ by redress category; the lowest is shown here, and the prospectus
+    gives the others.
+- id: uct.bachelor-of-science-in-occupational-therapy
+  name: Bachelor of Science in Occupational Therapy
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 340
+  floor: *id026
+  requirements:
+  - - subject: mathematics
+      min: 60
+    - subject: maths_literacy
+      min: 70
+  - - subject: physical_sciences
+      min: 65
+    - subject: life_sciences
+      min: 65
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 730
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: likely
+    metric: WPS
+    score: 782
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: possible
+    metric: FPS_NBT
+    score: 565
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 340. Mathematical Literacy applicants get an NBT maths equivalence
+    (QL minus 20). 70 places. Only the all-applicant bands are judged. NBT results
+    are not held, so an eligible learner gets 'unconfirmed'. Checked against the prospectus
+    page images on 2026-10-24, not second-person verified. Targeted-redress thresholds
+    differ by redress category; the lowest is shown here, and the prospectus gives
+    the others.
+- id: uct.bachelor-of-science-in-audiology
+  name: Bachelor of Science in Audiology
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 340
+  floor: *id026
+  requirements:
+  - - subject: mathematics
+      min: 60
+    - subject: maths_literacy
+      min: 70
+  - - subject: physical_sciences
+      min: 65
+    - subject: life_sciences
+      min: 65
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 720
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: likely
+    metric: WPS
+    score: 710
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: possible
+    metric: FPS_NBT
+    score: 550
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 340. 37 places. Only the all-applicant bands are judged.
+    NBT results are not held, so an eligible learner gets 'unconfirmed'. Checked against
+    the prospectus page images on 2026-10-24, not second-person verified. Targeted-redress
+    thresholds differ by redress category; the lowest is shown here, and the prospectus
+    gives the others.
+- id: uct.bachelor-of-science-in-speech-language-pathology
+  name: Bachelor of Science in Speech-Language Pathology
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 340
+  floor: *id026
+  requirements:
+  - - subject: mathematics
+      min: 60
+    - subject: maths_literacy
+      min: 70
+  - - subject: physical_sciences
+      min: 65
+    - subject: life_sciences
+      min: 65
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 715
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: likely
+    metric: WPS
+    score: 670
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: possible
+    metric: FPS_NBT
+    score: 510
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 340. 40 places. Applicants with Mathematical Literacy and
+    any Basic NBT result are considered individually. Only the all-applicant bands
+    are judged. NBT results are not held, so an eligible learner gets 'unconfirmed'.
+    Checked against the prospectus page images on 2026-10-24, not second-person verified.
+    Targeted-redress thresholds differ by redress category; the lowest is shown here,
+    and the prospectus gives the others.

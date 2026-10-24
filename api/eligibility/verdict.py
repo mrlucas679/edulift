@@ -28,6 +28,14 @@ NBT_LEVELS = ("basic", "intermediate", "upper_intermediate", "proficient")
 
 
 @dataclass(frozen=True)
+class Floor:
+    """The best `count` subjects outside the named requirements must each reach `min_percent`."""
+
+    count: int
+    min_percent: int
+
+
+@dataclass(frozen=True)
 class Nbt:
     component: str  # "AL", "QL" or "MAT"
     level: str  # one of NBT_LEVELS
@@ -53,6 +61,7 @@ class Rules:
     closes_on: date | None = None
     bands: list[Band] = field(default_factory=list)  # highest score first
     nbt: list[list[Nbt]] = field(default_factory=list)
+    floor: Floor | None = None
 
 
 @dataclass(frozen=True)
@@ -127,11 +136,36 @@ def _group_check(n: int, group: list[Option], marks: dict[str, int]) -> Check:
     return Check(f"subjects_{n}", required, yours, "pass" if _group_met(group, marks) else "fail")
 
 
-def _banded(aps: int | None, marks: dict[str, int], rules: Rules, window: Window) -> Verdict:
-    if aps is None:
-        return Verdict("incomplete", None, [], window)
+def _floor_check(floor: Floor, groups: list[list[Option]], marks: dict[str, int]) -> Check:
+    named = _satisfiers(groups, marks)
+    others = sorted(
+        (p for s, p in without_lo(marks).items() if s not in named and s not in ENGLISH_SUBJECTS),
+        reverse=True,
+    )
+    ok = len(others) >= floor.count and all(p >= floor.min_percent for p in others[: floor.count])
+    yours = ", ".join(str(p) for p in others[: floor.count]) or "none"
+    return Check(
+        "next_three", f"next {floor.count} subjects at {floor.min_percent}%", yours,
+        "pass" if ok else "fail",
+    )  # fmt: skip
+
+
+ENGLISH_SUBJECTS = frozenset({"english_hl", "english_fal"})
+
+
+def _satisfiers(groups: list[list[Option]], marks: dict[str, int]) -> set[str]:
+    """The subjects that meet each group, so they do not also count as 'next best'."""
+    return {
+        o.subject
+        for g in groups
+        for o in g
+        if o.subject in marks and marks[o.subject] >= o.min_percent
+    }
+
+
+def _band_checks(aps: int, marks: dict[str, int], bands: list[Band]) -> list[Check]:
     checks = []
-    for band in sorted(rules.bands, key=lambda b: -b.score):
+    for band in sorted(bands, key=lambda b: -b.score):
         if band.applies_to != "all":
             continue
         parts = [f"{band.metric} {band.score}"] + [_describe(g) for g in band.groups]
@@ -149,15 +183,38 @@ def _banded(aps: int | None, marks: dict[str, int], rules: Rules, window: Window
         else:
             result = "unknown" if band.nbt else "pass"  # NBT results are not held
         checks.append(Check(band.label, " and ".join(parts), f"FPS {aps}", result))
+    return checks
+
+
+def _banded(aps: int | None, marks: dict[str, int], rules: Rules, window: Window) -> Verdict:
+    if aps is None:
+        return Verdict("incomplete", None, [], window)
+    hard = [_group_check(i, g, marks) for i, g in enumerate(rules.groups, start=1)]
+    if rules.floor is not None:
+        hard.append(_floor_check(rules.floor, rules.groups, marks))
+    if rules.min_aps is not None:
+        hard.append(_score_check(aps, rules.min_aps))
+    checks = _band_checks(aps, marks, rules.bands)
     if window == "closed":
-        return Verdict("closed", aps, checks, window)
+        return Verdict("closed", aps, checks + hard, window)
+    if any(h.result == "fail" for h in hard):
+        subjects_fail = any(h.result == "fail" for h in hard if h.name != "score")
+        aps_fail = any(h.result == "fail" for h in hard if h.name == "score")
+        outcome: Outcome
+        if subjects_fail and aps_fail:
+            outcome = "not_eligible"
+        elif subjects_fail:
+            outcome = "subjects_only"
+        else:
+            outcome = "aps_only"
+        return Verdict(outcome, aps, hard + checks, window)
     if any(c.result == "pass" for c in checks):
         top = checks[0].result == "pass"
-        outcome: Outcome = "qualifies" if top and not rules.selection else "qualifies_selection"
-        return Verdict(outcome, aps, checks, window)
-    if any(c.result == "unknown" for c in checks):
-        return Verdict("qualifies_unconfirmed", aps, checks, window)
-    return Verdict("not_eligible", aps, checks, window)
+        outcome = "qualifies" if top and not rules.selection else "qualifies_selection"
+        return Verdict(outcome, aps, hard + checks, window)
+    if any(c.result == "unknown" for c in checks + hard):
+        return Verdict("qualifies_unconfirmed", aps, hard + checks, window)
+    return Verdict("not_eligible", aps, hard + checks, window)
 
 
 def _outcome(checks: list[Check], selection: bool, window: str) -> Outcome:

@@ -115,7 +115,12 @@ class OptionIn(Strict):
     min: int
 
 
-FPS_SCHEMES = {"uct_fps", "uct_science"}
+FPS_SCHEMES = {"uct_fps", "uct_science", "uct_health"}
+
+
+class FloorIn(Strict):
+    count: int
+    min: int
 
 
 class NbtIn(Strict):
@@ -138,8 +143,9 @@ class ProgrammeIn(Strict):
     qualification: Literal["higher_cert", "diploma", "degree", "extended_degree", "ncv", "n4"]
     field: str
     min_aps: int | None = None
-    aps_scheme: Literal["uct_fps", "uct_science"] | None = None  # overrides the institution's
+    aps_scheme: Literal["uct_fps", "uct_science", "uct_health"] | None = None  # overrides
     notes: str | None = None  # shown as-is; never judged, e.g. places limits
+    floor: FloorIn | None = None
     selection: bool = False
     closes_on: date | None = None
     source: str
@@ -159,7 +165,9 @@ class InstitutionIn(Strict):
     route: Literal["direct", "cao", "cas"]
     fee_cents: int | None = None
     max_choices: int | None = None
-    aps_scheme: Literal["standard_best6", "wits_best7", "uct_fps", "uct_science"] | None = None
+    aps_scheme: (
+        Literal["standard_best6", "wits_best7", "uct_fps", "uct_science", "uct_health"] | None
+    ) = None
     source: str
     cycles: list[CycleIn] = []
     programmes: list[ProgrammeIn] = []
