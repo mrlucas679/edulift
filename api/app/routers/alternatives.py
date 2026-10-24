@@ -7,6 +7,7 @@ from app import models as m
 from app import rate_limit
 from app.deps import Db, DbEngine, SignedIn
 from app.errors import NotFoundError
+from app.nbt_levels import learner_nbt
 from app.opportunities import learner_facts, matched, open_opportunities, route
 from app.routers.marks import active_user, latest_marks
 from app.routers.opportunities import to_matched
@@ -32,14 +33,15 @@ def alternatives(
     names = subject_names(db, marks)
     today = date.today()
 
-    if programme_verdict(db, target, marks, names, today).outcome in QUALIFIES:
+    nbt = learner_nbt(db, user.id)
+    if programme_verdict(db, target, marks, names, today, nbt=nbt).outcome in QUALIFIES:
         return AlternativesOut(routes=[], funding=[], work=[])
 
     profile = db.get(m.Profile, user.id)
     province = profile.province if profile and profile.province else ""
     candidates = []
     for programme in db.scalars(select(m.Programme).where(m.Programme.id != programme_id)):
-        verdict = programme_verdict(db, programme, marks, names, today)
+        verdict = programme_verdict(db, programme, marks, names, today, nbt=nbt)
         institution = db.get_one(m.Institution, programme.institution_id)
         candidates.append(
             Candidate(

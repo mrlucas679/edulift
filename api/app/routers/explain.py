@@ -11,6 +11,7 @@ from app import rate_limit
 from app.deps import Db, DbEngine, Explainer, SignedIn
 from app.errors import NotFoundError, RateLimitedError
 from app.explain import CheckFact, ExplanationInput, TemplateProvider, explain
+from app.nbt_levels import learner_nbt
 from app.routers.marks import active_user, latest_marks
 from app.schemas import CheckRequest
 from app.verdicts import programme_verdict, subject_names
@@ -68,7 +69,9 @@ def explain_verdict(
     if marks is None:
         raise NotFoundError("Save your marks first.")
     names = subject_names(db, marks)
-    verdict = programme_verdict(db, programme, marks, names, date.today())
+    verdict = programme_verdict(
+        db, programme, marks, names, date.today(), nbt=learner_nbt(db, user.id)
+    )
     institution = db.get_one(m.Institution, programme.institution_id)
     data = ExplanationInput(
         outcome=verdict.outcome,

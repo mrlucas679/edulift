@@ -26,6 +26,7 @@ export const PURPOSES: Record<string, string> = {
   ai_explanations: 'Explain my results in plain language. The result (not my name or contact details) goes to an AI service that may be outside South Africa.',
   ai_writing: 'Answer my questions and help draft a CV or letter. What I type goes to an AI service that may be outside South Africa.',
   reminders: 'Email me before deadlines I saved. Nothing else.',
+  nbt_results: 'Use my NBT levels to check admission rules that need them. Optional: without them, those rules show as unconfirmed. Removing them deletes them.',
 };
 
 // Same choices, worded for the parent reading them.
@@ -33,6 +34,7 @@ export const GUARDIAN_PURPOSES: Record<string, string> = {
   ai_explanations: 'Explain their results in plain language. The result (not their name or contact details) goes to an AI service that may be outside South Africa.',
   ai_writing: 'Answer their questions and help draft a CV or letter. What they type goes to an AI service that may be outside South Africa.',
   reminders: 'Email them before deadlines they saved. Nothing else.',
+  nbt_results: 'Use their NBT levels to check admission rules that need them. Optional: without them, those rules show as unconfirmed. Removing them deletes them.',
 };
 
 export function useMe() {

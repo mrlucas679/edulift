@@ -32,6 +32,7 @@ export default function Settings() {
 
   const reminderOn = me.data?.consents.includes('reminders') ?? false;
   const aiOn = me.data?.consents.includes('ai_explanations') ?? false;
+  const nbtOn = me.data?.consents.includes('nbt_results') ?? false;
 
   return (
     <Screen>
@@ -75,6 +76,19 @@ export default function Settings() {
             maxLength={254}
           />
         )}
+
+        <View style={{ minHeight: touchTarget, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View style={{ flex: 1, paddingRight: space.md }}>
+            <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>Use my NBT results</Text>
+            <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>{PURPOSES.nbt_results}</Text>
+          </View>
+          <Switch
+            value={nbtOn}
+            disabled={busy !== null}
+            onValueChange={(on) => change('nbt_results', on)}
+            accessibilityLabel="Use my NBT results"
+          />
+        </View>
 
         <Title>Account</Title>
         <Body>Parent approval: {me.data?.status === 'pending_guardian' ? 'waiting' : me.data?.status === 'restricted' ? 'withdrawn, browsing only' : 'not needed or given'}</Body>

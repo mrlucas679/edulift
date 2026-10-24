@@ -28,7 +28,7 @@ router = APIRouter(tags=["onboarding"])
 
 POLICY = "2026-10"
 LINK_HOURS = 72
-OPTIONAL = {"ai_explanations", "ai_writing", "reminders"}
+OPTIONAL = {"ai_explanations", "ai_writing", "reminders", "nbt_results"}
 
 
 class TooYoungError(AppError):
@@ -195,6 +195,8 @@ def set_consent(body: ConsentRequest, me: SignedIn, db: Db) -> MeDetail:
         learner_profile = db.get(m.Profile, user.id)
         if body.purpose == "reminders" and learner_profile is not None:
             learner_profile.contact_email = None
+        if body.purpose == "nbt_results":
+            db.execute(delete(m.NbtRecord).where(m.NbtRecord.user_id == user.id))
         db.execute(
             update(m.Consent)
             .where(

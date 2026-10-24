@@ -6,4 +6,1625 @@ apply_url: https://www.uct.ac.za/students/applications-apply-undergraduate-quali
 route: direct
 aps_scheme: uct_fps
 source: uct-nsc-2027
-# cycles and programmes: add once checked against the 2027 prospectus
+cycles:
+- intake_year: 2027
+  opens_on: 2026-04-01
+  closes_on: 2026-07-31
+  source: uct-prospectus-2027
+programmes:
+- id: uct.bachelor-of-science-in-engineering-in-civil-engineering
+  name: Bachelor of Science in Engineering in Civil Engineering
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+  - label: likely
+    metric: WPS
+    score: 480
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+  - label: possible
+    metric: FPS
+    score: 420
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+- id: uct.bachelor-of-science-in-engineering-in-electrical-electrical-and-comput
+  name: Bachelor of Science in Engineering in Electrical, Electrical and Computer
+    Engineering and Mechatronics
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: likely
+    metric: WPS
+    score: 480
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: possible
+    metric: FPS
+    score: 420
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+- id: uct.bachelor-of-science-in-engineering-in-chemical-engineering
+  name: Bachelor of Science in Engineering in Chemical Engineering
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: likely
+    metric: WPS
+    score: 480
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+  - label: possible
+    metric: FPS
+    score: 420
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+- id: uct.bachelor-of-science-in-engineering-in-mechanical-and-mechanical-mechat
+  name: Bachelor of Science in Engineering in Mechanical, and Mechanical & Mechatronic
+    Engineering
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: likely
+    metric: WPS
+    score: 480
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: possible
+    metric: FPS
+    score: 420
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+- id: uct.bachelor-of-science-in-geomatics
+  name: Bachelor of Science in Geomatics
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 450
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 75
+    - - subject: physical_sciences
+        min: 70
+  - label: likely
+    metric: WPS
+    score: 420
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 60
+  - label: possible
+    metric: FPS
+    score: 390
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 60
+- id: uct.bachelor-of-science-in-construction-studies
+  name: Bachelor of Science in Construction Studies
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 450
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 60
+  - label: likely
+    metric: WPS
+    score: 420
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 55
+  - label: possible
+    metric: FPS
+    score: 390
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 55
+- id: uct.bachelor-of-science-in-property-studies
+  name: Bachelor of Science in Property Studies
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 450
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+  - label: likely
+    metric: WPS
+    score: 420
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+  - label: possible
+    metric: FPS
+    score: 390
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 65
+- id: uct.bachelor-of-business-science-specialising-in-economics
+  name: Bachelor of Business Science specialising in Economics
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id001
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id001
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id001
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-specialising-in-economics-with-law
+  name: Bachelor of Business Science specialising in Economics with Law
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id002
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id002
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id002
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-specialising-in-finance-investment-and-ba
+  name: Bachelor of Business Science specialising in Finance, Investment and Banking
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id003
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id003
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id003
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-specialising-in-finance-with-accounting
+  name: Bachelor of Business Science specialising in Finance with Accounting
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id004
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id004
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id004
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-specialising-in-information-systems
+  name: Bachelor of Business Science specialising in Information Systems
+  qualification: degree
+  field: it
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id005
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id005
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id005
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-specialising-in-marketing
+  name: Bachelor of Business Science specialising in Marketing
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id006
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id006
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id006
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-specialising-in-industrial-and-organisati
+  name: Bachelor of Business Science specialising in Industrial and Organisational
+    Psychology
+  qualification: degree
+  field: humanities
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id007
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id007
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id007
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-specialising-in-computer-science
+  name: Bachelor of Business Science specialising in Computer Science
+  qualification: degree
+  field: it
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id008
+    - - subject: mathematics
+        min: 70
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id008
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id008
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-specialising-in-statistics-and-data-scien
+  name: Bachelor of Business Science specialising in Statistics and Data Science
+  qualification: degree
+  field: science
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id009
+    - - subject: mathematics
+        min: 70
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id009
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id009
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-financial-accounting-general-char
+  name: Bachelor of Commerce specialising in Financial Accounting (General/Chartered)
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id010
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id010
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id010
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-economics-with-law
+  name: Bachelor of Commerce specialising in Economics with Law
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id011
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id011
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id011
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-economics-with-finance
+  name: Bachelor of Commerce specialising in Economics with Finance
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id012
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id012
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id012
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-economics-statistics
+  name: Bachelor of Commerce specialising in Economics & Statistics
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id013
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id013
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id013
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-information-systems
+  name: Bachelor of Commerce specialising in Information Systems
+  qualification: degree
+  field: it
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id014
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id014
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id014
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-information-systems-computer-scie
+  name: Bachelor of Commerce specialising in Information Systems & Computer Science
+  qualification: degree
+  field: it
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id015
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id015
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id015
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-information-systems-finance
+  name: Bachelor of Commerce specialising in Information Systems & Finance
+  qualification: degree
+  field: it
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id016
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id016
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id016
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-management-studies
+  name: Bachelor of Commerce specialising in Management Studies
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id017
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id017
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id017
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-commerce-specialising-in-philosophy-politics-economics
+  name: Bachelor of Commerce specialising in Philosophy, Politics & Economics
+  qualification: degree
+  field: humanities
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 435
+    applies_to: all
+    requirements: &id018
+    - - subject: mathematics
+        min: 60
+    - - subject: english_hl
+        min: 50
+    - - subject: english_fal
+        min: 60
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: likely
+    metric: WPS
+    score: 470
+    applies_to: all
+    requirements: *id018
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+  - label: possible
+    metric: FPS
+    score: 430
+    applies_to: targeted_redress
+    requirements: *id018
+    nbt:
+    - - component: AL
+        level: upper_intermediate
+    - - component: QL
+        level: upper_intermediate
+- id: uct.bachelor-of-business-science-or-bachelor-of-commerce-specialising-in-a
+  name: Bachelor of Business Science or Bachelor of Commerce specialising in Actuarial
+    Science
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements: &id019
+    - - subject: mathematics
+        min: 80
+    - - subject: english_hl
+        min: 60
+    - - subject: english_fal
+        min: 80
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+  - label: likely
+    metric: WPS
+    score: 525
+    applies_to: all
+    requirements: *id019
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+  - label: possible
+    metric: FPS
+    score: 475
+    applies_to: targeted_redress
+    requirements: *id019
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+- id: uct.bachelor-of-business-science-or-bachelor-of-commerce-specialising-in-q
+  name: Bachelor of Business Science or Bachelor of Commerce specialising in Quantitative
+    Finance
+  qualification: degree
+  field: commerce
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements: &id020
+    - - subject: mathematics
+        min: 80
+    - - subject: english_hl
+        min: 60
+    - - subject: english_fal
+        min: 80
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+  - label: likely
+    metric: WPS
+    score: 525
+    applies_to: all
+    requirements: *id020
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+  - label: possible
+    metric: FPS
+    score: 475
+    applies_to: targeted_redress
+    requirements: *id020
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+- id: uct.bsc-applied-mathematics
+  name: 'Bachelor of Science: Applied Mathematics'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: &id021
+  - label: guaranteed
+    metric: FPS
+    score: 660
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 70
+    - - subject: physical_sciences
+        min: 60
+  - label: likely
+    metric: WPS
+    score: 640
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 70
+    - - subject: physical_sciences
+        min: 60
+  - label: possible
+    metric: FPS
+    score: 550
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 70
+    - - subject: physical_sciences
+        min: 60
+  requirements: &id022
+  - - subject: physical_sciences
+      min: 0
+  notes: null
+- id: uct.bsc-applied-statistics
+  name: 'Bachelor of Science: Applied Statistics'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-archaeology
+  name: 'Bachelor of Science: Archaeology'
+  qualification: degree
+  field: humanities
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: []
+  notes: Where Physical Sciences or Information Technology was not taken, the choice
+    of majors is restricted to Archaeology and Environmental & Geographical Science.
+- id: uct.bsc-artificial-intelligence
+  name: 'Bachelor of Science: Artificial Intelligence'
+  qualification: degree
+  field: it
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-astrophysics
+  name: 'Bachelor of Science: Astrophysics'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-biochemistry
+  name: 'Bachelor of Science: Biochemistry'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: 'Places are limited: acceptance into the Faculty does not guarantee this
+    major. Some majors have limits on the number of students (Biochemistry, Computer
+    Science and associated majors, Genetics, Human Anatomy & Physiology).'
+- id: uct.bsc-biology
+  name: 'Bachelor of Science: Biology'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-chemistry
+  name: 'Bachelor of Science: Chemistry'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-computer-engineering
+  name: 'Bachelor of Science: Computer Engineering'
+  qualification: degree
+  field: engineering
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-environmental-geographical-science
+  name: 'Bachelor of Science: Environmental & Geographical Science'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: []
+  notes: Where Physical Sciences or Information Technology was not taken, the choice
+    of majors is restricted to Archaeology and Environmental & Geographical Science.
+    Physical Sciences may be replaced by Geography for this major.
+- id: uct.bsc-genetics
+  name: 'Bachelor of Science: Genetics'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: 'Places are limited: acceptance into the Faculty does not guarantee this
+    major. Some majors have limits on the number of students (Biochemistry, Computer
+    Science and associated majors, Genetics, Human Anatomy & Physiology).'
+- id: uct.bsc-geology
+  name: 'Bachelor of Science: Geology'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-human-anatomy-physiology
+  name: 'Bachelor of Science: Human Anatomy & Physiology'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: 'Places are limited: acceptance into the Faculty does not guarantee this
+    major. Some majors have limits on the number of students (Biochemistry, Computer
+    Science and associated majors, Genetics, Human Anatomy & Physiology).'
+- id: uct.bsc-marine-biology
+  name: 'Bachelor of Science: Marine Biology'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-mathematical-statistics
+  name: 'Bachelor of Science: Mathematical Statistics'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-mathematics
+  name: 'Bachelor of Science: Mathematics'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-ocean-atmosphere-science
+  name: 'Bachelor of Science: Ocean & Atmosphere Science'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-physics
+  name: 'Bachelor of Science: Physics'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-quantitative-biology
+  name: 'Bachelor of Science: Quantitative Biology'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bsc-statistics-data-science
+  name: 'Bachelor of Science: Statistics & Data Science'
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands: *id021
+  requirements: *id022
+  notes: null
+- id: uct.bachelor-of-laws-llb
+  name: Bachelor of Laws (LLB), 4-year undergraduate
+  qualification: degree
+  field: humanities.law
+  source: uct-prospectus-2027
+  notes: Combined Law and Humanities or Law and Commerce, and the graduate LLB, are
+    separate routes not loaded here. Up to ten international applicants are accepted.
+    The international band is not judged.
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: intermediate
+  - label: likely
+    metric: WPS
+    score: 500
+    applies_to: all
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: intermediate
+  - label: possible
+    metric: FPS
+    score: 470
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+  - label: probable
+    metric: FPS
+    score: 510
+    applies_to: international
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: intermediate
+- id: uct.bachelor-of-medicine-and-bachelor-of-surgery-mbchb
+  name: Bachelor of Medicine and Bachelor of Surgery (MBChB)
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 450
+  floor:
+    count: 3
+    min: 70
+  requirements:
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 810
+    applies_to: all
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+    - - component: MAT
+        level: proficient
+  - label: likely
+    metric: WPS
+    score: 807
+    applies_to: all
+    requirements: []
+    nbt:
+    - - &id023
+        component: AL
+        level: intermediate
+    - - &id024
+        component: QL
+        level: intermediate
+    - - &id025
+        component: MAT
+        level: intermediate
+  - label: possible
+    metric: FPS_NBT
+    score: 644
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 450. 240 places. Only the all-applicant bands are judged.
+    NBT results are not held, so an eligible learner gets 'unconfirmed'. Checked against
+    the prospectus page images on 2026-10-24, not second-person verified. Targeted-redress
+    thresholds differ by redress category; the lowest is shown here, and the prospectus
+    gives the others.
+- id: uct.bachelor-of-science-in-physiotherapy
+  name: Bachelor of Science in Physiotherapy
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 360
+  floor: &id026
+    count: 3
+    min: 60
+  requirements:
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 65
+    - subject: life_sciences
+      min: 65
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 730
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: likely
+    metric: WPS
+    score: 797
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: possible
+    metric: FPS_NBT
+    score: 580
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 360. 70 places. Only the all-applicant bands are judged.
+    NBT results are not held, so an eligible learner gets 'unconfirmed'. Checked against
+    the prospectus page images on 2026-10-24, not second-person verified. Targeted-redress
+    thresholds differ by redress category; the lowest is shown here, and the prospectus
+    gives the others.
+- id: uct.bachelor-of-science-in-occupational-therapy
+  name: Bachelor of Science in Occupational Therapy
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 340
+  floor: *id026
+  requirements:
+  - - subject: mathematics
+      min: 60
+    - subject: maths_literacy
+      min: 70
+  - - subject: physical_sciences
+      min: 65
+    - subject: life_sciences
+      min: 65
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 730
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: likely
+    metric: WPS
+    score: 782
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: possible
+    metric: FPS_NBT
+    score: 565
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 340. Mathematical Literacy applicants get an NBT maths equivalence
+    (QL minus 20). 70 places. Only the all-applicant bands are judged. NBT results
+    are not held, so an eligible learner gets 'unconfirmed'. Checked against the prospectus
+    page images on 2026-10-24, not second-person verified. Targeted-redress thresholds
+    differ by redress category; the lowest is shown here, and the prospectus gives
+    the others.
+- id: uct.bachelor-of-science-in-audiology
+  name: Bachelor of Science in Audiology
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 340
+  floor: *id026
+  requirements:
+  - - subject: mathematics
+      min: 60
+    - subject: maths_literacy
+      min: 70
+  - - subject: physical_sciences
+      min: 65
+    - subject: life_sciences
+      min: 65
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 720
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: likely
+    metric: WPS
+    score: 710
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: possible
+    metric: FPS_NBT
+    score: 550
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 340. 37 places. Only the all-applicant bands are judged.
+    NBT results are not held, so an eligible learner gets 'unconfirmed'. Checked against
+    the prospectus page images on 2026-10-24, not second-person verified. Targeted-redress
+    thresholds differ by redress category; the lowest is shown here, and the prospectus
+    gives the others.
+- id: uct.bachelor-of-science-in-speech-language-pathology
+  name: Bachelor of Science in Speech-Language Pathology
+  qualification: degree
+  field: health
+  source: uct-prospectus-2027
+  aps_scheme: uct_health
+  min_aps: 340
+  floor: *id026
+  requirements:
+  - - subject: mathematics
+      min: 60
+    - subject: maths_literacy
+      min: 70
+  - - subject: physical_sciences
+      min: 65
+    - subject: life_sciences
+      min: 65
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  fps_bands:
+  - label: guaranteed
+    metric: FPS_NBT
+    score: 715
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: likely
+    metric: WPS
+    score: 670
+    applies_to: all
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  - label: possible
+    metric: FPS_NBT
+    score: 510
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - *id023
+    - - *id024
+    - - *id025
+  notes: Sub-minimum APS 340. 40 places. Applicants with Mathematical Literacy and
+    any Basic NBT result are considered individually. Only the all-applicant bands
+    are judged. NBT results are not held, so an eligible learner gets 'unconfirmed'.
+    Checked against the prospectus page images on 2026-10-24, not second-person verified.
+    Targeted-redress thresholds differ by redress category; the lowest is shown here,
+    and the prospectus gives the others.

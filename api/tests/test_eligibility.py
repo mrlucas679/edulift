@@ -4,7 +4,7 @@ import pytest
 
 from eligibility.aps import best6, score
 from eligibility.marks import level
-from eligibility.verdict import Option, Rules, evaluate
+from eligibility.verdict import Band, Floor, Nbt, Option, Rules, evaluate
 
 TODAY = date(2026, 10, 23)
 
@@ -36,7 +36,7 @@ def test_best6_ignores_life_orientation_and_the_seventh_subject() -> None:
 
 
 def test_unverified_scheme_gives_no_score() -> None:
-    assert score("uct_health", THANDI) is None  # needs NBT results we don't collect
+    assert score("uct_unknown", THANDI) is None
     assert score(None, THANDI) is None
 
 
@@ -160,3 +160,228 @@ def test_uct_ignores_marks_under_40_and_always_counts_english() -> None:
     marks = dict(UCT_EXAMPLE, english_hl=45, egd=39) | {"history": 90, "geography": 88}
     # English 45 forced in; best five others: 90, 88, 86, 84, 79. EGD 39 scores 0.
     assert score("uct_fps", marks) == 45 + 90 + 88 + 86 + 84 + 79
+
+
+def _uct_band_rules(selection: bool = False) -> Rules:
+    maths = [Option("mathematics", 65)]
+    return Rules(
+        min_aps=None,
+        scheme="uct_fps",
+        selection=selection,
+        bands=[
+            Band("guaranteed", 500, [[Option("mathematics", 80)]]),
+            Band("likely", 480, [maths]),
+            Band("possible", 390, [maths], applies_to="targeted_redress"),
+        ],
+    )
+
+
+def test_band_top_score_with_subjects_qualifies() -> None:
+    marks = {"english_hl": 90, "mathematics": 90, "physical_sciences": 90, "geography": 90,
+             "life_sciences": 90, "isizulu_fal": 90}  # fmt: skip
+    v = evaluate(marks, _uct_band_rules(), TODAY)
+    assert v.outcome == "qualifies"
+    assert v.score == 540
+
+
+def test_band_below_top_but_above_likely_is_selection() -> None:
+    # 85+75+80+80+80+80 = 480 (likely). Mathematics 75 misses the top band's 80%.
+    marks = {"english_hl": 85, "mathematics": 75, "physical_sciences": 80, "geography": 80,
+             "life_sciences": 80, "isizulu_fal": 80}  # fmt: skip
+    v = evaluate(marks, _uct_band_rules(), TODAY)
+    assert v.score == 480
+    assert v.outcome == "qualifies_selection"
+
+
+def test_band_subject_short_fails_that_band_only() -> None:
+    # Mathematics 60% is below the likely band's 65%, so only the 'possible' band is
+    # not judged here and no band passes.
+    marks = {"english_hl": 60, "mathematics": 60, "physical_sciences": 60, "geography": 60,
+             "life_sciences": 60, "isizulu_fal": 60}  # fmt: skip
+    v = evaluate(marks, _uct_band_rules(), TODAY)
+    assert v.outcome == "not_eligible"
+    assert [c.result for c in v.checks] == ["fail", "fail"]
+
+
+def test_targeted_redress_band_is_never_judged() -> None:
+    marks = {"english_hl": 60, "mathematics": 70, "physical_sciences": 60, "geography": 60,
+             "life_sciences": 60, "isizulu_fal": 60}  # fmt: skip
+    v = evaluate(marks, _uct_band_rules(), TODAY)
+    assert "possible" not in [c.name for c in v.checks]
+
+
+def test_band_closed_window_wins() -> None:
+    rules = _uct_band_rules()
+    closed = Rules(**{**rules.__dict__, "closes_on": date(2026, 1, 1)})
+    marks = {"english_hl": 75, "mathematics": 85, "physical_sciences": 80, "geography": 75,
+             "life_sciences": 70, "isizulu_fal": 70}  # fmt: skip
+    assert evaluate(marks, closed, TODAY).outcome == "closed"
+
+
+def test_wps_band_is_unconfirmed_not_a_fail() -> None:
+    # FPS 470 misses the guaranteed band and the WPS 'likely' band cannot be judged
+    # without the disadvantage factor, so the answer is unconfirmed.
+    rules = Rules(
+        min_aps=None,
+        scheme="uct_fps",
+        bands=[
+            Band("guaranteed", 500, [[Option("mathematics", 80)]]),
+            Band("likely", 480, [[Option("mathematics", 80)]], metric="WPS"),
+        ],
+    )
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 70, "geography": 60,
+             "life_sciences": 60, "isizulu_fal": 60}  # fmt: skip
+    v = evaluate(marks, rules, TODAY)
+    assert v.score == 410
+    assert v.outcome == "qualifies_unconfirmed"
+
+
+def _nbt_rules() -> Rules:
+    return Rules(
+        min_aps=None, scheme="uct_fps",
+        groups=[[Option("mathematics", 60)]],
+        nbt=[[Nbt("AL", "upper_intermediate")], [Nbt("QL", "upper_intermediate")]],
+    )  # fmt: skip
+
+
+def test_missing_nbt_is_unconfirmed_never_a_fail() -> None:
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 80, "geography": 80,
+             "life_sciences": 80, "isizulu_fal": 80}  # fmt: skip
+    v = evaluate(marks, _nbt_rules(), TODAY)
+    assert v.outcome == "qualifies_unconfirmed"
+    assert [c.result for c in v.checks[1:]] == ["pass", "unknown", "unknown"]
+
+
+def test_failed_subject_still_fails_when_nbt_is_unknown() -> None:
+    marks = {"english_hl": 80, "mathematics": 40, "physical_sciences": 80, "geography": 80,
+             "life_sciences": 80, "isizulu_fal": 80}  # fmt: skip
+    assert evaluate(marks, _nbt_rules(), TODAY).outcome == "aps_only"
+
+
+def test_nbt_rule_reads_as_text() -> None:
+    v = evaluate(
+        dict.fromkeys(
+            [
+                "english_hl",
+                "mathematics",
+                "physical_sciences",
+                "geography",
+                "life_sciences",
+                "isizulu_fal",
+            ],
+            80,
+        ),
+        _nbt_rules(),
+        TODAY,
+    )
+    assert v.checks[-1].required == "NBT QL upper_intermediate"
+
+
+def test_fps_nbt_band_cannot_be_judged() -> None:
+    rules = Rules(
+        min_aps=None,
+        scheme="uct_fps",
+        bands=[Band("guaranteed", 500, [[Option("mathematics", 80)]], metric="FPS_NBT")],
+    )
+    marks = dict.fromkeys(
+        [
+            "english_hl",
+            "mathematics",
+            "physical_sciences",
+            "geography",
+            "life_sciences",
+            "isizulu_fal",
+        ],
+        90,
+    )
+    v = evaluate(marks, rules, TODAY)
+    assert v.outcome == "qualifies_unconfirmed"
+
+
+def _health_rules(min_aps: int = 450, floor: Floor | None = None) -> Rules:
+    return Rules(
+        min_aps=min_aps,
+        scheme="uct_health",
+        groups=[
+            [Option("mathematics", 70)],
+            [Option("physical_sciences", 70)],
+            [Option("english_hl", 65), Option("english_fal", 65)],
+        ],
+        floor=floor or Floor(3, 70),
+        bands=[Band("guaranteed", 810, [], metric="FPS_NBT", nbt=[[Nbt("AL", "proficient")]])],
+    )
+
+
+def test_health_is_unconfirmed_when_every_subject_rule_holds() -> None:
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 80, "geography": 75,
+             "life_sciences": 75, "isizulu_fal": 75}  # fmt: skip
+    v = evaluate(marks, _health_rules(), TODAY)
+    assert v.outcome == "qualifies_unconfirmed"
+    assert v.score == 80 * 3 + 75 * 3
+
+
+def test_health_floor_fails_when_a_next_best_subject_is_short() -> None:
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 80, "geography": 69,
+             "life_sciences": 75, "isizulu_fal": 75}  # fmt: skip
+    v = evaluate(marks, _health_rules(), TODAY)
+    assert v.outcome == "subjects_only"
+
+
+def test_health_sub_minimum_aps_is_its_own_refusal() -> None:
+    # 65 + 70 + 70 + 75 + 75 + 75 = 430: below the sub-minimum of 450, floor still met.
+    marks = {"english_hl": 65, "mathematics": 70, "physical_sciences": 70, "geography": 75,
+             "life_sciences": 75, "isizulu_fal": 75}  # fmt: skip
+    v = evaluate(marks, _health_rules(min_aps=450), TODAY)
+    assert v.outcome == "aps_only"
+
+
+def test_health_floor_fails_below_three_other_subjects() -> None:
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 80, "geography": 80,
+             "life_sciences": 80, "isizulu_fal": 80}  # fmt: skip
+    rules = _health_rules(floor=Floor(4, 70))  # only three other subjects exist
+    assert evaluate(marks, rules, TODAY).outcome == "subjects_only"
+
+
+def test_uct_health_is_out_of_600() -> None:
+    marks = dict.fromkeys(
+        [
+            "english_hl",
+            "mathematics",
+            "physical_sciences",
+            "geography",
+            "life_sciences",
+            "isizulu_fal",
+        ],
+        50,
+    )
+    assert score("uct_health", marks) == 300
+
+
+def _nbt_rules_with_score() -> Rules:
+    return Rules(
+        min_aps=0, scheme="uct_fps",
+        groups=[[Option("mathematics", 60)]],
+        nbt=[[Nbt("AL", "upper_intermediate")], [Nbt("QL", "upper_intermediate")]],
+    )  # fmt: skip
+
+
+SIX_AT_70 = dict.fromkeys(["english_hl", "mathematics", "physical_sciences", "geography",
+                           "life_sciences", "isizulu_fal"], 70)  # fmt: skip
+
+
+def test_held_nbt_level_that_meets_the_rule_passes() -> None:
+    nbt = {"AL": "upper_intermediate", "QL": "proficient"}
+    v = evaluate(SIX_AT_70, _nbt_rules_with_score(), TODAY, nbt)
+    assert [c.result for c in v.checks[2:]] == ["pass", "pass"]
+
+
+def test_held_nbt_level_below_the_rule_fails() -> None:
+    nbt = {"AL": "basic", "QL": "proficient"}
+    v = evaluate(SIX_AT_70, _nbt_rules_with_score(), TODAY, nbt)
+    assert v.checks[2].result == "fail"
+    assert v.outcome == "aps_only"
+
+
+def test_all_nbt_held_and_met_qualifies() -> None:
+    nbt = {"AL": "upper_intermediate", "QL": "proficient"}
+    assert evaluate(SIX_AT_70, _nbt_rules_with_score(), TODAY, nbt).outcome == "qualifies"

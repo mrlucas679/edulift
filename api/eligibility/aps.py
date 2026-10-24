@@ -63,11 +63,21 @@ def uct_science(marks: dict[str, int]) -> int:
     return _uct_aps(marks, core) + bonus
 
 
+def uct_health(marks: dict[str, int]) -> int:
+    """Health Sciences APS out of 600: three required subjects plus the next three best.
+
+    Prospectus p.42: percentages of three required subjects plus next three best,
+    excluding Life Orientation. The FPS adds NBT points on top, which we do not hold.
+    """
+    return _uct_aps(marks, ("mathematics", "physical_sciences"))
+
+
 SCHEMES: dict[str, Callable[[dict[str, int]], int]] = {
     "standard_best6": best6,
     "wits_best7": wits7,
     "uct_fps": uct600,
     "uct_science": uct_science,
+    "uct_health": uct_health,
 }
 
 

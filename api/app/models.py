@@ -117,6 +117,10 @@ class Programme(Base):
     qualification: Mapped[str] = mapped_column(String(20))
     field_id: Mapped[str] = mapped_column(ForeignKey("fields.id"))
     min_aps: Mapped[int | None] = mapped_column(Integer)
+    aps_scheme: Mapped[str | None] = mapped_column(String(30))
+    nbt: Mapped[list[Any]] = mapped_column(JSONB, default=list)  # [[{"component", "level"}]]
+    notes: Mapped[str | None] = mapped_column(Text)
+    floor: Mapped[dict[str, int] | None] = mapped_column(JSONB)  # {"count", "min"}
     selection: Mapped[bool] = mapped_column(Boolean, default=False)
     closes_on: Mapped[date | None] = mapped_column(Date)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
@@ -126,6 +130,7 @@ class Programme(Base):
     requirements: Mapped[list["Requirement"]] = relationship(
         order_by="(Requirement.group_no, Requirement.id)"
     )
+    fps_bands: Mapped[list["FpsBand"]] = relationship(order_by="FpsBand.score.desc()")
 
 
 class Requirement(Base):
@@ -136,6 +141,22 @@ class Requirement(Base):
     group_no: Mapped[int] = mapped_column(Integer)  # same group = alternatives
     subject_id: Mapped[str] = mapped_column(ForeignKey("subjects.id"))
     min_percent: Mapped[int] = mapped_column(Integer)
+
+
+class FpsBand(Base):
+    """UCT-style admission band: a score bar plus subject groups that must also be met."""
+
+    __tablename__ = "fps_bands"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    programme_id: Mapped[str] = mapped_column(ForeignKey("programmes.id", ondelete="CASCADE"))
+    label: Mapped[str] = mapped_column(String(20))
+    metric: Mapped[str] = mapped_column(String(7))
+    score: Mapped[int] = mapped_column(Integer)
+    applies_to: Mapped[str] = mapped_column(String(20))
+    # [[{"subject": ..., "min": ...}], ...]; each inner list is one group of alternatives
+    requirements: Mapped[list[Any]] = mapped_column(JSONB, default=list)
+    nbt: Mapped[list[Any]] = mapped_column(JSONB, default=list)
 
 
 class Handoff(Base):
@@ -206,6 +227,26 @@ class Mark(Base):
     period: Mapped[str] = mapped_column(String(20), primary_key=True)
     subject_id: Mapped[str] = mapped_column(ForeignKey("subjects.id"), primary_key=True)
     percent: Mapped[int] = mapped_column(Integer)
+    entered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class NbtRecord(Base):
+    """A learner's NBT level per component. Kept only while nbt_results consent is given."""
+
+    __tablename__ = "nbt_records"
+    __table_args__ = (
+        CheckConstraint("component IN ('AL', 'QL', 'MAT')", name="nbt_component"),
+        CheckConstraint(
+            "level IN ('basic', 'intermediate', 'upper_intermediate', 'proficient')",
+            name="nbt_level",
+        ),
+    )
+
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    component: Mapped[str] = mapped_column(String(3), primary_key=True)
+    level: Mapped[str] = mapped_column(String(20))
     entered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 

@@ -115,18 +115,45 @@ class OptionIn(Strict):
     min: int
 
 
+FPS_SCHEMES = {"uct_fps", "uct_science", "uct_health"}
+
+
+class FloorIn(Strict):
+    count: int
+    min: int
+
+
+class NbtIn(Strict):
+    component: Literal["AL", "QL", "MAT"]
+    level: Literal["basic", "intermediate", "upper_intermediate", "proficient"]
+
+
+class BandIn(Strict):
+    label: Literal["guaranteed", "likely", "possible", "probable"]
+    metric: Literal["FPS", "WPS", "FPS_NBT"] = "FPS"
+    score: int
+    applies_to: Literal["all", "targeted_redress", "international"] = "all"
+    requirements: list[list[OptionIn]] = []
+    nbt: list[list[NbtIn]] = []
+
+
 class ProgrammeIn(Strict):
     id: str
     name: str
     qualification: Literal["higher_cert", "diploma", "degree", "extended_degree", "ncv", "n4"]
     field: str
     min_aps: int | None = None
+    aps_scheme: Literal["uct_fps", "uct_science", "uct_health"] | None = None  # overrides
+    notes: str | None = None  # shown as-is; never judged, e.g. places limits
+    floor: FloorIn | None = None
     selection: bool = False
     closes_on: date | None = None
     source: str
     verified_on: date | None = None
     # Each inner list is one group of alternatives; every group must be met.
     requirements: list[list[OptionIn]] = []
+    fps_bands: list[BandIn] = []
+    nbt: list[list[NbtIn]] = []
 
 
 class InstitutionIn(Strict):
@@ -138,7 +165,9 @@ class InstitutionIn(Strict):
     route: Literal["direct", "cao", "cas"]
     fee_cents: int | None = None
     max_choices: int | None = None
-    aps_scheme: Literal["standard_best6", "wits_best7", "uct_fps", "uct_science"] | None = None
+    aps_scheme: (
+        Literal["standard_best6", "wits_best7", "uct_fps", "uct_science", "uct_health"] | None
+    ) = None
     source: str
     cycles: list[CycleIn] = []
     programmes: list[ProgrammeIn] = []
@@ -167,7 +196,14 @@ class Data(BaseModel):
                 used.append(p.source)
                 if p.field not in fields:
                     raise ValueError(f"{p.id}: unknown field {p.field}")
-                for group in p.requirements:
+                scheme = p.aps_scheme or inst.aps_scheme
+                if p.fps_bands and scheme not in FPS_SCHEMES:
+                    raise ValueError(f"{p.id}: fps_bands need an FPS scheme")
+                groups: list[list[OptionIn]] = [
+                    *p.requirements,
+                    *(g for b in p.fps_bands for g in b.requirements),
+                ]
+                for group in groups:
                     for option in group:
                         if option.subject not in subjects:
                             raise ValueError(f"{p.id}: unknown subject {option.subject}")
@@ -202,7 +238,7 @@ def read(folder: Path) -> Data:
 
 
 TABLES = [
-    m.Requirement, m.Programme, m.Cycle, m.Institution,
+    m.FpsBand, m.Requirement, m.Programme, m.Cycle, m.Institution,
     m.Opportunity, m.Handoff, m.Subject, m.Field, m.Source,
 ]  # fmt: skip
 
@@ -252,7 +288,7 @@ def _write_institution(db: Session, inst: InstitutionIn) -> None:
     for p in inst.programmes:
         db.add(
             m.Programme(
-                **p.model_dump(exclude={"source", "field", "requirements"}),
+                **p.model_dump(exclude={"source", "field", "requirements", "fps_bands"}),
                 institution_id=inst.id,
                 field_id=p.field,
                 source_id=p.source,
@@ -269,6 +305,18 @@ def _write_institution(db: Session, inst: InstitutionIn) -> None:
                         min_percent=o.min,
                     )
                 )
+        for band in p.fps_bands:
+            db.add(
+                m.FpsBand(
+                    programme_id=p.id,
+                    label=band.label,
+                    metric=band.metric,
+                    score=band.score,
+                    applies_to=band.applies_to,
+                    requirements=[[o.model_dump() for o in g] for g in band.requirements],
+                    nbt=[[n.model_dump() for n in g] for g in band.nbt],
+                )
+            )
 
 
 def main() -> None:

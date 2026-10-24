@@ -174,3 +174,18 @@ def test_guardian_emails_are_limited(client: TestClient, minor: Signed) -> None:
         for _ in range(4)
     ]
     assert codes == [204, 204, 204, 429]
+
+
+def test_nbt_results_is_optional_and_off_until_granted(client: TestClient, adult: Signed) -> None:
+    me = client.get("/v1/me/details", headers=adult.headers).json()
+    assert "nbt_results" not in me["consents"]
+    assert consent(client, adult, "nbt_results") == 200
+    assert "nbt_results" in client.get("/v1/me/details", headers=adult.headers).json()["consents"]
+    assert consent(client, adult, "nbt_results", granted=False) == 200
+    assert (
+        "nbt_results" not in client.get("/v1/me/details", headers=adult.headers).json()["consents"]
+    )
+
+
+def test_minor_needs_the_guardian_for_nbt_results(client: TestClient, minor: Signed) -> None:
+    assert consent(client, minor, "nbt_results") == 403
