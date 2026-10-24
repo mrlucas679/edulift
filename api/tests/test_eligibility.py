@@ -4,7 +4,7 @@ import pytest
 
 from eligibility.aps import best6, score
 from eligibility.marks import level
-from eligibility.verdict import Option, Rules, evaluate
+from eligibility.verdict import Band, Option, Rules, evaluate
 
 TODAY = date(2026, 10, 23)
 
@@ -160,3 +160,59 @@ def test_uct_ignores_marks_under_40_and_always_counts_english() -> None:
     marks = dict(UCT_EXAMPLE, english_hl=45, egd=39) | {"history": 90, "geography": 88}
     # English 45 forced in; best five others: 90, 88, 86, 84, 79. EGD 39 scores 0.
     assert score("uct_fps", marks) == 45 + 90 + 88 + 86 + 84 + 79
+
+
+def _uct_band_rules(selection: bool = False) -> Rules:
+    maths = [Option("mathematics", 65)]
+    return Rules(
+        min_aps=None,
+        scheme="uct_fps",
+        selection=selection,
+        bands=[
+            Band("guaranteed", 500, [[Option("mathematics", 80)]]),
+            Band("likely", 480, [maths]),
+            Band("possible", 390, [maths], applies_to="targeted_redress"),
+        ],
+    )
+
+
+def test_band_top_score_with_subjects_qualifies() -> None:
+    marks = {"english_hl": 90, "mathematics": 90, "physical_sciences": 90, "geography": 90,
+             "life_sciences": 90, "isizulu_fal": 90}  # fmt: skip
+    v = evaluate(marks, _uct_band_rules(), TODAY)
+    assert v.outcome == "qualifies"
+    assert v.score == 540
+
+
+def test_band_below_top_but_above_likely_is_selection() -> None:
+    # 85+75+80+80+80+80 = 480 (likely). Mathematics 75 misses the top band's 80%.
+    marks = {"english_hl": 85, "mathematics": 75, "physical_sciences": 80, "geography": 80,
+             "life_sciences": 80, "isizulu_fal": 80}  # fmt: skip
+    v = evaluate(marks, _uct_band_rules(), TODAY)
+    assert v.score == 480
+    assert v.outcome == "qualifies_selection"
+
+
+def test_band_subject_short_fails_that_band_only() -> None:
+    # Mathematics 60% is below the likely band's 65%, so only the 'possible' band is
+    # not judged here and no band passes.
+    marks = {"english_hl": 60, "mathematics": 60, "physical_sciences": 60, "geography": 60,
+             "life_sciences": 60, "isizulu_fal": 60}  # fmt: skip
+    v = evaluate(marks, _uct_band_rules(), TODAY)
+    assert v.outcome == "not_eligible"
+    assert [c.result for c in v.checks] == ["fail", "fail"]
+
+
+def test_targeted_redress_band_is_never_judged() -> None:
+    marks = {"english_hl": 60, "mathematics": 70, "physical_sciences": 60, "geography": 60,
+             "life_sciences": 60, "isizulu_fal": 60}  # fmt: skip
+    v = evaluate(marks, _uct_band_rules(), TODAY)
+    assert "possible" not in [c.name for c in v.checks]
+
+
+def test_band_closed_window_wins() -> None:
+    rules = _uct_band_rules()
+    closed = Rules(**{**rules.__dict__, "closes_on": date(2026, 1, 1)})
+    marks = {"english_hl": 75, "mathematics": 85, "physical_sciences": 80, "geography": 75,
+             "life_sciences": 70, "isizulu_fal": 70}  # fmt: skip
+    assert evaluate(marks, closed, TODAY).outcome == "closed"

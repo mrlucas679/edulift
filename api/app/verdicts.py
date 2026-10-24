@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app import models as m
 from app.routers.aps import UnknownSubjectError
 from app.schemas import CheckOut, VerdictOut
-from eligibility.verdict import Check, Option, Rules, evaluate
+from eligibility.verdict import Band, Check, Option, Rules, evaluate
 
 
 def subject_names(db: Session, marks: dict[str, int]) -> dict[str, str]:
@@ -34,11 +34,21 @@ def programme_verdict(
     for r in programme.requirements:
         groups.setdefault(r.group_no, []).append(Option(r.subject_id, r.min_percent))
 
+    bands = [
+        Band(
+            label=b.label,
+            score=b.score,
+            applies_to=b.applies_to,
+            groups=[[Option(o["subject"], o["min"]) for o in g] for g in b.requirements],
+        )
+        for b in programme.fps_bands
+    ]
     rules = Rules(
         min_aps=programme.min_aps,
         scheme=institution.aps_scheme,
         groups=list(groups.values()),
         selection=programme.selection,
+        bands=bands,
         opens_on=cycle.opens_on if cycle else None,
         closes_on=programme.closes_on or (cycle.closes_on if cycle else None),
     )

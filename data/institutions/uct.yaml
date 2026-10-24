@@ -6,4 +6,8 @@ apply_url: https://www.uct.ac.za/students/applications-apply-undergraduate-quali
 route: direct
 aps_scheme: uct_fps
 source: uct-nsc-2027
-# cycles and programmes: add once checked against the 2027 prospectus
+cycles:
+- intake_year: 2027
+  opens_on: 2026-04-01
+  closes_on: 2026-07-31
+  source: uct-prospectus-2027

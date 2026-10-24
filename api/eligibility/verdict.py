@@ -8,6 +8,7 @@ from eligibility.aps import score
 from eligibility.marks import without_lo
 
 Result = Literal["pass", "fail", "unknown"]
+Window = Literal["open", "closing_soon", "closed", "not_open", "unknown"]
 Outcome = Literal[
     "incomplete", "closed", "not_eligible", "aps_only", "subjects_only",
     "qualifies_unconfirmed", "qualifies_selection", "qualifies",
@@ -24,6 +25,14 @@ class Option:
 
 
 @dataclass(frozen=True)
+class Band:
+    label: str
+    score: int
+    groups: list[list[Option]]
+    applies_to: str = "all"  # "targeted_redress" bands are not judged yet
+
+
+@dataclass(frozen=True)
 class Rules:
     min_aps: int | None
     scheme: str | None
@@ -31,6 +40,7 @@ class Rules:
     selection: bool = False
     opens_on: date | None = None
     closes_on: date | None = None
+    bands: list[Band] = field(default_factory=list)  # highest score first
 
 
 @dataclass(frozen=True)
@@ -46,7 +56,7 @@ class Verdict:
     outcome: Outcome
     score: int | None
     checks: list[Check]
-    window: Literal["open", "closing_soon", "closed", "not_open", "unknown"]
+    window: Window
 
 
 def evaluate(marks: dict[str, int], rules: Rules, today: date) -> Verdict:
@@ -55,6 +65,8 @@ def evaluate(marks: dict[str, int], rules: Rules, today: date) -> Verdict:
         return Verdict("incomplete", None, [], window)
 
     aps = score(rules.scheme, marks)
+    if rules.bands:
+        return _banded(aps, marks, rules, window)
     checks = [_score_check(aps, rules.min_aps)]
     checks += [_group_check(i, g, marks) for i, g in enumerate(rules.groups, start=1)]
     return Verdict(_outcome(checks, rules.selection, window), aps, checks, window)
@@ -78,12 +90,39 @@ def _score_check(aps: int | None, minimum: int | None) -> Check:
     return Check("score", str(minimum), str(aps), "pass" if aps >= minimum else "fail")
 
 
+def _group_met(group: list[Option], marks: dict[str, int]) -> bool:
+    return any(o.subject in marks and marks[o.subject] >= o.min_percent for o in group)
+
+
+def _describe(group: list[Option]) -> str:
+    return " or ".join(f"{o.subject} {o.min_percent}%" for o in group)
+
+
 def _group_check(n: int, group: list[Option], marks: dict[str, int]) -> Check:
-    required = " or ".join(f"{o.subject} {o.min_percent}%" for o in group)
+    required = _describe(group)
     taken = [o for o in group if o.subject in marks]
     yours = ", ".join(f"{o.subject} {marks[o.subject]}%" for o in taken) or "not taken"
-    met = any(marks[o.subject] >= o.min_percent for o in taken)
-    return Check(f"subjects_{n}", required, yours, "pass" if met else "fail")
+    return Check(f"subjects_{n}", required, yours, "pass" if _group_met(group, marks) else "fail")
+
+
+def _banded(aps: int | None, marks: dict[str, int], rules: Rules, window: Window) -> Verdict:
+    if aps is None:
+        return Verdict("incomplete", None, [], window)
+    checks = []
+    for band in sorted(rules.bands, key=lambda b: -b.score):
+        if band.applies_to != "all":
+            continue
+        met = aps >= band.score and all(_group_met(g, marks) for g in band.groups)
+        parts = [f"FPS {band.score}"] + [_describe(g) for g in band.groups]
+        required = " and ".join(parts)
+        checks.append(Check(band.label, required, f"FPS {aps}", "pass" if met else "fail"))
+    if window == "closed":
+        return Verdict("closed", aps, checks, window)
+    if not checks or all(c.result == "fail" for c in checks):
+        return Verdict("not_eligible", aps, checks, window)
+    top = checks[0].result == "pass"
+    outcome: Outcome = "qualifies" if top and not rules.selection else "qualifies_selection"
+    return Verdict(outcome, aps, checks, window)
 
 
 def _outcome(checks: list[Check], selection: bool, window: str) -> Outcome:

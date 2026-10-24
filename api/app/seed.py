@@ -115,6 +115,16 @@ class OptionIn(Strict):
     min: int
 
 
+FPS_SCHEMES = {"uct_fps", "uct_science"}
+
+
+class BandIn(Strict):
+    label: Literal["guaranteed", "likely", "possible"]
+    score: int
+    applies_to: Literal["all", "targeted_redress"] = "all"
+    requirements: list[list[OptionIn]] = []
+
+
 class ProgrammeIn(Strict):
     id: str
     name: str
@@ -127,6 +137,7 @@ class ProgrammeIn(Strict):
     verified_on: date | None = None
     # Each inner list is one group of alternatives; every group must be met.
     requirements: list[list[OptionIn]] = []
+    fps_bands: list[BandIn] = []
 
 
 class InstitutionIn(Strict):
@@ -167,7 +178,13 @@ class Data(BaseModel):
                 used.append(p.source)
                 if p.field not in fields:
                     raise ValueError(f"{p.id}: unknown field {p.field}")
-                for group in p.requirements:
+                if p.fps_bands and inst.aps_scheme not in FPS_SCHEMES:
+                    raise ValueError(f"{p.id}: fps_bands need an FPS scheme")
+                groups: list[list[OptionIn]] = [
+                    *p.requirements,
+                    *(g for b in p.fps_bands for g in b.requirements),
+                ]
+                for group in groups:
                     for option in group:
                         if option.subject not in subjects:
                             raise ValueError(f"{p.id}: unknown subject {option.subject}")
@@ -202,7 +219,7 @@ def read(folder: Path) -> Data:
 
 
 TABLES = [
-    m.Requirement, m.Programme, m.Cycle, m.Institution,
+    m.FpsBand, m.Requirement, m.Programme, m.Cycle, m.Institution,
     m.Opportunity, m.Handoff, m.Subject, m.Field, m.Source,
 ]  # fmt: skip
 
@@ -269,6 +286,16 @@ def _write_institution(db: Session, inst: InstitutionIn) -> None:
                         min_percent=o.min,
                     )
                 )
+        for band in p.fps_bands:
+            db.add(
+                m.FpsBand(
+                    programme_id=p.id,
+                    label=band.label,
+                    score=band.score,
+                    applies_to=band.applies_to,
+                    requirements=[[o.model_dump() for o in g] for g in band.requirements],
+                )
+            )
 
 
 def main() -> None:

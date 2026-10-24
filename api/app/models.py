@@ -126,6 +126,7 @@ class Programme(Base):
     requirements: Mapped[list["Requirement"]] = relationship(
         order_by="(Requirement.group_no, Requirement.id)"
     )
+    fps_bands: Mapped[list["FpsBand"]] = relationship(order_by="FpsBand.score.desc()")
 
 
 class Requirement(Base):
@@ -136,6 +137,20 @@ class Requirement(Base):
     group_no: Mapped[int] = mapped_column(Integer)  # same group = alternatives
     subject_id: Mapped[str] = mapped_column(ForeignKey("subjects.id"))
     min_percent: Mapped[int] = mapped_column(Integer)
+
+
+class FpsBand(Base):
+    """UCT-style admission band: a score bar plus subject groups that must also be met."""
+
+    __tablename__ = "fps_bands"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    programme_id: Mapped[str] = mapped_column(ForeignKey("programmes.id", ondelete="CASCADE"))
+    label: Mapped[str] = mapped_column(String(20))
+    score: Mapped[int] = mapped_column(Integer)
+    applies_to: Mapped[str] = mapped_column(String(20))
+    # [[{"subject": ..., "min": ...}], ...]; each inner list is one group of alternatives
+    requirements: Mapped[list[Any]] = mapped_column(JSONB, default=list)
 
 
 class Handoff(Base):
