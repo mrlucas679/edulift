@@ -1300,3 +1300,52 @@ programmes:
   fps_bands: *id021
   requirements: *id022
   notes: null
+- id: uct.bachelor-of-laws-llb
+  name: Bachelor of Laws (LLB), 4-year undergraduate
+  qualification: degree
+  field: humanities.law
+  source: uct-prospectus-2027
+  notes: Combined Law and Humanities or Law and Commerce, and the graduate LLB, are
+    separate routes not loaded here. Up to ten international applicants are accepted.
+    The international band is not judged.
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: intermediate
+  - label: likely
+    metric: WPS
+    score: 500
+    applies_to: all
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: intermediate
+  - label: possible
+    metric: FPS
+    score: 470
+    applies_to: targeted_redress
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: proficient
+  - label: probable
+    metric: FPS
+    score: 510
+    applies_to: international
+    requirements: []
+    nbt:
+    - - component: AL
+        level: proficient
+    - - component: QL
+        level: intermediate

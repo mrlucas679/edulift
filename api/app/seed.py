@@ -124,10 +124,10 @@ class NbtIn(Strict):
 
 
 class BandIn(Strict):
-    label: Literal["guaranteed", "likely", "possible"]
+    label: Literal["guaranteed", "likely", "possible", "probable"]
     metric: Literal["FPS", "WPS", "FPS_NBT"] = "FPS"
     score: int
-    applies_to: Literal["all", "targeted_redress"] = "all"
+    applies_to: Literal["all", "targeted_redress", "international"] = "all"
     requirements: list[list[OptionIn]] = []
     nbt: list[list[NbtIn]] = []
 
