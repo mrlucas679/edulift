@@ -23,6 +23,7 @@ from app.db import new_engine
 # Official sites only. Anything else needs a deliberate addition here.
 ALLOWED_SUFFIXES = (".ac.za", ".gov.za", ".edu.za")
 ALLOWED_HOSTS = {
+    "bankseta.org.za",
     "sayouth.mobi",
     "www.agriseta.co.za",
     "www.bankseta.org.za",

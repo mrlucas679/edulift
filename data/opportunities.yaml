@@ -806,3 +806,203 @@
   field: education
   closes_on: 2027-01-31
   source: dbe-funza-lushaka
+- id: merseta-learnership-01
+  name: First Line Production Supervisor (NQF 4, 86 credits, SAQA 115722)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-02
+  name: Production Process Machine Operator and Assembler (NQF 3, 103 credits, SAQA 102580)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-03
+  name: Automotive Motor Mechanic (NQF 4, 540 credits, SAQA 97990)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-04
+  name: Unitary Air Conditioning Installer (NQF 2, 190 credits, SAQA 103269)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-05
+  name: Automotive Drive Train Repairer (NQF 2, 142 credits, SAQA 118727)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-06
+  name: Metal Manufacturing, Melting and Refining Process Controller (NQF 4, 241 credits, SAQA 102159)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-07
+  name: Metal Manufacturing, Electrolysis Process Controller (NQF 4, 201 credits, SAQA 102154)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-08
+  name: Metal Manufacturing, Casting Process Controller (NQF 4, 205 credits, SAQA 102160)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-09
+  name: Metal Manufacturing, Rolling Process Controller (NQF 4, 205 credits, SAQA 102155)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-10
+  name: Metal Manufacturing, Finishing Process Controller (NQF 4, 201 credits, SAQA 102153)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-11
+  name: Metal Manufacturing, Material Preparation Process Controller (NQF 4, 201 credits, SAQA 102157)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-12
+  name: Automotive Engine Fitter (NQF 4, 540 credits, SAQA 119423)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-13
+  name: Solar Photovoltaic Standalone Service Technician (Higher Occupational Certificate) (NQF 3, 133 credits, SAQA 119428)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-14
+  name: Mechatronics Technician (NQF 5, 293 credits, SAQA 102064)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-15
+  name: Production Supervisor (NQF 5, 216 credits, SAQA 115723)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-16
+  name: CNC Turning Machinist (NQF 4, 139 credits, SAQA 103099)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-17
+  name: Toolmaker (NQF 5, 432 credits, SAQA 91796)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-18
+  name: Insulation Installer (NQF 2, 161 credits, SAQA 109560)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-19
+  name: Solar Photovoltaic Standalone System Mounter (NQF 4, 84 credits, SAQA 120885)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-20
+  name: Extrusion Machine Operator (NQF 5, 180 credits, SAQA 110315)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-21
+  name: Automotive Suspension Repairer (NQF 2, 123 credits, SAQA 117471)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-22
+  name: Injection Moulding Machine Setter (NQF 5, 301 credits, SAQA 110318)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-23
+  name: Blow Moulding Machine Setter (NQF 5, 305 credits, SAQA 110313)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-24
+  name: Production Process Controller (NQF 4, 140 credits, SAQA 119977)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-25
+  name: Automotive Engine Assembler (NQF 3, 93 credits, SAQA 119428)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-26
+  name: Solar Photovoltaic Standalone Systems Installer (National Occupational Certificate) (NQF 4, 211 credits, SAQA 120883)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-27
+  name: Solar Photovoltaic Standalone Service Technician (Higher Occupational Certificate) (NQF 4, 133 credits, SAQA 120863)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-28
+  name: Automotive Sales Advisor (NQF 4, 224 credits, SAQA 118097)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-29
+  name: Plastics Manufacturing Machine Operator (NQF 3, 150 credits, SAQA 118697)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-30
+  name: Tooling Machinist (NQF 5, 457 credits, SAQA 103142)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-31
+  name: Automotive Engine Dismantler (NQF 2, 106 credits, SAQA 119440)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: merseta-learnership-32
+  name: Production Operator (NQF 3, 122 credits, SAQA 120037)
+  kind: learnership
+  provider: merSETA
+  url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
+  source: seta-merseta
+- id: bankseta-unemployed-learners-bursaries
+  name: BANKSETA bursaries for unemployed learners (applied for by public universities and universities of technology)
+  kind: bursary
+  provider: BANKSETA
+  url: https://bankseta.org.za/funding-window-1/discretionary-grant-unemployed-learners-granted-bursaries-new-continuing/
+  field: commerce
+  closes_on: 2026-11-13
+  source: seta-bankseta

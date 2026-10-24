@@ -39,3 +39,16 @@ Requirements differ by SETA and programme. None of the pages above listed a full
 2. Label each link with what it is (vacancies, learnerships, grants, portal) and when it was checked.
 3. Only send learners to hosts on the allowlist in `api/app/seed.py`.
 4. Never ask learners for a password or ID number on our side; they enter those on the SETA portal.
+
+## Requirements and dates read on 2026-10-24
+
+- **MerSETA, approved learnerships (PDF, 2026/09):** 32 approved learnerships with NQF level, credits and SAQA ID. The PDF gives no closing date and no entry requirements. Loaded as `merseta-learnership-01` to `32`.
+- **BANKSETA, bursaries for unemployed learners:** applications come from public universities and universities of technology, not from individuals. Closing date 13 November 2026, 16:00, submitted through BANKSETA's SIMS portal. The window page also shows 17 November 2026 as the closing date, so the earlier date is used. Briefing session 22 October 2026. Loaded as `bankseta-unemployed-learners-bursaries`.
+- **AgriSETA, discretionary grants (FY 2027/28):** the SETA does not accept applications from individuals. Learners apply through an employer or an accredited training provider. Window dates are not on the page.
+- **FoodBev, mandatory grants:** for levy-paying employers only. The page's deadline is for 2024/25 and is out of date.
+- **CATHSSETA vacancies:** no openings when checked. These pages are for SETA staff, not learners.
+- **ETDP SETA vacancies:** staff jobs, hosted on an external recruitment site that is not on the allowlist. Not added.
+
+## Pattern
+
+Most SETA money goes through employers and training providers, not learners. The app should tell learners to ask their employer or a training provider to apply for them, and should not present SETA pages as individual application forms.
