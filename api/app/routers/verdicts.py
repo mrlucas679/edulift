@@ -1,5 +1,8 @@
 """Where do I stand for this programme? Marks come with the request and aren't stored."""
 
+import hashlib
+import json
+import time
 from datetime import date
 
 from fastapi import APIRouter
@@ -59,11 +62,34 @@ def check_all(body: CheckRequest, me: SignedIn, db: Db, engine: DbEngine) -> lis
     names = subject_names(db, marks)
     nbt = learner_nbt(db, me.subject)
     today = date.today()
+    key = _batch_key(me.subject, marks, nbt, today)
+    cached = _BATCH_CACHE.get(key)
+    if cached is not None and cached[0] > time.monotonic():
+        return cached[1]
     programmes = db.scalars(select(m.Programme).order_by(m.Programme.id))
-    return [
+    result = [
         BatchOut(
             programme_id=p.id,
             outcome=programme_verdict(db, p, marks, names, today, nbt=nbt).outcome,
         )
         for p in programmes
     ]
+    _remember(key, result)
+    return result
+
+
+# Per process and short-lived: the badges are cheap to recompute once the cache expires.
+BATCH_TTL_SECONDS = 600
+BATCH_MAX_ENTRIES = 500
+_BATCH_CACHE: dict[str, tuple[float, list[BatchOut]]] = {}
+
+
+def _batch_key(user: str, marks: dict[str, int], nbt: dict[str, str] | None, today: date) -> str:
+    raw = json.dumps([user, sorted(marks.items()), sorted((nbt or {}).items()), today.isoformat()])
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _remember(key: str, result: list[BatchOut]) -> None:
+    if len(_BATCH_CACHE) >= BATCH_MAX_ENTRIES:
+        _BATCH_CACHE.clear()
+    _BATCH_CACHE[key] = (time.monotonic() + BATCH_TTL_SECONDS, result)

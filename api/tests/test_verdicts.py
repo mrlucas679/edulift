@@ -6,6 +6,7 @@ from sqlalchemy import Engine, func, select
 from sqlalchemy.orm import Session
 
 from app import models as m
+from app.routers import verdicts as batch
 from app.seed import read, write
 from tests.conftest import sign_in
 from tests.test_seed import REPO_DATA, dataset
@@ -76,3 +77,17 @@ def test_batch_verdicts_cover_every_programme(
     assert {row["programme_id"] for row in body} == {
         p["id"] for p in client.get("/v1/programmes").json()["items"]
     }
+
+
+def test_batch_verdicts_are_cached_until_marks_change(
+    client: TestClient, inbox: dict[str, str], seeded: None
+) -> None:
+    batch._BATCH_CACHE.clear()
+    session = sign_in(client, inbox, "cache@example.org")
+    client.post("/v1/programmes/checks", json={"marks": THANDI}, headers=session.headers)
+    before = len(batch._BATCH_CACHE)
+    client.post("/v1/programmes/checks", json={"marks": THANDI}, headers=session.headers)
+    assert len(batch._BATCH_CACHE) == before
+    changed = {**THANDI, "mathematics": 40}
+    client.post("/v1/programmes/checks", json={"marks": changed}, headers=session.headers)
+    assert len(batch._BATCH_CACHE) == before + 1
