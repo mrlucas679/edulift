@@ -46,7 +46,7 @@ def programme_verdict(
     ]
     rules = Rules(
         min_aps=programme.min_aps,
-        scheme=institution.aps_scheme,
+        scheme=programme.aps_scheme or institution.aps_scheme,
         groups=list(groups.values()),
         selection=programme.selection,
         bands=bands,
@@ -58,7 +58,7 @@ def programme_verdict(
         programme_id=programme.id,
         outcome=v.outcome,
         score=v.score,
-        scheme=institution.aps_scheme,
+        scheme=programme.aps_scheme or institution.aps_scheme,
         window=v.window,
         checks=[_with_source(c, names, programme.source) for c in v.checks],
     )

@@ -239,3 +239,37 @@ programmes:
     requirements:
     - - subject: mathematics
         min: 65
+- id: uct.bachelor-of-science
+  name: Bachelor of Science
+  qualification: degree
+  field: science
+  aps_scheme: uct_science
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 660
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 70
+    - - subject: physical_sciences
+        min: 60
+  - label: likely
+    metric: WPS
+    score: 640
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 70
+    - - subject: physical_sciences
+        min: 60
+  - label: possible
+    metric: FPS
+    score: 550
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 70
+    - - subject: physical_sciences
+        min: 60

@@ -18,6 +18,7 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
+    op.add_column("programmes", sa.Column("aps_scheme", sa.String(length=30), nullable=True))
     op.create_table(
         "fps_bands",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
@@ -34,3 +35,4 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     op.drop_table("fps_bands")
+    op.drop_column("programmes", "aps_scheme")

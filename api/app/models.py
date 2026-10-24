@@ -117,6 +117,7 @@ class Programme(Base):
     qualification: Mapped[str] = mapped_column(String(20))
     field_id: Mapped[str] = mapped_column(ForeignKey("fields.id"))
     min_aps: Mapped[int | None] = mapped_column(Integer)
+    aps_scheme: Mapped[str | None] = mapped_column(String(30))
     selection: Mapped[bool] = mapped_column(Boolean, default=False)
     closes_on: Mapped[date | None] = mapped_column(Date)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))

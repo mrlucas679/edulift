@@ -132,6 +132,7 @@ class ProgrammeIn(Strict):
     qualification: Literal["higher_cert", "diploma", "degree", "extended_degree", "ncv", "n4"]
     field: str
     min_aps: int | None = None
+    aps_scheme: Literal["uct_fps", "uct_science"] | None = None  # overrides the institution's
     selection: bool = False
     closes_on: date | None = None
     source: str
@@ -179,7 +180,8 @@ class Data(BaseModel):
                 used.append(p.source)
                 if p.field not in fields:
                     raise ValueError(f"{p.id}: unknown field {p.field}")
-                if p.fps_bands and inst.aps_scheme not in FPS_SCHEMES:
+                scheme = p.aps_scheme or inst.aps_scheme
+                if p.fps_bands and scheme not in FPS_SCHEMES:
                     raise ValueError(f"{p.id}: fps_bands need an FPS scheme")
                 groups: list[list[OptionIn]] = [
                     *p.requirements,
