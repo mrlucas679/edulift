@@ -1,5 +1,3 @@
-"""My plan: up to three programmes, each with a verdict from saved marks."""
-
 from datetime import date
 
 from fastapi import APIRouter

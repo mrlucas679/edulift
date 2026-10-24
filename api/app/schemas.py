@@ -197,6 +197,8 @@ class ProfileIn(Request):
 class ConsentRequest(Request):
     purpose: Purpose
     granted: bool
+    # Required with the reminders purpose: where reminder emails go.
+    contact_email: EmailStr | None = Field(default=None, max_length=254)
 
 
 class MeDetail(BaseModel):
@@ -206,6 +208,7 @@ class MeDetail(BaseModel):
     first_name: str | None
     birth_date: date | None
     consents: list[str]
+    reconfirm: list[str]  # guardian choices the learner must confirm at 18
 
 
 class GuardianRequestIn(Request):

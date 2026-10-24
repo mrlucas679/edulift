@@ -17,7 +17,8 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "app.edulift"
+      "package": "app.edulift",
+      "allowBackup": false
     },
     "web": {
       "favicon": "./assets/favicon.png",

@@ -1,5 +1,3 @@
-"""Funding and work. Browsing is public and judges nothing; "for me" matches the learner."""
-
 from datetime import date
 from typing import Literal
 

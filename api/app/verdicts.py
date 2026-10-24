@@ -1,5 +1,3 @@
-"""Builds a programme verdict from marks. The rules engine decides; this gathers its inputs."""
-
 import re
 from datetime import date
 
@@ -56,7 +54,6 @@ def programme_verdict(
 
 
 def _with_source(check: Check, names: dict[str, str], source: m.Source) -> CheckOut:
-    # Every check comes from the programme's own prospectus, so each one carries its source.
     return CheckOut(
         name=check.name,
         result=check.result,
@@ -68,5 +65,4 @@ def _with_source(check: Check, names: dict[str, str], source: m.Source) -> Check
 
 
 def _named_subjects(text: str, names: dict[str, str]) -> str:
-    # Subject ids read badly on screen; show names instead.
     return re.sub(r"\b[a-z_]+\b", lambda w: names.get(w.group(), w.group()), text)

@@ -1,5 +1,3 @@
-"""Plan B for one programme: easier entry, same field elsewhere, TVET. When the target says no."""
-
 from datetime import date
 
 from fastapi import APIRouter
