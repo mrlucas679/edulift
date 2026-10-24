@@ -22,7 +22,7 @@ from app.db import new_engine
 
 # Official sites only. Anything else needs a deliberate addition here.
 ALLOWED_SUFFIXES = (".ac.za", ".gov.za", ".edu.za")
-ALLOWED_HOSTS = {"www.nsfas.org.za", "sayouth.mobi", "www.sayouth.mobi"}
+ALLOWED_HOSTS = {"www.nsfas.org.za", "sayouth.mobi", "www.sayouth.mobi", "www.zabursaries.co.za"}
 
 
 def official_url(url: str) -> str:

@@ -74,3 +74,8 @@
   url: https://www.sayouth.mobi/
   publisher: SA Youth
   checked_on: 2026-10-24
+- id: zabursaries-listings
+  title: Zabursaries government bursary listings (aggregator; check each listing before applying)
+  url: https://www.zabursaries.co.za/government-bursaries-south-africa/
+  publisher: Zabursaries
+  checked_on: 2026-10-24

@@ -1,3 +1,26 @@
 # Funding and work. Add an entry only after its page has been checked and
-# its source recorded in sources.yaml. Until then this list stays empty.
-[]
+# its source recorded in sources.yaml.
+- id: zab-ekurhuleni-bursary
+  name: Ekurhuleni Metropolitan Municipality bursary
+  kind: bursary
+  provider: Ekurhuleni Metropolitan Municipality
+  url: https://www.zabursaries.co.za/government-bursaries-south-africa/ekurhuleni-metropolitan-municipality-bursaries/
+  source: zabursaries-listings
+- id: zab-city-of-cape-town-bursary
+  name: City of Cape Town bursary
+  kind: bursary
+  provider: City of Cape Town
+  url: https://www.zabursaries.co.za/government-bursaries-south-africa/city-of-cape-town-bursary/
+  source: zabursaries-listings
+- id: zab-fasset-bursary
+  name: FASSET bursary
+  kind: bursary
+  provider: FASSET
+  url: https://www.zabursaries.co.za/accounting-bursaries-south-africa/fasset-bursary/
+  source: zabursaries-listings
+- id: zab-nfvf-international-bursary
+  name: NFVF International bursary
+  kind: bursary
+  provider: National Film and Video Foundation
+  url: https://www.zabursaries.co.za/international-scholarships-bursaries-south-africa/nfvf-international-bursary/
+  source: zabursaries-listings
