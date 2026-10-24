@@ -37,6 +37,12 @@ class TooYoungError(AppError):
     message = "EduLift accounts are for people aged 17 and over."
 
 
+class UnknownInterestError(AppError):
+    code = "validation_failed"
+    status_code = 422
+    message = "Some interests aren't recognised."
+
+
 class NotAllowedError(AppError):
     code = "not_allowed"
     status_code = 403
@@ -115,6 +121,7 @@ def _me(db: Session, user: m.User) -> MeDetail:
         first_name=profile.first_name if profile else None,
         birth_date=profile.birth_date if profile else None,
         consents=sorted(_active_purposes(db, user.id)),
+        interests=list(profile.interests) if profile else [],
         reconfirm=reconfirm_purposes(db, user, date.today()),
     )
 
@@ -134,8 +141,13 @@ def save_profile(body: ProfileIn, me: SignedIn, db: Db, identities: Identities) 
         identities.delete_user(me.subject)
         raise TooYoungError
     profile = db.get(m.Profile, user.id) or m.Profile(user_id=user.id)
-    for field, value in body.model_dump().items():
+    for field, value in body.model_dump(exclude_unset=True, exclude={"interests"}).items():
         setattr(profile, field, value)
+    if body.interests is not None:
+        known = set(db.scalars(select(m.Field.id)))
+        if set(body.interests) - known:
+            raise UnknownInterestError
+        profile.interests = body.interests
     db.add(profile)
     db.flush()
     _refresh_status(db, user)

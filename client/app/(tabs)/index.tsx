@@ -1,5 +1,8 @@
 import { router } from 'expo-router';
 
+import { useMe } from '../../src/account';
+import { useApplications } from '../../src/tracking';
+import { usePlan } from '../../src/plan';
 import { useDeadlines } from '../../src/reference';
 import { useSession } from '../../src/session';
 import { Body, Button, Card, Empty, Heading, QueryState, Screen, Title } from '../../src/ui';
@@ -10,26 +13,51 @@ function daysLabel(days: number) {
 }
 
 export default function Home() {
-  const { status } = useSession();
+  const { status, accessToken } = useSession();
+  const signedIn = status === 'signed-in';
+  const me = useMe();
+  const plan = usePlan(signedIn ? accessToken : null);
+  const applications = useApplications(signedIn ? accessToken : null);
   const deadlines = useDeadlines();
+
+  const nextDeadline = deadlines.data?.[0];
+  const openRoutes = plan.data?.targets.filter((t) => t.verdict && t.verdict.outcome !== 'qualifies') ?? [];
+  const nextStep = applications.data?.find((a) => a.checklist.some((c) => !c.done));
+  const nextStepItem = nextStep?.checklist.find((c) => !c.done);
+  const firstName = me.data?.first_name;
 
   return (
     <Screen>
-      <Heading>Your next step after matric</Heading>
-      <Body muted>See where you qualify, and what’s still open if you don’t.</Body>
-      {status !== 'signed-in' && (
-        <Button label="Sign in to check your marks" onPress={() => router.push('/sign-in')} />
-      )}
-      <Button label="Try the APS calculator" onPress={() => router.push('/aps')} />
-      <Button label="My plan" onPress={() => router.push('/plan')} />
-      <Button label="Funding and work" onPress={() => router.push('/opportunities')} />
-      <Button label="My applications" onPress={() => router.push('/applications')} />
-      <Button label="Ask about programmes" onPress={() => router.push('/ask')} />
-      <Button label="CV and letters" onPress={() => router.push('/draft')} />
+      <Heading>{firstName ? `Good day, ${firstName}` : 'Your next step after matric'}</Heading>
+      {nextDeadline && <Body>Your next deadline {daysLabel(nextDeadline.days_left).toLowerCase()}.</Body>}
 
-      <Title>Closing soon</Title>
+      {!signedIn && (
+        <>
+          <Body muted>See your marks, your Plan A and Plan B, and funding and work you qualify for.</Body>
+          <Button label="Check my options, no account needed" onPress={() => router.push('/aps')} />
+          <Button label="Sign in or create an account" onPress={() => router.push('/sign-in')} />
+        </>
+      )}
+
+      {signedIn && openRoutes.length > 0 && (
+        <Card onPress={() => router.push('/plan')} label="Open your Plan B">
+          <Title>Your Plan B is ready</Title>
+          <Body muted>
+            {openRoutes.length} programme{openRoutes.length === 1 ? '' : 's'} on your plan need another route.
+          </Body>
+        </Card>
+      )}
+
+      {signedIn && nextStep && nextStepItem && (
+        <Card onPress={() => router.push(`/application/${nextStep.id}`)} label="Open your next step">
+          <Title>Your next step</Title>
+          <Body>{nextStepItem.label} for {nextStep.name}</Body>
+        </Card>
+      )}
+
+      <Title>Upcoming deadlines</Title>
       <QueryState query={deadlines} empty={deadlines.data?.length === 0}>
-        {deadlines.data?.map((d) => (
+        {deadlines.data?.slice(0, 6).map((d) => (
           <Card
             key={`${d.institution_id}-${d.intake_year}`}
             label={`${d.institution}, ${daysLabel(d.days_left)}`}

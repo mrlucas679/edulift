@@ -192,6 +192,13 @@ class ProfileIn(Request):
     birth_date: date
     province: str | None = Field(default=None, max_length=30)
     certificate: Literal["nsc", "ieb", "sacai"] | None = None
+    interests: list[str] | None = Field(default=None, max_length=3)
+
+    @model_validator(mode="after")
+    def unique_interests(self) -> "ProfileIn":
+        if self.interests is not None and len(set(self.interests)) != len(self.interests):
+            raise ValueError("pick each interest once")
+        return self
 
 
 class ConsentRequest(Request):
@@ -209,6 +216,7 @@ class MeDetail(BaseModel):
     birth_date: date | None
     consents: list[str]
     reconfirm: list[str]  # guardian choices the learner must confirm at 18
+    interests: list[str]
 
 
 class GuardianRequestIn(Request):
