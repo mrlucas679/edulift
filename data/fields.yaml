@@ -17,3 +17,7 @@
 - {id: humanities, name: Humanities}
 - {id: humanities.law, name: Law, parent: humanities}
 - {id: humanities.social, name: Social sciences, parent: humanities}
+- {id: science, name: Natural and physical sciences}
+- {id: agriculture, name: Agriculture and food sciences}
+- {id: arts, name: "Arts, design and music"}
+- {id: theology, name: Theology and religion}

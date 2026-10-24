@@ -5,4 +5,1547 @@ province: Gauteng
 apply_url: https://www.up.ac.za/online-application
 route: direct
 source: up-apply
-# cycles and programmes: add once checked against the 2027 prospectus
+programmes:
+- id: up.bachelor-of-administration-specialising-in-public-administra
+  name: Bachelor of Administration specialising in Public Administration and International
+    Relations (3 yrs)
+  qualification: degree
+  field: humanities
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 40
+    - subject: maths_literacy
+      min: 50
+- id: up.bachelor-of-commerce-in-accounting-sciences-3-yrs
+  name: Bachelor of Commerce in Accounting Sciences (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: up.bachelor-of-commerce-specialising-in-investment-management-3
+  name: Bachelor of Commerce specialising in Investment Management (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: up.bachelor-of-commerce-specialising-in-financial-management-sc
+  name: Bachelor of Commerce specialising in Financial Management Sciences (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-commerce-specialising-in-econometrics-3-yrs
+  name: Bachelor of Commerce specialising in Econometrics (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: up.bachelor-of-commerce-specialising-in-economics-3-yrs
+  name: Bachelor of Commerce specialising in Economics (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-commerce-specialising-in-law-3-yrs
+  name: Bachelor of Commerce specialising in Law (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-commerce-specialising-in-statistics-and-data-sci
+  name: Bachelor of Commerce specialising in Statistics and Data Science (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-commerce-specialising-in-information-systems-3-y
+  name: Bachelor of Commerce specialising in Information Systems (3 yrs)
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-commerce-specialising-in-agribusiness-management
+  name: Bachelor of Commerce specialising in Agribusiness Management (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-commerce-specialising-in-business-management-3-y
+  name: Bachelor of Commerce specialising in Business Management (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-commerce-specialising-in-supply-chain-management
+  name: Bachelor of Commerce specialising in Supply Chain Management (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-commerce-specialising-in-marketing-management-3-
+  name: Bachelor of Commerce specialising in Marketing Management (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-commerce-specialising-in-human-resource-manageme
+  name: Bachelor of Commerce specialising in Human Resource Management (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-commerce-3-yrs
+  name: Bachelor of Commerce (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-commerce-4-yrs-selection-programme
+  name: Bachelor of Commerce (4 yrs) - selection programme
+  qualification: degree
+  field: commerce
+  min_aps: 26
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 40
+- id: up.bachelor-of-education-in-early-childhood-care-and-education-
+  name: Bachelor of Education in Early Childhood Care and Education (4 yrs)
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-education-in-foundation-phase-teaching-grade-r-3
+  name: Bachelor of Education in Foundation Phase Teaching Grade R-3 (4 yrs)
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-education-in-intermediate-phase-teaching-grade-4
+  name: Bachelor of Education in Intermediate Phase Teaching Grade 4-6 (4 yrs)
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-education-in-senior-phase-and-fet-teaching-grade
+  name: Bachelor of Education in Senior Phase and FET Teaching Grade 7-12 (4 yrs)
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.higher-certificate-in-sports-sciences-1-yr
+  name: Higher Certificate in Sports Sciences (1 yr)
+  qualification: higher_cert
+  field: health
+  min_aps: 20
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.higher-certificate-in-sports-sciences-2-yrs
+  name: Higher Certificate in Sports Sciences (2 yrs)
+  qualification: higher_cert
+  field: health
+  min_aps: 20
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-engineering-in-chemical-engineering-4-yrs
+  name: Bachelor of Engineering in Chemical Engineering (4 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-in-civil-engineering-4-yrs
+  name: Bachelor of Engineering in Civil Engineering (4 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-in-computer-engineering-4-yrs
+  name: Bachelor of Engineering in Computer Engineering (4 yrs)
+  qualification: degree
+  field: it
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-in-electrical-engineering-4-yrs
+  name: Bachelor of Engineering in Electrical Engineering (4 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-in-electronic-engineering-4-yrs
+  name: Bachelor of Engineering in Electronic Engineering (4 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-in-industrial-engineering-4-yrs
+  name: Bachelor of Engineering in Industrial Engineering (4 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-in-mechanical-engineering-4-yrs
+  name: Bachelor of Engineering in Mechanical Engineering (4 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-in-metallurgical-engineering-4-yrs
+  name: Bachelor of Engineering in Metallurgical Engineering (4 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-in-mining-engineering-4-yrs
+  name: Bachelor of Engineering in Mining Engineering (4 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+- id: up.bachelor-of-engineering-5-yrs-engage
+  name: Bachelor of Engineering (5 yrs - ENGAGE)
+  qualification: degree
+  field: engineering
+  min_aps: 33
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 65
+    - subject: english_fal
+      min: 65
+  - - subject: mathematics
+      min: 65
+  - - subject: physical_sciences
+      min: 65
+- id: up.bachelor-of-science-in-architecture-3-yrs
+  name: Bachelor of Science in Architecture (3 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: up.bachelor-of-science-in-construction-management-3-yrs
+  name: Bachelor of Science in Construction Management (3 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 50
+    - subject: accounting
+      min: 50
+- id: up.bachelor-of-science-in-real-estate-3-yrs
+  name: Bachelor of Science in Real Estate (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 50
+    - subject: accounting
+      min: 50
+- id: up.bachelor-of-science-in-quantity-surveying-3-yrs
+  name: Bachelor of Science in Quantity Surveying (3 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 50
+    - subject: accounting
+      min: 50
+- id: up.bachelor-of-town-and-regional-planning-4-yrs
+  name: Bachelor of Town and Regional Planning (4 yrs)
+  qualification: degree
+  field: humanities
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-commerce-specialising-in-information-systems-3-y
+  name: Bachelor of Commerce specialising in Information Systems (3 yrs; administered
+    by EMS)
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-information-science-3-yrs
+  name: Bachelor of Information Science (3 yrs)
+  qualification: degree
+  field: it
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-information-science-specialising-in-publishing-3
+  name: Bachelor of Information Science specialising in Publishing (3 yrs)
+  qualification: degree
+  field: it
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-information-science-specialising-in-multimedia-3
+  name: Bachelor of Information Science specialising in Multimedia (3 yrs)
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-information-technology-in-information-systems-3-
+  name: Bachelor of Information Technology in Information Systems (3 yrs)
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-science-in-computer-science-3-yrs
+  name: Bachelor of Science in Computer Science (3 yrs)
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: up.bachelor-of-science-in-information-technology-in-information
+  name: Bachelor of Science in Information Technology in Information and Knowledge
+    Systems (3 yrs)
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 70
+- id: up.bachelor-of-dental-surgery-5-yrs
+  name: Bachelor of Dental Surgery (5 yrs)
+  qualification: degree
+  field: health
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-oral-hygiene-3-yrs
+  name: Bachelor of Oral Hygiene (3 yrs)
+  qualification: degree
+  field: health
+  min_aps: 25
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: up.bachelor-of-dietetics-4-yrs
+  name: Bachelor of Dietetics (4 yrs)
+  qualification: degree
+  field: health
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: up.bachelor-of-nursing-science-4-yrs
+  name: Bachelor of Nursing Science (4 yrs)
+  qualification: degree
+  field: health
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: life_sciences
+      min: 50
+- id: up.bachelor-of-occupational-therapy-4-yrs
+  name: Bachelor of Occupational Therapy (4 yrs)
+  qualification: degree
+  field: health
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: up.bachelor-of-physiotherapy-4-yrs
+  name: Bachelor of Physiotherapy (4 yrs)
+  qualification: degree
+  field: health
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: up.bachelor-of-radiography-in-diagnostics-4-yrs
+  name: Bachelor of Radiography in Diagnostics (4 yrs)
+  qualification: degree
+  field: health
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: up.bachelor-of-clinical-medical-practice-bcmp-3-yrs
+  name: Bachelor of Clinical Medical Practice (BCMP) (3 yrs)
+  qualification: degree
+  field: health
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+    - subject: life_sciences
+      min: 50
+- id: up.bachelor-of-medicine-and-surgery-mbchb-6-yrs
+  name: Bachelor of Medicine and Surgery (MBChB) (6 yrs)
+  qualification: degree
+  field: health
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-sports-science-3-yrs
+  name: Bachelor of Sports Science (3 yrs)
+  qualification: degree
+  field: health
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+    - subject: life_sciences
+      min: 50
+- id: up.bachelor-of-arts-in-speech-language-pathology-4-yrs
+  name: Bachelor of Arts in Speech-Language Pathology (4 yrs)
+  qualification: degree
+  field: humanities
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-arts-in-audiology-4-yrs
+  name: Bachelor of Arts in Audiology (4 yrs)
+  qualification: degree
+  field: humanities
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-arts-in-information-design-4-yrs
+  name: Bachelor of Arts in Information Design (4 yrs)
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-arts-3-yrs
+  name: Bachelor of Arts (3 yrs)
+  qualification: degree
+  field: humanities
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-social-work-4-yrs
+  name: Bachelor of Social Work (4 yrs)
+  qualification: degree
+  field: humanities
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-arts-specialising-in-law-3-yrs
+  name: Bachelor of Arts specialising in Law (3 yrs)
+  qualification: degree
+  field: humanities.law
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-arts-specialising-in-languages-3-yrs
+  name: Bachelor of Arts specialising in Languages (3 yrs)
+  qualification: degree
+  field: humanities
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-social-science-specialising-in-industrial-sociol
+  name: Bachelor of Social Science specialising in Industrial Sociology and Labour
+    Studies (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-social-science-in-heritage-and-cultural-sciences
+  name: Bachelor of Social Science in Heritage and Cultural Sciences (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-arts-specialising-in-philosophy-politics-and-eco
+  name: Bachelor of Arts specialising in Philosophy Politics and Economics (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-political-science-specialising-in-international-
+  name: Bachelor of Political Science specialising in International Studies (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-political-science-specialising-in-political-stud
+  name: Bachelor of Political Science specialising in Political Studies (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-arts-in-fine-arts-4-yrs
+  name: Bachelor of Arts in Fine Arts (4 yrs)
+  qualification: degree
+  field: arts
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-arts-in-fine-arts-5-yrs
+  name: Bachelor of Arts in Fine Arts (5 yrs)
+  qualification: degree
+  field: arts
+  min_aps: 26
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-arts-specialising-in-visual-studies-3-yrs
+  name: Bachelor of Arts specialising in Visual Studies (3 yrs)
+  qualification: degree
+  field: arts
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-music-4-yrs
+  name: Bachelor of Music (4 yrs)
+  qualification: degree
+  field: arts
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-music-5-yrs
+  name: Bachelor of Music (5 yrs)
+  qualification: degree
+  field: arts
+  min_aps: 26
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-drama-3-yrs
+  name: Bachelor of Drama (3 yrs)
+  qualification: degree
+  field: arts
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-drama-4-yrs
+  name: Bachelor of Drama (4 yrs)
+  qualification: degree
+  field: arts
+  min_aps: 26
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-laws-llb-4-yrs
+  name: Bachelor of Laws LLB (4 yrs)
+  qualification: degree
+  field: humanities.law
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 70
+    - subject: english_fal
+      min: 70
+- id: up.bachelor-of-commerce-specialising-in-law-3-yrs
+  name: Bachelor of Commerce specialising in Law (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-arts-specialising-in-law-3-yrs
+  name: Bachelor of Arts specialising in Law (3 yrs)
+  qualification: degree
+  field: humanities.law
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: up.bachelor-of-theology-3-yrs
+  name: Bachelor of Theology (3 yrs)
+  qualification: degree
+  field: theology
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-divinity-4-yrs
+  name: Bachelor of Divinity (4 yrs)
+  qualification: degree
+  field: theology
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.diploma-in-theology-3-yrs
+  name: Diploma in Theology (3 yrs)
+  qualification: diploma
+  field: theology
+  min_aps: 24
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: up.bachelor-of-science-in-agriculture-in-applied-plant-and-soil
+  name: Bachelor of Science in Agriculture in Applied Plant and Soil Sciences (4 yrs)
+  qualification: degree
+  field: agriculture
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-agriculture-in-plant-pathology-4-yrs
+  name: Bachelor of Science in Agriculture in Plant Pathology (4 yrs)
+  qualification: degree
+  field: agriculture
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-agriculture-in-animal-science-4-yrs
+  name: Bachelor of Science in Agriculture in Animal Science (4 yrs)
+  qualification: degree
+  field: agriculture
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-agriculture-in-agricultural-economics
+  name: Bachelor of Science in Agriculture in Agricultural Economics and Agribusiness
+    Management (4 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-food-science-3-yrs
+  name: Bachelor of Science in Food Science (3 yrs)
+  qualification: degree
+  field: agriculture
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-food-management-option-culinary-scien
+  name: Bachelor of Science in Food Management option Culinary Science (4 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-food-management-option-nutritional-sc
+  name: Bachelor of Science in Food Management option Nutritional Science (4 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-biochemistry-3-yrs
+  name: Bachelor of Science in Biochemistry (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-biotechnology-3-yrs
+  name: Bachelor of Science in Biotechnology (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-ecology-3-yrs
+  name: Bachelor of Science in Ecology (3 yrs)
+  qualification: degree
+  field: agriculture
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-entomology-3-yrs
+  name: Bachelor of Science in Entomology (3 yrs)
+  qualification: degree
+  field: agriculture
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-genetics-and-bachelor-of-science-in-h
+  name: Bachelor of Science in Genetics and Bachelor of Science in Human Genetics
+    (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-human-physiology-and-bachelor-of-scie
+  name: Bachelor of Science in Human Physiology and Bachelor of Science in Human Physiology
+    Genetics and Psychology (3 yrs)
+  qualification: degree
+  field: health
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-medical-sciences-3-yrs
+  name: Bachelor of Science in Medical Sciences (3 yrs)
+  qualification: degree
+  field: health
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-microbiology-3-yrs
+  name: Bachelor of Science in Microbiology (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-plant-science-3-yrs
+  name: Bachelor of Science in Plant Science (3 yrs)
+  qualification: degree
+  field: agriculture
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-zoology-3-yrs
+  name: Bachelor of Science in Zoology (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-consumer-science-specialising-in-clothing-retail
+  name: Bachelor of Consumer Science specialising in Clothing Retail Management (4
+    yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-consumer-science-specialising-in-food-management
+  name: Bachelor of Consumer Science specialising in Food Management (4 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: up.bachelor-of-science-in-actuarial-and-financial-mathematics-3
+  name: Bachelor of Science in Actuarial and Financial Mathematics (3 yrs)
+  qualification: degree
+  field: commerce
+  min_aps: 36
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 80
+- id: up.bachelor-of-science-in-mathematical-statistics-3-yrs
+  name: Bachelor of Science in Mathematical Statistics (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: up.bachelor-of-science-in-mathematics-and-applied-mathematics-3
+  name: Bachelor of Science in Mathematics and Applied Mathematics (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: up.bachelor-of-science-in-chemistry-3-yrs
+  name: Bachelor of Science in Chemistry (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-environmental-and-engineering-geology
+  name: Bachelor of Science in Environmental and Engineering Geology (3 yrs)
+  qualification: degree
+  field: engineering
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-geography-option-geography-and-enviro
+  name: Bachelor of Science in Geography option Geography and Environmental Science
+    (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-geoinformatics-3-yrs
+  name: Bachelor of Science in Geoinformatics (3 yrs)
+  qualification: degree
+  field: it
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-geology-3-yrs
+  name: Bachelor of Science in Geology (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-meteorology-3-yrs
+  name: Bachelor of Science in Meteorology (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.bachelor-of-science-in-physics-3-yrs
+  name: Bachelor of Science in Physics (3 yrs)
+  qualification: degree
+  field: science
+  min_aps: 34
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: up.extended-bachelor-of-science-in-mathematics-4-yrs
+  name: EXTENDED Bachelor of Science in Mathematics (4 yrs)
+  qualification: extended_degree
+  field: science
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 58
+    - subject: english_fal
+      min: 58
+  - - subject: mathematics
+      min: 65
+- id: up.extended-bachelor-of-science-in-chemistry-geoinformatics-geo
+  name: EXTENDED Bachelor of Science in Chemistry Geoinformatics Geology Meteorology
+    Physics (4 yrs)
+  qualification: extended_degree
+  field: it
+  min_aps: 32
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 58
+    - subject: english_fal
+      min: 58
+  - - subject: mathematics
+      min: 58
+- id: up.extended-bachelor-of-science-in-agriculture-applied-plant-an
+  name: EXTENDED Bachelor of Science in Agriculture Applied Plant and Soil Sciences
+    Plant Pathology Ecology Human Physiology (5 yrs)
+  qualification: extended_degree
+  field: health
+  min_aps: 30
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 58
+    - subject: english_fal
+      min: 58
+  - - subject: mathematics
+      min: 58
+- id: up.bachelor-of-veterinary-science-bvsc-6-yrs
+  name: Bachelor of Veterinary Science (BVSc) (6 yrs)
+  qualification: degree
+  field: health
+  min_aps: 35
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: up.bachelor-of-veterinary-nursing-3-yrs
+  name: Bachelor of Veterinary Nursing (3 yrs)
+  qualification: degree
+  field: health
+  min_aps: 28
+  source: up-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+    - subject: life_sciences
+      min: 50
+cycles:
+- intake_year: 2027
+  opens_on: '2026-04-01'
+  closes_on: '2026-06-30'
+  source: up-prospectus-2027

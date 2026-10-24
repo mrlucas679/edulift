@@ -5,4 +5,1098 @@ province: Gauteng
 apply_url: https://www.uj.ac.za/
 route: direct
 source: uj-site
-# cycles and programmes: add once checked against the 2027 prospectus
+programmes:
+- id: uj.b8ba3q
+  name: B ARCHITECTURE
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: uj.b34caq
+  name: ACCOUNTING (CA)
+  qualification: degree
+  field: commerce
+  min_aps: 33
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: uj.b34a5q
+  name: ACCOUNTING
+  qualification: degree
+  field: commerce
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+- id: uj.b34bmq
+  name: BUSINESS MANAGEMENT
+  qualification: degree
+  field: commerce
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+- id: uj.b3n14q
+  name: ECONOMICS AND ECONOMETRICS
+  qualification: degree
+  field: commerce
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+- id: uj.b1cemq
+  name: ENTREPRENEURIAL MANAGEMENT
+  qualification: degree
+  field: commerce
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+- id: uj.b34f5q
+  name: FINANCE
+  qualification: degree
+  field: commerce
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+- id: uj.b1cisq
+  name: INFORMATION SYSTEMS
+  qualification: degree
+  field: it
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+- id: uj.b1cmmq
+  name: MARKETING MANAGEMENT
+  qualification: degree
+  field: commerce
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+- id: uj.b34tlq
+  name: TRANSPORT AND LOGISTICS MANAGEMENT
+  qualification: degree
+  field: health
+  min_aps: 27
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: uj.bsbfpq
+  name: BEd Foundation Phase Teaching Grade R-3
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 40
+- id: uj.bsbitq
+  name: BEd Intermediate Phase Teaching Grade 4-7
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 40
+- id: uj.bslopq
+  name: BEd Psychology (Life Orientation) Senior Phase
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: uj.bsbsaq
+  name: BEd Commerce Education Accounting
+  qualification: degree
+  field: commerce
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: uj.bsbsbq
+  name: BEd Commerce Education Business Management
+  qualification: degree
+  field: commerce
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: uj.bsbseq
+  name: BEd Commerce Education Economics
+  qualification: degree
+  field: commerce
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+- id: uj.bslaeq
+  name: BEd Language Education English
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: uj.bslazq
+  name: BEd Language Education isiZulu
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+    - subject: mathematics
+      min: 60
+- id: uj.bslasq
+  name: BEd Language Education Sepedi
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: maths_literacy
+      min: 50
+    - subject: maths_literacy
+      min: 60
+- id: uj.bssgeq
+  name: BEd Geography
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+    - subject: mathematics
+      min: 70
+- id: uj.bssmmq
+  name: BEd Mathematics
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+    - subject: mathematics
+      min: 70
+- id: uj.bsspsq
+  name: BEd Physical Science
+  qualification: degree
+  field: education
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: uj.b6c50q
+  name: BEng Civil Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 32
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: uj.b6es0q
+  name: BEng Electrical and Electronic Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 32
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: uj.b6m50q
+  name: BEng Mechanical Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 32
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: uj.b6ce1q
+  name: BEngTech Chemical Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: uj.b6cv3q
+  name: BEngTech Civil Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: maths_literacy
+      min: 60
+    - subject: technical_sciences
+      min: 60
+- id: uj.b6el1q
+  name: BEngTech Electrical Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: uj.b6extq
+  name: BEngTech Extraction Metallurgy
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: uj.b6in2q
+  name: BEngTech Industrial Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: maths_literacy
+      min: 60
+    - subject: technical_sciences
+      min: 60
+- id: uj.b6mc2q
+  name: BEngTech Mechanical Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: maths_literacy
+      min: 60
+    - subject: technical_sciences
+      min: 60
+- id: uj.b6minq
+  name: BEngTech Mining Engineering
+  qualification: degree
+  field: engineering
+  min_aps: 23
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: maths_literacy
+      min: 60
+    - subject: technical_sciences
+      min: 60
+- id: uj.b6py2q
+  name: BEngTech Physical Metallurgy
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: mathematics
+      min: 60
+- id: uj.b6su0q
+  name: MINE SURVEYING
+  qualification: degree
+  field: engineering
+  min_aps: 23
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+    - subject: technical_sciences
+      min: 60
+- id: uj.b6cn0q
+  name: BSc Construction
+  qualification: degree
+  field: engineering
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+    - subject: technical_sciences
+      min: 60
+- id: uj.b6up0q
+  name: Urban and Regional Planning
+  qualification: degree
+  field: humanities
+  min_aps: 27
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: geography
+      min: 60
+- id: uj.b6sc0q
+  name: EXTENDED BSc CONSTRUCTION
+  qualification: extended_degree
+  field: engineering
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: uj.b6cx3q
+  name: EXTENDED BEngTech CIVIL ENGINEERING
+  qualification: extended_degree
+  field: engineering
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: uj.b6l1xq
+  name: EXTENDED BEngTech ELECTRICAL ENGINEERING
+  qualification: extended_degree
+  field: engineering
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: uj.b6ex0q
+  name: EXTENDED BEngTech EXTRACTION METALLURGY
+  qualification: extended_degree
+  field: engineering
+  min_aps: 22
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: uj.b6ix2q
+  name: EXTENDED BEngTech INDUSTRIAL ENGINEERING
+  qualification: extended_degree
+  field: engineering
+  min_aps: 24
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: uj.b6mx2q
+  name: EXTENDED BEngTech MECHANICAL ENGINEERING
+  qualification: extended_degree
+  field: engineering
+  min_aps: 24
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+- id: uj.b6px2q
+  name: EXTENDED BEngTech PHYSICAL METALLURGY
+  qualification: extended_degree
+  field: engineering
+  min_aps: 22
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: uj.b9c01q
+  name: CHIROPRACTIC (selection)
+  qualification: degree
+  field: health
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+    - subject: life_sciences
+      min: 50
+- id: uj.b9cm1q
+  name: COMPLEMENTARY MEDICINE (selection)
+  qualification: degree
+  field: health
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+    - subject: life_sciences
+      min: 50
+- id: uj.b9e01q
+  name: EMERGENCY MEDICAL CARE (EMC) (fitness assessment)
+  qualification: degree
+  field: health
+  min_aps: 27
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: uj.b9b01q
+  name: MEDICAL LABORATORY SCIENCE
+  qualification: degree
+  field: health
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+  - - subject: life_sciences
+      min: 60
+- id: uj.b9p01q
+  name: PODIATRY
+  qualification: degree
+  field: health
+  min_aps: 28
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+- id: uj.b9env1
+  name: ENVIRONMENTAL HEALTH
+  qualification: degree
+  field: health
+  min_aps: 24
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+  - - subject: life_sciences
+      min: 50
+- id: uj.b9n02q
+  name: NURSING
+  qualification: degree
+  field: health
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+  - - subject: life_sciences
+      min: 50
+- id: uj.b9o02q
+  name: OPTOMETRY (B OPTOM)
+  qualification: degree
+  field: health
+  min_aps: 34
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+  - - subject: life_sciences
+      min: 60
+- id: uj.b7025q
+  name: BSocial Work SOCIAL WORK
+  qualification: degree
+  field: humanities
+  min_aps: 31
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: uj.b7026q
+  name: BA with specialisation in LANGUAGE PRACTICE
+  qualification: degree
+  field: humanities
+  min_aps: 27
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: uj.b7015q
+  name: COMMUNITY DEVELOPMENT AND LEADERSHIP
+  qualification: degree
+  field: humanities
+  min_aps: 27
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: uj.d7002q
+  name: DIPLOMA PUBLIC RELATIONS AND COMMUNICATION
+  qualification: diploma
+  field: humanities
+  min_aps: 25
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+- id: uj.d7ex2q
+  name: EXTENDED DIPLOMA PUBLIC RELATIONS AND COMMUNICATION
+  qualification: diploma
+  field: humanities
+  min_aps: 24
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+- id: uj.b2i01q
+  name: BSc INFORMATION TECHNOLOGY
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2i02q
+  name: BSc COMPUTER SCIENCE AND INFORMATICS
+  qualification: degree
+  field: it
+  min_aps: 30
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2i04q
+  name: BSc COMPUTER SCIENCE AND INFORMATICS (Artificial Intelligence)
+  qualification: degree
+  field: it
+  min_aps: 34
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 80
+- id: uj.b2m44q
+  name: BSc MATHEMATICAL STATISTICS AND COMPUTER SCIENCE
+  qualification: degree
+  field: it
+  min_aps: 31
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2m45q
+  name: BSc MATHEMATICS AND COMPUTER SCIENCE
+  qualification: degree
+  field: it
+  min_aps: 31
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2m46q
+  name: BSc MATHEMATICS AND INFORMATICS
+  qualification: degree
+  field: it
+  min_aps: 31
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2m47q
+  name: BSc MATHEMATICS AND MATHEMATICAL STATISTICS
+  qualification: degree
+  field: science
+  min_aps: 31
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2m55q
+  name: BSc MATHEMATICS AND MATHEMATICAL STATISTICS (WITH FINANCIAL ORIENTATION)
+  qualification: degree
+  field: commerce
+  min_aps: 33
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2m56q
+  name: BSc MATHEMATICAL STATISTICS AND ECONOMICS (WITH FINANCIAL ORIENTATION)
+  qualification: degree
+  field: commerce
+  min_aps: 33
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2m57q
+  name: BSc MATHEMATICS AND ECONOMICS (WITH FINANCIAL ORIENTATION)
+  qualification: degree
+  field: commerce
+  min_aps: 33
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+- id: uj.b2m52q
+  name: BSc ACTUARIAL SCIENCE
+  qualification: degree
+  field: commerce
+  min_aps: 40
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 80
+- id: uj.b2e02q
+  name: EXTENDED BSc COMPUTER SCIENCE AND INFORMATICS
+  qualification: extended_degree
+  field: it
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: uj.b2e41q
+  name: EXTENDED BSc APPLIED MATHEMATICS AND MATHEMATICAL STATISTICS
+  qualification: extended_degree
+  field: science
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: uj.b2e43q
+  name: EXTENDED BSc MATHEMATICAL STATISTICS AND COMPUTER SCIENCE
+  qualification: extended_degree
+  field: it
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: uj.b2e44q
+  name: EXTENDED BSc MATHEMATICS AND COMPUTER SCIENCE
+  qualification: extended_degree
+  field: it
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: uj.b2e45q
+  name: EXTENDED BSc MATHEMATICS AND INFORMATICS
+  qualification: extended_degree
+  field: it
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: uj.b2e46q
+  name: EXTENDED BSc MATHEMATICS AND MATHEMATICAL STATISTICS
+  qualification: extended_degree
+  field: science
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: uj.b2e49q
+  name: EXTENDED BSc MATHEMATICS AND PSYCHOLOGY
+  qualification: extended_degree
+  field: science
+  min_aps: 26
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+- id: uj.d2ackq
+  name: DIPLOMA (EXTENDED) ANALYTICAL CHEMISTRY
+  qualification: diploma
+  field: science
+  min_aps: 22
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 40
+  - - subject: physical_sciences
+      min: 50
+- id: uj.d2bteq
+  name: DIPLOMA (EXTENDED) BIOTECHNOLOGY
+  qualification: diploma
+  field: science
+  min_aps: 23
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 40
+  - - subject: physical_sciences
+      min: 40
+  - - subject: life_sciences
+      min: 40
+- id: uj.d2fteq
+  name: DIPLOMA (EXTENDED) FOOD TECHNOLOGY
+  qualification: diploma
+  field: agriculture
+  min_aps: 22
+  source: uj-prospectus-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 40
+  - - subject: physical_sciences
+      min: 40
+  - - subject: life_sciences
+      min: 40
+cycles:
+- intake_year: 2027
+  opens_on: '2026-04-01'
+  closes_on: '2026-10-31'
+  source: uj-prospectus-2027
