@@ -9,9 +9,11 @@ from app.errors import NotFoundError
 TargetKind = str  # "programme" or "opportunity"
 
 DEFAULT_CHECKLIST = (
-    "Certificate or statement of results",
     "Certified copy of your ID",
-    "Proof of payment or registration, if asked",
+    "Grade 11 final results",
+    "Grade 12 June results",
+    "Confirmation email saved",
+    "Residence application",
 )
 DEADLINE_SOON_DAYS = 7
 
