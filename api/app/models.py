@@ -119,6 +119,7 @@ class Programme(Base):
     min_aps: Mapped[int | None] = mapped_column(Integer)
     aps_scheme: Mapped[str | None] = mapped_column(String(30))
     nbt: Mapped[list[Any]] = mapped_column(JSONB, default=list)  # [[{"component", "level"}]]
+    notes: Mapped[str | None] = mapped_column(Text)
     selection: Mapped[bool] = mapped_column(Boolean, default=False)
     closes_on: Mapped[date | None] = mapped_column(Date)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))

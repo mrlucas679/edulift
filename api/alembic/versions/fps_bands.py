@@ -23,6 +23,7 @@ def upgrade() -> None:
         "programmes",
         sa.Column("nbt", postgresql.JSONB(), nullable=False, server_default="[]"),
     )
+    op.add_column("programmes", sa.Column("notes", sa.Text(), nullable=True))
     op.create_table(
         "fps_bands",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
@@ -40,5 +41,6 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     op.drop_table("fps_bands")
+    op.drop_column("programmes", "notes")
     op.drop_column("programmes", "nbt")
     op.drop_column("programmes", "aps_scheme")

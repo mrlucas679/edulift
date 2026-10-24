@@ -139,6 +139,7 @@ class ProgrammeIn(Strict):
     field: str
     min_aps: int | None = None
     aps_scheme: Literal["uct_fps", "uct_science"] | None = None  # overrides the institution's
+    notes: str | None = None  # shown as-is; never judged, e.g. places limits
     selection: bool = False
     closes_on: date | None = None
     source: str
