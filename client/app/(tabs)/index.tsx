@@ -85,7 +85,7 @@ export default function Home() {
       <QueryState query={deadlines} empty={deadlines.data?.length === 0}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space.md }}>
           {deadlines.data?.slice(0, 6).map((d) => (
-            <View key={`${d.institution_id}-${d.intake_year}`} style={{ width: 220 }}>
+            <View key={`${d.institution_id}-${d.intake_year}`} style={{ width: 170 }}>
               <Card
                 label={`${d.institution}, ${daysLabel(d.days_left)}`}
                 onPress={() => router.push(`/institution/${d.institution_id}`)}
