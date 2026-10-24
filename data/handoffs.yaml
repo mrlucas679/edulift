@@ -8,3 +8,8 @@
   purpose: Public service jobs and internships, published in the DPSA circular.
   url: https://www.dpsa.gov.za/
   source: dpsa-site
+- id: sayouth
+  name: SA Youth
+  purpose: Free, data-free site with jobs and learning for young people across the country.
+  url: https://www.sayouth.mobi/
+  source: sayouth-site

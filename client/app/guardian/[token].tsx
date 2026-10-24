@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, Switch, Text, View } from 'react-native';
 
-import { decideGuardianRequest, viewGuardianRequest } from '../../src/account';
+import { decideGuardianRequest, GUARDIAN_PURPOSES, viewGuardianRequest } from '../../src/account';
 import { font, space, text, touchTarget, useColors } from '../../src/theme';
 import { Body, Button, Card, ErrorNote, Heading, QueryState, Screen, Title } from '../../src/ui';
 
@@ -13,6 +13,7 @@ export default function GuardianApproval() {
   const colors = useColors();
   const view = useQuery({ queryKey: ['guardian', token], queryFn: () => viewGuardianRequest(token), retry: false });
   const [declared, setDeclared] = useState(false);
+  const [purposes, setPurposes] = useState<string[]>([]);
   const [done, setDone] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
@@ -22,7 +23,7 @@ export default function GuardianApproval() {
     setBusy(true);
     setError(null);
     try {
-      await decideGuardianRequest(token, { decision, relationship: 'parent', declaration: declared, purposes: [] });
+      await decideGuardianRequest(token, { decision, relationship: 'parent', declaration: declared, purposes });
       setDone(decision === 'approve' ? `Thank you. ${learner}’s account is approved.` : 'Done. We’ve deleted what was entered.');
     } catch (e) {
       setError(e);
@@ -63,6 +64,17 @@ export default function GuardianApproval() {
               <Body>• Send their details to universities or funders</Body>
               <Body>• Show them adverts</Body>
             </Card>
+            <Body muted>Optional. You can allow these now, or they stay off until {learner} turns them on.</Body>
+            {view.data.optional_purposes.map((p) => (
+              <View key={p} style={{ flexDirection: 'row', alignItems: 'center', gap: space.md, minHeight: touchTarget }}>
+                <Text style={{ flex: 1, fontFamily: font.regular, fontSize: text.body, color: colors.ink }}>{GUARDIAN_PURPOSES[p] ?? p}</Text>
+                <Switch
+                  accessibilityLabel={GUARDIAN_PURPOSES[p] ?? p}
+                  value={purposes.includes(p)}
+                  onValueChange={(on) => setPurposes((ps) => (on ? [...ps, p] : ps.filter((x) => x !== p)))}
+                />
+              </View>
+            ))}
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.md, minHeight: touchTarget }}>
               <Switch accessibilityLabel={`I am ${learner}’s parent or legal guardian`} value={declared} onValueChange={setDeclared} />
               <Text style={{ flex: 1, fontFamily: font.regular, fontSize: text.body, color: colors.ink }}>

@@ -7,7 +7,17 @@ import { KindChips, OpportunityCard } from './opportunity-views';
 import { useSession } from './session';
 import { Body, Empty, Field, QueryState, Screen } from './ui';
 
-export function OpportunityList({ title, kinds, intro }: { title: React.ReactNode; kinds: string[]; intro: string }) {
+export function OpportunityList({
+  title,
+  kinds,
+  intro,
+  header,
+}: {
+  title: React.ReactNode;
+  kinds: string[];
+  intro: string;
+  header?: React.ReactNode;
+}) {
   const { status, accessToken } = useSession();
   const signedIn = status === 'signed-in';
   const [kind, setKind] = useState<string | null>(null);
@@ -29,6 +39,7 @@ export function OpportunityList({ title, kinds, intro }: { title: React.ReactNod
       {title}
       <Field label="Search" value={search} onChangeText={setSearch} placeholder="Search bursaries, loans, scholarships" maxLength={60} />
       <Body muted>{intro}</Body>
+      {header}
       <KindChips kinds={kinds} value={kind} onChange={setKind} />
       <QueryState query={query}>
         {signedIn && items.length > 0 && (
