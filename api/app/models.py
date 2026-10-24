@@ -147,6 +147,7 @@ class FpsBand(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     programme_id: Mapped[str] = mapped_column(ForeignKey("programmes.id", ondelete="CASCADE"))
     label: Mapped[str] = mapped_column(String(20))
+    metric: Mapped[str] = mapped_column(String(3))
     score: Mapped[int] = mapped_column(Integer)
     applies_to: Mapped[str] = mapped_column(String(20))
     # [[{"subject": ..., "min": ...}], ...]; each inner list is one group of alternatives

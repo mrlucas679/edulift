@@ -120,6 +120,7 @@ FPS_SCHEMES = {"uct_fps", "uct_science"}
 
 class BandIn(Strict):
     label: Literal["guaranteed", "likely", "possible"]
+    metric: Literal["FPS", "WPS"] = "FPS"
     score: int
     applies_to: Literal["all", "targeted_redress"] = "all"
     requirements: list[list[OptionIn]] = []
@@ -269,7 +270,7 @@ def _write_institution(db: Session, inst: InstitutionIn) -> None:
     for p in inst.programmes:
         db.add(
             m.Programme(
-                **p.model_dump(exclude={"source", "field", "requirements"}),
+                **p.model_dump(exclude={"source", "field", "requirements", "fps_bands"}),
                 institution_id=inst.id,
                 field_id=p.field,
                 source_id=p.source,
@@ -291,6 +292,7 @@ def _write_institution(db: Session, inst: InstitutionIn) -> None:
                 m.FpsBand(
                     programme_id=p.id,
                     label=band.label,
+                    metric=band.metric,
                     score=band.score,
                     applies_to=band.applies_to,
                     requirements=[[o.model_dump() for o in g] for g in band.requirements],

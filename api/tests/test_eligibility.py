@@ -216,3 +216,21 @@ def test_band_closed_window_wins() -> None:
     marks = {"english_hl": 75, "mathematics": 85, "physical_sciences": 80, "geography": 75,
              "life_sciences": 70, "isizulu_fal": 70}  # fmt: skip
     assert evaluate(marks, closed, TODAY).outcome == "closed"
+
+
+def test_wps_band_is_unconfirmed_not_a_fail() -> None:
+    # FPS 470 misses the guaranteed band and the WPS 'likely' band cannot be judged
+    # without the disadvantage factor, so the answer is unconfirmed.
+    rules = Rules(
+        min_aps=None,
+        scheme="uct_fps",
+        bands=[
+            Band("guaranteed", 500, [[Option("mathematics", 80)]]),
+            Band("likely", 480, [[Option("mathematics", 80)]], metric="WPS"),
+        ],
+    )
+    marks = {"english_hl": 80, "mathematics": 80, "physical_sciences": 70, "geography": 60,
+             "life_sciences": 60, "isizulu_fal": 60}  # fmt: skip
+    v = evaluate(marks, rules, TODAY)
+    assert v.score == 410
+    assert v.outcome == "qualifies_unconfirmed"

@@ -37,6 +37,7 @@ def programme_verdict(
     bands = [
         Band(
             label=b.label,
+            metric=b.metric,
             score=b.score,
             applies_to=b.applies_to,
             groups=[[Option(o["subject"], o["min"]) for o in g] for g in b.requirements],

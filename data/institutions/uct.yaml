@@ -11,3 +11,231 @@ cycles:
   opens_on: 2026-04-01
   closes_on: 2026-07-31
   source: uct-prospectus-2027
+programmes:
+- id: uct.bachelor-of-science-in-engineering-in-civil-engineering
+  name: Bachelor of Science in Engineering in Civil Engineering
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+  - label: likely
+    metric: WPS
+    score: 480
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+  - label: possible
+    metric: FPS
+    score: 420
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+- id: uct.bachelor-of-science-in-engineering-in-electrical-electrical-and-comput
+  name: Bachelor of Science in Engineering in Electrical, Electrical and Computer
+    Engineering and Mechatronics
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: likely
+    metric: WPS
+    score: 480
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: possible
+    metric: FPS
+    score: 420
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+- id: uct.bachelor-of-science-in-engineering-in-chemical-engineering
+  name: Bachelor of Science in Engineering in Chemical Engineering
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: likely
+    metric: WPS
+    score: 480
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+  - label: possible
+    metric: FPS
+    score: 420
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 70
+- id: uct.bachelor-of-science-in-engineering-in-mechanical-and-mechanical-mechat
+  name: Bachelor of Science in Engineering in Mechanical, and Mechanical & Mechatronic
+    Engineering
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 500
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: likely
+    metric: WPS
+    score: 480
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+  - label: possible
+    metric: FPS
+    score: 420
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 80
+    - - subject: physical_sciences
+        min: 75
+- id: uct.bachelor-of-science-in-geomatics
+  name: Bachelor of Science in Geomatics
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 450
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 75
+    - - subject: physical_sciences
+        min: 70
+  - label: likely
+    metric: WPS
+    score: 420
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 60
+  - label: possible
+    metric: FPS
+    score: 390
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 60
+- id: uct.bachelor-of-science-in-construction-studies
+  name: Bachelor of Science in Construction Studies
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 450
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 60
+  - label: likely
+    metric: WPS
+    score: 420
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 55
+  - label: possible
+    metric: FPS
+    score: 390
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 65
+    - - subject: physical_sciences
+        min: 55
+- id: uct.bachelor-of-science-in-property-studies
+  name: Bachelor of Science in Property Studies
+  qualification: degree
+  field: engineering
+  source: uct-prospectus-2027
+  fps_bands:
+  - label: guaranteed
+    metric: FPS
+    score: 450
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+  - label: likely
+    metric: WPS
+    score: 420
+    applies_to: all
+    requirements:
+    - - subject: mathematics
+        min: 65
+  - label: possible
+    metric: FPS
+    score: 390
+    applies_to: targeted_redress
+    requirements:
+    - - subject: mathematics
+        min: 65

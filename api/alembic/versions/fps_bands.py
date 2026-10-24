@@ -23,6 +23,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("programme_id", sa.String(length=80), nullable=False),
         sa.Column("label", sa.String(length=20), nullable=False),
+        sa.Column("metric", sa.String(length=3), nullable=False),
         sa.Column("score", sa.Integer(), nullable=False),
         sa.Column("applies_to", sa.String(length=20), nullable=False),
         sa.Column("requirements", postgresql.JSONB(), nullable=False),

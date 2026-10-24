@@ -30,6 +30,7 @@ class Band:
     score: int
     groups: list[list[Option]]
     applies_to: str = "all"  # "targeted_redress" bands are not judged yet
+    metric: str = "FPS"  # "WPS" needs the disadvantage factor, which we do not collect
 
 
 @dataclass(frozen=True)
@@ -112,17 +113,22 @@ def _banded(aps: int | None, marks: dict[str, int], rules: Rules, window: Window
     for band in sorted(rules.bands, key=lambda b: -b.score):
         if band.applies_to != "all":
             continue
+        parts = [f"{band.metric} {band.score}"] + [_describe(g) for g in band.groups]
+        if band.metric != "FPS":
+            checks.append(Check(band.label, " and ".join(parts), f"FPS {aps}", "unknown"))
+            continue
         met = aps >= band.score and all(_group_met(g, marks) for g in band.groups)
-        parts = [f"FPS {band.score}"] + [_describe(g) for g in band.groups]
-        required = " and ".join(parts)
-        checks.append(Check(band.label, required, f"FPS {aps}", "pass" if met else "fail"))
+        result: Result = "pass" if met else "fail"
+        checks.append(Check(band.label, " and ".join(parts), f"FPS {aps}", result))
     if window == "closed":
         return Verdict("closed", aps, checks, window)
-    if not checks or all(c.result == "fail" for c in checks):
-        return Verdict("not_eligible", aps, checks, window)
-    top = checks[0].result == "pass"
-    outcome: Outcome = "qualifies" if top and not rules.selection else "qualifies_selection"
-    return Verdict(outcome, aps, checks, window)
+    if any(c.result == "pass" for c in checks):
+        top = checks[0].result == "pass"
+        outcome: Outcome = "qualifies" if top and not rules.selection else "qualifies_selection"
+        return Verdict(outcome, aps, checks, window)
+    if any(c.result == "unknown" for c in checks):
+        return Verdict("qualifies_unconfirmed", aps, checks, window)
+    return Verdict("not_eligible", aps, checks, window)
 
 
 def _outcome(checks: list[Check], selection: bool, window: str) -> Outcome:
