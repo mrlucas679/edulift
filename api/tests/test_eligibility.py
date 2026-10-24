@@ -355,3 +355,33 @@ def test_uct_health_is_out_of_600() -> None:
         50,
     )
     assert score("uct_health", marks) == 300
+
+
+def _nbt_rules_with_score() -> Rules:
+    return Rules(
+        min_aps=0, scheme="uct_fps",
+        groups=[[Option("mathematics", 60)]],
+        nbt=[[Nbt("AL", "upper_intermediate")], [Nbt("QL", "upper_intermediate")]],
+    )  # fmt: skip
+
+
+SIX_AT_70 = dict.fromkeys(["english_hl", "mathematics", "physical_sciences", "geography",
+                           "life_sciences", "isizulu_fal"], 70)  # fmt: skip
+
+
+def test_held_nbt_level_that_meets_the_rule_passes() -> None:
+    nbt = {"AL": "upper_intermediate", "QL": "proficient"}
+    v = evaluate(SIX_AT_70, _nbt_rules_with_score(), TODAY, nbt)
+    assert [c.result for c in v.checks[2:]] == ["pass", "pass"]
+
+
+def test_held_nbt_level_below_the_rule_fails() -> None:
+    nbt = {"AL": "basic", "QL": "proficient"}
+    v = evaluate(SIX_AT_70, _nbt_rules_with_score(), TODAY, nbt)
+    assert v.checks[2].result == "fail"
+    assert v.outcome == "aps_only"
+
+
+def test_all_nbt_held_and_met_qualifies() -> None:
+    nbt = {"AL": "upper_intermediate", "QL": "proficient"}
+    assert evaluate(SIX_AT_70, _nbt_rules_with_score(), TODAY, nbt).outcome == "qualifies"

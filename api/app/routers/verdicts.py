@@ -8,6 +8,7 @@ from app import models as m
 from app import rate_limit
 from app.deps import Db, DbEngine, SignedIn
 from app.errors import NotFoundError
+from app.nbt_levels import learner_nbt
 from app.routers.marks import active_user, latest_marks
 from app.schemas import CheckRequest, VerdictOut
 from app.verdicts import programme_verdict, subject_names
@@ -29,4 +30,11 @@ def check(
         if marks is None:
             raise NotFoundError("Save your marks first.")
     names = subject_names(db, marks)
-    return programme_verdict(db, programme, marks, names, date.today())
+    return programme_verdict(
+        db,
+        programme,
+        marks,
+        names,
+        date.today(),
+        nbt=learner_nbt(db, me.subject),  # no account is created by a check
+    )

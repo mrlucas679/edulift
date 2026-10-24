@@ -23,6 +23,8 @@ def programme_verdict(
     marks: dict[str, int],
     names: dict[str, str],
     today: date,
+    *,
+    nbt: dict[str, str] | None = None,
 ) -> VerdictOut:
     institution = db.get_one(m.Institution, programme.institution_id)
     cycle = db.scalars(
@@ -56,7 +58,7 @@ def programme_verdict(
         opens_on=cycle.opens_on if cycle else None,
         closes_on=programme.closes_on or (cycle.closes_on if cycle else None),
     )
-    v = evaluate(marks, rules, today)
+    v = evaluate(marks, rules, today, nbt)
     return VerdictOut(
         programme_id=programme.id,
         outcome=v.outcome,

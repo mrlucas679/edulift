@@ -48,7 +48,7 @@ class Band:
     groups: list[list[Option]]
     applies_to: str = "all"  # "targeted_redress" bands are not judged yet
     metric: str = "FPS"  # "WPS" needs the disadvantage factor, which we do not collect
-    nbt: list[list[Nbt]] = field(default_factory=list)  # we hold no NBT results yet
+    nbt: list[list[Nbt]] = field(default_factory=list)  # levels come from the learner, if held
 
 
 @dataclass(frozen=True)
@@ -80,17 +80,20 @@ class Verdict:
     window: Window
 
 
-def evaluate(marks: dict[str, int], rules: Rules, today: date) -> Verdict:
+def evaluate(
+    marks: dict[str, int], rules: Rules, today: date, nbt: dict[str, str] | None = None
+) -> Verdict:
+    """nbt holds the learner's levels by component; None when we do not hold them."""
     window = _window(rules, today)
     if len(without_lo(marks)) < MIN_SUBJECTS:
         return Verdict("incomplete", None, [], window)
 
     aps = score(rules.scheme, marks)
     if rules.bands:
-        return _banded(aps, marks, rules, window)
+        return _banded(aps, marks, rules, window, nbt)
     checks = [_score_check(aps, rules.min_aps)]
     checks += [_group_check(i, g, marks) for i, g in enumerate(rules.groups, start=1)]
-    checks += [_nbt_check(i, g) for i, g in enumerate(rules.nbt, start=1)]
+    checks += [_nbt_check(i, g, nbt) for i, g in enumerate(rules.nbt, start=1)]
     return Verdict(_outcome(checks, rules.selection, window), aps, checks, window)
 
 
@@ -124,9 +127,27 @@ def _describe_nbt(group: list[Nbt]) -> str:
     return " or ".join(f"NBT {n.component} {n.level}" for n in group)
 
 
-def _nbt_check(n: int, group: list[Nbt]) -> Check:
-    # Never pass or fail: we hold no NBT results, so the rule stays unconfirmed.
-    return Check(f"nbt_{n}", _describe_nbt(group), "no NBT result", "unknown")
+def _nbt_result(group: list[Nbt], nbt: dict[str, str] | None) -> Result:
+    """Pass if any option's level is reached. Unknown until every component is held."""
+    if nbt is None:
+        return "unknown"
+    held = [o for o in group if o.component in nbt]
+    if any(NBT_LEVELS.index(nbt[o.component]) >= NBT_LEVELS.index(o.level) for o in held):
+        return "pass"
+    return "fail" if len(held) == len(group) else "unknown"
+
+
+def _nbt_yours(group: list[Nbt], nbt: dict[str, str] | None) -> str:
+    if nbt is None:
+        return "no NBT result"
+    return (
+        ", ".join(f"NBT {o.component} {nbt[o.component]}" for o in group if o.component in nbt)
+        or "not held"
+    )
+
+
+def _nbt_check(n: int, group: list[Nbt], nbt: dict[str, str] | None) -> Check:
+    return Check(f"nbt_{n}", _describe_nbt(group), _nbt_yours(group, nbt), _nbt_result(group, nbt))
 
 
 def _group_check(n: int, group: list[Option], marks: dict[str, int]) -> Check:
@@ -163,7 +184,9 @@ def _satisfiers(groups: list[list[Option]], marks: dict[str, int]) -> set[str]:
     }
 
 
-def _band_checks(aps: int, marks: dict[str, int], bands: list[Band]) -> list[Check]:
+def _band_checks(
+    aps: int, marks: dict[str, int], bands: list[Band], nbt: dict[str, str] | None
+) -> list[Check]:
     checks = []
     for band in sorted(bands, key=lambda b: -b.score):
         if band.applies_to != "all":
@@ -181,12 +204,25 @@ def _band_checks(aps: int, marks: dict[str, int], bands: list[Band]) -> list[Che
         elif aps < band.score:
             result = "fail"
         else:
-            result = "unknown" if band.nbt else "pass"  # NBT results are not held
+            results = [_nbt_result(g, nbt) for g in band.nbt]
+            result = "pass" if not results else _worst(results)
         checks.append(Check(band.label, " and ".join(parts), f"FPS {aps}", result))
     return checks
 
 
-def _banded(aps: int | None, marks: dict[str, int], rules: Rules, window: Window) -> Verdict:
+def _worst(results: list[Result]) -> Result:
+    if "fail" in results:
+        return "fail"
+    return "unknown" if "unknown" in results else "pass"
+
+
+def _banded(
+    aps: int | None,
+    marks: dict[str, int],
+    rules: Rules,
+    window: Window,
+    nbt: dict[str, str] | None,
+) -> Verdict:
     if aps is None:
         return Verdict("incomplete", None, [], window)
     hard = [_group_check(i, g, marks) for i, g in enumerate(rules.groups, start=1)]
@@ -194,7 +230,8 @@ def _banded(aps: int | None, marks: dict[str, int], rules: Rules, window: Window
         hard.append(_floor_check(rules.floor, rules.groups, marks))
     if rules.min_aps is not None:
         hard.append(_score_check(aps, rules.min_aps))
-    checks = _band_checks(aps, marks, rules.bands)
+    checks = _band_checks(aps, marks, rules.bands, nbt)
+    hard += [_nbt_check(i, g, nbt) for i, g in enumerate(rules.nbt, start=1)]
     if window == "closed":
         return Verdict("closed", aps, checks + hard, window)
     if any(h.result == "fail" for h in hard):
