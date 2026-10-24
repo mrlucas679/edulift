@@ -6,4 +6,1053 @@ apply_url: https://www.wits.ac.za/undergraduate/apply-to-wits/
 route: direct
 aps_scheme: wits_best7
 source: wits-entry
-# cycles and programmes: add once checked against the 2027 prospectus
+programmes:
+- id: wits.bachelor-of-commerce-bcom-in-the-fields-of-general-politics-philosophy
+  name: Bachelor of Commerce (BCom) in the fields of General, Politics, Philosophy
+    and Economics, or Information Systems
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 38
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 35-37, with English Level 6 AND Mathematics Level
+    6, subject to place availability.
+- id: wits.bachelor-of-accounting-science-baccsci
+  name: Bachelor of Accounting Science (BAccSci)
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 44
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  notes: 3 yrs. Waitlisted at APS 39-43, with English Level 6 AND Mathematics Level
+    6, subject to place availability.
+- id: wits.bachelor-of-commerce-bcom-in-the-field-of-accounting
+  name: Bachelor of Commerce (BCom) in the field of Accounting
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 38
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 35-37, with English Level 6 AND Mathematics Level
+    6, subject to place availability.
+- id: wits.bachelor-of-economic-science-beconsci
+  name: Bachelor of Economic Science (BEconSci)
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 80
+  notes: 3 yrs. Waitlisted at APS 39-41, with English Level 5 AND Mathematics Level
+    7, subject to place availability.
+- id: wits.bachelor-of-commerce-bcom-in-the-field-of-financial-sciences
+  name: Bachelor of Commerce (BCom) in the field of Financial Sciences
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 80
+  notes: 3 yrs. Waitlisted at APS 39-41, with English Level 5 AND Mathematics Level
+    7, subject to place availability.
+- id: wits.bachelor-of-commerce-bcom-in-the-field-of-law
+  name: Bachelor of Commerce (BCom) in the field of Law
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 35-42, with English Level 6 AND Mathematics Level
+    6, subject to place availability.
+- id: wits.two-year-llb-for-graduates-only
+  name: Two-year LLB (for graduates only)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  notes: 2 yrs. Subject to assessment criteria and place availability. Open to Wits
+    BA Law or BCom Law graduates. No matric APS calculation.
+- id: wits.three-year-llb-for-graduates-only
+  name: Three-year LLB (for graduates only)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  notes: 2 yrs. Subject to assessment criteria and place availability. Needs a 65%
+    average in the final year of an undergraduate degree, which is not judged. No
+    matric APS calculation.
+- id: wits.four-year-llb
+  name: Four-year LLB
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 46
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 70
+    - subject: english_fal
+      min: 70
+  - - subject: mathematics
+      min: 60
+    - subject: maths_literacy
+      min: 70
+  notes: 4 yrs. Waitlisted at APS 40-45, with English Level 6 AND Mathematics Level
+    5 OR Maths Literacy Level 6, subject to place availability.
+- id: wits.bachelor-of-science-in-engineering-in-chemical-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Chemical Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: &id001
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-metallurgy-and-materials-enginee
+  name: Bachelor of Science in Engineering in Metallurgy and Materials Engineering
+    (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-civil-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Civil Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-electrical-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Electrical Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-aeronautical-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Aeronautical Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-industrial-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Industrial Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-mechanical-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Mechanical Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-mining-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Mining Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-engineering-science-in-biomedical-engineering-bengsc-bme
+  name: Bachelor of Engineering Science in Biomedical Engineering (BEngSc(BME))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 3 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-engineering-science-in-digital-arts-bengsc-da
+  name: Bachelor of Engineering Science in Digital Arts (BEngSc(DA))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 3 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-architectural-studies-bas
+  name: Bachelor of Architectural Studies (BAS)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 34
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  notes: '3 yrs. Acceptance depends on departmental selection: a written and graphic
+    exercise, then an interview. Applicants with a Wits APS of 30-33 may be accepted
+    on exceptional scores. Not judged in full.'
+- id: wits.bachelor-of-science-in-urban-and-regional-planning-bsc-urp
+  name: Bachelor of Science in Urban and Regional Planning (BSc(URP))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 30-35, subject to place availability.
+- id: wits.bachelor-of-science-in-construction-studies-bsc-cs
+  name: Bachelor of Science in Construction Studies (BSc(CS))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 30-35, subject to place availability.
+- id: wits.bachelor-of-science-in-property-studies-bsc-ps
+  name: Bachelor of Science in Property Studies (BSc(PS))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 30-35, subject to place availability.
+- id: wits.bachelor-of-health-sciences-bhsci-biomedical-sciences-biokinetics-heal
+  name: 'Bachelor of Health Sciences (BHSci): Biomedical Sciences, Biokinetics, Health
+    Systems Sciences'
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+    - subject: physical_sciences
+      min: 60
+  notes: '3 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants.'
+- id: wits.bachelor-of-clinical-medical-practice-bcmp
+  name: Bachelor of Clinical Medical Practice (BCMP)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+    - subject: maths_literacy
+      min: 80
+  - - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: '3 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants.'
+- id: wits.bachelor-of-medicine-and-bachelor-of-surgery-mbbch
+  name: Bachelor of Medicine and Bachelor of Surgery (MBBCh)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+    - subject: physical_sciences
+      min: 60
+  notes: '6 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Two entry points:
+    first year (Grade 12) and third year (GEMP graduates). GEMP is not loaded.'
+- id: wits.bachelor-of-dental-science-bds
+  name: Bachelor of Dental Science (BDS)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+  notes: '5 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Requires job-shadowing
+    of a dentist, dental therapist or oral hygienist. Not judged.'
+- id: wits.bachelor-of-oral-health-sciences-bohs
+  name: Bachelor of Oral Health Sciences (BOHS)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+    - subject: maths_literacy
+      min: 80
+  - - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: '3 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Requires job-shadowing
+    certificate (16 hours). Not judged.'
+- id: wits.bachelor-of-nursing-bnurs
+  name: Bachelor of Nursing (BNurs)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: '4 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants.'
+- id: wits.bachelor-of-pharmacy-bpharm
+  name: Bachelor of Pharmacy (BPharm)
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+    - subject: physical_sciences
+      min: 60
+  notes: '4 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants.'
+- id: wits.bachelor-of-science-in-occupational-therapy-bsc-ot
+  name: Bachelor of Science in Occupational Therapy (BSc(OT))
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: '4 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Requires job-shadowing
+    of an occupational therapist and a physiotherapist (16 hours). Not judged.'
+- id: wits.bachelor-of-science-in-physiotherapy-bsc-physiotherapy
+  name: Bachelor of Science in Physiotherapy (BSc(Physiotherapy))
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: null
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: life_sciences
+      min: 60
+    - subject: physical_sciences
+      min: 60
+  notes: '4 yrs. Composite Index: 60% academic (five subjects), 40% NBT. Not judged,
+    so the score is not checked. NBT is required for all applicants. Requires job-shadowing
+    (16 hours). Not judged.'
+- id: wits.bachelor-of-arts-ba
+  name: Bachelor of Arts (BA)
+  qualification: degree
+  field: humanities
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 30-35.'
+- id: wits.bachelor-of-arts-law
+  name: Bachelor of Arts (Law)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 40
+    - subject: maths_literacy
+      min: 50
+  notes: 3 yrs. Law courses in first year need an APS of 40-42. Mathematics level
+    3 or Maths Literacy level 4.
+- id: wits.bachelor-of-arts-in-digital-arts
+  name: Bachelor of Arts in Digital Arts
+  qualification: degree
+  field: arts
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 30-35. Selection criteria
+    apply.'
+- id: wits.bachelor-of-arts-in-theatre-and-performance
+  name: Bachelor of Arts in Theatre and Performance
+  qualification: degree
+  field: arts
+  source: wits-prospectus-2027
+  min_aps: 34
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 30-33. Interview,
+    audition or portfolio.'
+- id: wits.bachelor-of-arts-in-film-and-television
+  name: Bachelor of Arts in Film and Television
+  qualification: degree
+  field: arts
+  source: wits-prospectus-2027
+  min_aps: 34
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 30-33. Interview,
+    audition or portfolio.'
+- id: wits.bachelor-of-arts-in-fine-arts
+  name: Bachelor of Arts in Fine Arts
+  qualification: degree
+  field: arts
+  source: wits-prospectus-2027
+  min_aps: 34
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 30-33. Interview,
+    audition or portfolio.'
+- id: wits.bachelor-of-music
+  name: Bachelor of Music
+  qualification: degree
+  field: arts
+  source: wits-prospectus-2027
+  min_aps: 34
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 30-33. Interview,
+    audition or portfolio.'
+- id: wits.bachelor-of-education-bed-foundation-phase-teaching
+  name: Bachelor of Education (BEd) Foundation Phase Teaching
+  qualification: degree
+  field: education
+  source: wits-prospectus-2027
+  min_aps: 37
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+    - subject: maths_literacy
+      min: 60
+    - subject: technical_maths
+      min: 60
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 34-36.'
+- id: wits.bachelor-of-education-bed-intermediate-phase-teaching
+  name: Bachelor of Education (BEd) Intermediate Phase Teaching
+  qualification: degree
+  field: education
+  source: wits-prospectus-2027
+  min_aps: 37
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+    - subject: maths_literacy
+      min: 60
+    - subject: technical_maths
+      min: 60
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 34-36.'
+- id: wits.bachelor-of-education-bed-senior-phase-and-fet-teaching
+  name: Bachelor of Education (BEd) Senior Phase and FET Teaching
+  qualification: degree
+  field: education
+  source: wits-prospectus-2027
+  min_aps: 37
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 34-36. Teaching subject
+    pairs are listed on the page and not modelled.'
+- id: wits.bachelor-of-speech-language-pathology
+  name: Bachelor of Speech-Language Pathology
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: 34
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 30-33. NBT required;
+    not judged.'
+- id: wits.bachelor-of-audiology
+  name: Bachelor of Audiology
+  qualification: degree
+  field: health
+  source: wits-prospectus-2027
+  min_aps: 34
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 50
+  notes: '4 yrs. Waitlisted, subject to place availability: APS 30-33. NBT required;
+    not judged.'
+- id: wits.bachelor-of-social-work
+  name: Bachelor of Social Work
+  qualification: degree
+  field: humanities
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: 4 yrs. Waitlisted at APS 34-35. Only 60 first-year places; selection within
+    school quintiles.
+- id: wits.bachelor-of-science-bsc-general
+  name: Bachelor of Science (BSc) General
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 40-41.'
+- id: wits.bachelor-of-science-in-biological-sciences
+  name: Bachelor of Science in Biological Sciences
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 41-42.'
+- id: wits.bachelor-of-science-in-geographical-and-archaeological-sciences
+  name: Bachelor of Science in Geographical and Archaeological Sciences
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 40-41.'
+- id: wits.bachelor-of-science-in-geospatial-sciences
+  name: Bachelor of Science in Geospatial Sciences
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 40-41.'
+- id: wits.bachelor-of-science-in-environmental-studies
+  name: Bachelor of Science in Environmental Studies
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 40-41.'
+- id: wits.bachelor-of-science-in-geological-sciences
+  name: Bachelor of Science in Geological Sciences
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 60
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 40-41.'
+- id: wits.bachelor-of-science-in-actuarial-science
+  name: Bachelor of Science in Actuarial Science
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 44
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 80
+    - subject: english_fal
+      min: 80
+  - - subject: mathematics
+      min: 80
+  - - subject: physical_sciences
+      min: 80
+  notes: 3 yrs. Waitlisted at APS 44+ with English Level 6.
+- id: wits.bachelor-of-science-in-computational-and-applied-mathematics
+  name: Bachelor of Science in Computational and Applied Mathematics
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 44
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 41-43.'
+- id: wits.bachelor-of-science-in-computer-science
+  name: Bachelor of Science in Computer Science
+  qualification: degree
+  field: it
+  source: wits-prospectus-2027
+  min_aps: 44
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 41-43.'
+- id: wits.bachelor-of-science-in-mathematical-sciences
+  name: Bachelor of Science in Mathematical Sciences
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 44
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 80
+    - subject: english_fal
+      min: 80
+  - - subject: mathematics
+      min: 80
+  - - subject: physical_sciences
+      min: 80
+  notes: 3 yrs. Waitlisted at APS 44+ with English Level 6, Maths Level 7 and Physical
+    Sciences Level 7.
+- id: wits.bachelor-of-science-in-physical-sciences-chemistry-physics
+  name: Bachelor of Science in Physical Sciences (Chemistry/Physics)
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 44+ with English Level 6, Maths Level 7, Physical
+    Sciences Level 7.
+- id: wits.bachelor-of-science-in-chemistry-with-chemical-engineering
+  name: Bachelor of Science in Chemistry with Chemical Engineering
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 40-42.'
+- id: wits.bachelor-of-science-in-astronomy-and-astrophysics
+  name: Bachelor of Science in Astronomy and Astrophysics
+  qualification: degree
+  field: science
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 70
+  - - subject: physical_sciences
+      min: 70
+  notes: '3 yrs. Waitlisted, subject to place availability: APS 40-42.'
+- id: wits.bachelor-of-arts-part-time
+  name: Bachelor of Arts (Part-Time)
+  qualification: degree
+  field: humanities
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - &id002
+    - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  notes: Part-time. 3 yrs. Intake in January and July, opening 1 March and closing
+    31 May. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-arts-with-law-part-time
+  name: Bachelor of Arts with Law (Part-Time)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - - subject: mathematics
+      min: 40
+    - subject: maths_literacy
+      min: 50
+  notes: Part-time. 3 yrs. Mathematics level 3 or Maths Literacy level 4. Intake in
+    January and July. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-commerce-part-time
+  name: Bachelor of Commerce (Part-Time)
+  qualification: degree
+  field: commerce
+  source: wits-prospectus-2027
+  min_aps: 38
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - &id003
+    - subject: mathematics
+      min: 60
+  notes: Part-time. 3 yrs.  Part-time students are not eligible for NSFAS or campus
+    residence.
+- id: wits.bachelor-of-commerce-with-law-part-time
+  name: Bachelor of Commerce with Law (Part-Time)
+  qualification: degree
+  field: humanities.law
+  source: wits-prospectus-2027
+  min_aps: 43
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  notes: Part-time. 3 yrs.  Part-time students are not eligible for NSFAS or campus
+    residence.
+- id: wits.bachelor-of-science-in-engineering-in-chemical-engineering-part-time
+  name: Bachelor of Science in Engineering in Chemical Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - &id004
+    - subject: physical_sciences
+      min: 60
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-civil-engineering-part-time
+  name: Bachelor of Science in Engineering in Civil Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-electrical-engineering-part-time
+  name: Bachelor of Science in Engineering in Electrical Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-aeronautical-engineering-part-ti
+  name: Bachelor of Science in Engineering in Aeronautical Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-industrial-engineering-part-time
+  name: Bachelor of Science in Engineering in Industrial Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
+- id: wits.bachelor-of-science-in-engineering-in-mechanical-engineering-part-time
+  name: Bachelor of Science in Engineering in Mechanical Engineering (Part-Time)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements:
+  - *id002
+  - *id003
+  - *id004
+  notes: Part-time. 4 yrs. The first year is offered over two years part-time, then
+    full-time study. Part-time students are not eligible for NSFAS or campus residence.
