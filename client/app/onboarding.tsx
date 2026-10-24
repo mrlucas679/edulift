@@ -77,7 +77,8 @@ function Birthday({ onTooYoung }: { onTooYoung: () => void }) {
 
   return (
     <>
-      <Heading>About you · step 1 of 3</Heading>
+      <StepBar step={1} />
+      <Heading>About you</Heading>
       <Body muted>We only ask what we need to match you. We never ask for your ID number, income or race.</Body>
       <Field label="First name" value={name} onChangeText={setName} maxLength={60} autoComplete="given-name" />
       <Title>When were you born?</Title>
@@ -258,8 +259,21 @@ function Consents({ me }: { me: MeDetail }) {
 }
 
 
+// Three segments across the top of the onboarding steps, filled up to the current step.
+function StepBar({ step }: { step: 1 | 2 | 3 }) {
+  const colors = useColors();
+  return (
+    <View style={{ flexDirection: 'row', gap: space.sm }}>
+      {[1, 2, 3].map((n) => (
+        <View key={n} style={{ flex: 1, height: 4, borderRadius: 2, backgroundColor: n <= step ? colors.ink : colors.border }} />
+      ))}
+    </View>
+  );
+}
+
 function Interests({ onDone }: { onDone: () => void }) {
   const { accessToken } = useSession();
+  const colors = useColors();
   const queryClient = useQueryClient();
   const fields = useFields();
   const me = useMe();
@@ -277,8 +291,9 @@ function Interests({ onDone }: { onDone: () => void }) {
   const topLevel = (fields.data ?? []).filter((f) => f.parent_id === null);
   return (
     <>
-      <Heading>What would you enjoy? · step 2 of 3</Heading>
-      <Body muted>Pick up to 3. This only changes the order of results, never what you qualify for.</Body>
+      <StepBar step={2} />
+      <Heading>What would you enjoy?</Heading>
+      <Body muted>Pick up to 3. This only changes the order of results — never what you qualify for.</Body>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
         {topLevel.map((f) => (
           <Chip key={f.id} label={f.name} selected={picked.includes(f.id)} onPress={() => toggle(f.id)} />
@@ -287,7 +302,9 @@ function Interests({ onDone }: { onDone: () => void }) {
       <Body muted>{picked.length} of 3 picked</Body>
       <ErrorNote error={save.error} />
       <Button label="Continue" onPress={save.run} busy={save.busy} disabled={picked.length === 0} />
-      <Button label="Not sure yet, skip" onPress={onDone} />
+      <Pressable accessibilityRole="button" onPress={onDone} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>Not sure yet — skip</Text>
+      </Pressable>
     </>
   );
 }
@@ -334,7 +351,8 @@ export default function Onboarding() {
           <Consents me={me.data} />
           {me.data.status === 'active' && (
             <>
-              <Title>Your marks · step 3 of 3</Title>
+              <StepBar step={3} />
+              <Heading>Add your marks</Heading>
               <Body muted>Add your marks so we can match you. You can change them any time.</Body>
               <Button label="Add my marks" onPress={() => router.replace('/my-marks')} />
             </>
