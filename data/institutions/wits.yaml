@@ -151,3 +151,174 @@ programmes:
       min: 70
   notes: 4 yrs. Waitlisted at APS 40-45, with English Level 6 AND Mathematics Level
     5 OR Maths Literacy Level 6, subject to place availability.
+- id: wits.bachelor-of-science-in-engineering-in-chemical-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Chemical Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: &id001
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-metallurgy-and-materials-enginee
+  name: Bachelor of Science in Engineering in Metallurgy and Materials Engineering
+    (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-civil-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Civil Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-electrical-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Electrical Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-aeronautical-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Aeronautical Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-industrial-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Industrial Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-mechanical-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Mechanical Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-science-in-engineering-in-mining-engineering-bsc-eng
+  name: Bachelor of Science in Engineering in Mining Engineering (BSc(Eng))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 4 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-engineering-science-in-biomedical-engineering-bengsc-bme
+  name: Bachelor of Engineering Science in Biomedical Engineering (BEngSc(BME))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 3 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-engineering-science-in-digital-arts-bengsc-da
+  name: Bachelor of Engineering Science in Digital Arts (BEngSc(DA))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 42
+  closes_on: '2026-09-30'
+  requirements: *id001
+  notes: 3 yrs. Level 6 in English, Mathematics and Physical Sciences stands a greater
+    chance. Those meeting the minimum may be wait-listed.
+- id: wits.bachelor-of-architectural-studies-bas
+  name: Bachelor of Architectural Studies (BAS)
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 34
+  closes_on: '2026-06-30'
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 50
+  notes: '3 yrs. Acceptance depends on departmental selection: a written and graphic
+    exercise, then an interview. Applicants with a Wits APS of 30-33 may be accepted
+    on exceptional scores. Not judged in full.'
+- id: wits.bachelor-of-science-in-urban-and-regional-planning-bsc-urp
+  name: Bachelor of Science in Urban and Regional Planning (BSc(URP))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 30-35, subject to place availability.
+- id: wits.bachelor-of-science-in-construction-studies-bsc-cs
+  name: Bachelor of Science in Construction Studies (BSc(CS))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 30-35, subject to place availability.
+- id: wits.bachelor-of-science-in-property-studies-bsc-ps
+  name: Bachelor of Science in Property Studies (BSc(PS))
+  qualification: degree
+  field: engineering
+  source: wits-prospectus-2027
+  min_aps: 36
+  closes_on: '2026-09-30'
+  requirements:
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 60
+  - - subject: mathematics
+      min: 60
+  notes: 3 yrs. Waitlisted at APS 30-35, subject to place availability.
