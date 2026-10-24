@@ -13,3 +13,93 @@
   purpose: Free, data-free site with jobs and learning for young people across the country.
   url: https://www.sayouth.mobi/
   source: sayouth-site
+- id: seta-agriseta
+  name: AgriSETA
+  purpose: Learnerships and skills programmes for the agricultural sector sector.
+  url: https://www.agriseta.co.za/
+  source: seta-agriseta
+- id: seta-bankseta
+  name: BANKSETA
+  purpose: Learnerships and skills programmes for the banking and financial services sector.
+  url: https://www.bankseta.org.za/
+  source: seta-bankseta
+- id: seta-cathsseta
+  name: CATHSSETA
+  purpose: Learnerships and skills programmes for the culture, arts, tourism, hospitality and sport sector.
+  url: https://www.cathsseta.org.za/
+  source: seta-cathsseta
+- id: seta-ceta
+  name: CETA
+  purpose: Learnerships and skills programmes for the construction industry sector.
+  url: https://www.ceta.org.za/
+  source: seta-ceta
+- id: seta-chieta
+  name: CHIETA
+  purpose: Learnerships and skills programmes for the chemical industries sector.
+  url: https://www.chieta.org.za/
+  source: seta-chieta
+- id: seta-etdpseta
+  name: ETDP SETA
+  purpose: Learnerships and skills programmes for the education, training and development sector.
+  url: https://www.etdpseta.org.za/
+  source: seta-etdpseta
+- id: seta-ewseta
+  name: EWSETA
+  purpose: Learnerships and skills programmes for the energy and water sector.
+  url: https://www.ewseta.org.za/
+  source: seta-ewseta
+- id: seta-fasset
+  name: FASSET
+  purpose: Learnerships and skills programmes for the finance, accounting and financial services sector.
+  url: https://www.fasset.org.za/
+  source: seta-fasset
+- id: seta-foodbev
+  name: FoodBev SETA
+  purpose: Learnerships and skills programmes for the food and beverage manufacturing sector.
+  url: https://www.foodbev.co.za/
+  source: seta-foodbev
+- id: seta-fpmseta
+  name: FP&M SETA
+  purpose: Learnerships and skills programmes for the fibre processing and manufacturing sector.
+  url: https://www.fpmseta.org.za/
+  source: seta-fpmseta
+- id: seta-hwseta
+  name: HWSETA
+  purpose: Learnerships and skills programmes for the health, welfare and social services sector.
+  url: https://www.hwseta.org.za/
+  source: seta-hwseta
+- id: seta-inseta
+  name: INSETA
+  purpose: Learnerships and skills programmes for the insurance sector.
+  url: https://www.inseta.org.za/
+  source: seta-inseta
+- id: seta-lgseta
+  name: LGSETA
+  purpose: Learnerships and skills programmes for the local government and municipal administration sector.
+  url: https://www.lgseta.org.za/
+  source: seta-lgseta
+- id: seta-mict
+  name: MICT SETA
+  purpose: Learnerships and skills programmes for the media, information and communication technologies sector.
+  url: https://www.mict.org.za/
+  source: seta-mict
+- id: seta-mqa
+  name: MQA
+  purpose: Learnerships and skills programmes for the mining qualifications sector.
+  url: https://www.mqa.org.za/
+  source: seta-mqa
+- id: seta-servicesseta
+  name: Services SETA
+  purpose: Learnerships and skills programmes for the management, trades and commercial services sector.
+  url: https://www.servicesseta.org.za/
+  source: seta-servicesseta
+- id: seta-teta
+  name: TETA
+  purpose: Learnerships and skills programmes for the transport education and training sector.
+  url: https://www.teta.org.za/
+  source: seta-teta
+- id: seta-wrseta
+  name: W&RSETA
+  purpose: Learnerships and skills programmes for the wholesale and retail sector.
+  url: https://www.wrseta.org.za/
+  source: seta-wrseta
