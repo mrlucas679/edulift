@@ -40,3 +40,13 @@ Always `npx cdk diff` before `deploy`.
 
 After the first deploy, redeploy `EduLift` with `-c appUrl=<SiteUrl output>` so guardian
 emails link to the app. Until then the API refuses guardian requests.
+
+## Database role for the API
+
+Run once as the database owner, after the database exists:
+
+```bash
+psql -h <db-host> -U edulift -d edulift -v app_password="<new password>" -f infra/db/app_role.sql
+```
+
+Store the role's username and password in Secrets Manager, and point the API task at them instead of the owner secret. Migrations keep running as the owner.
