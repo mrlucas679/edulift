@@ -349,3 +349,223 @@ programmes:
   - - subject: physical_sciences
       min: 50
   notes: CAO KN-H-UNT. 5 yrs.
+- id: ukzn.bachelor-of-audiology
+  name: Bachelor of Audiology
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - &id007
+    - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - &id008
+    - subject: life_orientation
+      min: 50
+  - &id009
+    - subject: mathematics
+      min: 50
+  - &id010
+    - subject: life_sciences
+      min: 40
+    - subject: physical_sciences
+      min: 40
+  notes: CAO KN-W-BPA. 4 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.bachelor-of-speech-language-therapy
+  name: Bachelor of Speech-Language Therapy
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id007
+  - *id008
+  - *id009
+  - *id010
+  notes: CAO KN-W-BPB. 4 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.b-dental-therapy
+  name: B Dental Therapy
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id007
+  - *id008
+  - &id011
+    - subject: mathematics
+      min: 40
+  - &id014
+    - subject: life_sciences
+      min: 40
+  notes: CAO KN-W-BDT. 3 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.bachelor-of-medical-science-innovation-and-entrepreneurship
+  name: Bachelor of Medical Science, Innovation and Entrepreneurship
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id007
+  - *id009
+  - &id013
+    - subject: physical_sciences
+      min: 50
+  - &id012
+    - subject: life_sciences
+      min: 50
+  notes: CAO KN-W-BMS-IE. 4 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.b-occupational-therapy
+  name: B Occupational Therapy
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id007
+  - *id008
+  - *id011
+  - *id010
+  notes: CAO KN-W-BOT. 4 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.b-optometry
+  name: B Optometry
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements:
+  - *id007
+  - *id008
+  - *id009
+  - *id012
+  - *id013
+  notes: CAO KN-W-BOP. 4 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.b-oral-hygiene
+  name: B Oral Hygiene
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id007
+  - *id008
+  - *id011
+  - *id014
+  notes: CAO KN-W-BON. 3 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.b-pharmacy
+  name: B Pharmacy
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - *id012
+  - *id008
+  - *id009
+  - *id013
+  notes: CAO KN-W-BPR. 4 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.b-physiotherapy
+  name: B Physiotherapy
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - *id012
+  - *id008
+  - *id009
+  - *id013
+  notes: CAO KN-W-BPH. 4 yrs. Applicants may choose up to three programmes in this
+    list.
+- id: ukzn.b-science-dietetics-and-human-nutrition
+  name: B Science Dietetics and Human Nutrition
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id007
+  - *id008
+  - *id009
+  - - subject: agricultural_sciences
+      min: 50
+    - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: CAO KN-P-BSD. 4 yrs.
+- id: ukzn.b-sport-science
+  name: B Sport Science
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id007
+  - *id008
+  - &id015
+    - subject: mathematics
+      min: 40
+    - subject: maths_literacy
+      min: 40
+  notes: CAO KN-W-BRT. 3 yrs.
+- id: ukzn.b-nursing
+  name: B Nursing
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id007
+  - *id008
+  - *id015
+  - *id012
+  notes: CAO KN-H-BN1. 4 yrs. Choice 1 only.
+- id: ukzn.b-medicine-and-b-surgery
+  name: B Medicine and B Surgery
+  qualification: degree
+  field: health
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: null
+  requirements:
+  - *id007
+  - - subject: life_sciences
+      min: 60
+  - - subject: mathematics
+      min: 60
+  - - subject: physical_sciences
+      min: 60
+  - *id008
+  notes: CAO KN-M-MBC. 6 yrs. Requires at least 65% aggregate, which is not judged.
+    No APS is published, so the score is not checked.
