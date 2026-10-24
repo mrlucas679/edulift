@@ -28,7 +28,7 @@ router = APIRouter(tags=["onboarding"])
 
 POLICY = "2026-10"
 LINK_HOURS = 72
-OPTIONAL = {"ai_explanations", "ai_writing", "reminders", "nbt_results"}
+OPTIONAL = {"ai_explanations", "ai_writing", "reminders", "nbt_results", "low_data"}
 
 
 class TooYoungError(AppError):

@@ -33,6 +33,7 @@ export default function Settings() {
   const reminderOn = me.data?.consents.includes('reminders') ?? false;
   const aiOn = me.data?.consents.includes('ai_explanations') ?? false;
   const nbtOn = me.data?.consents.includes('nbt_results') ?? false;
+  const lowDataOn = me.data?.consents.includes('low_data') ?? false;
 
   return (
     <Screen>
@@ -87,6 +88,19 @@ export default function Settings() {
             disabled={busy !== null}
             onValueChange={(on) => change('nbt_results', on)}
             accessibilityLabel="Use my NBT results"
+          />
+        </View>
+
+        <View style={{ minHeight: touchTarget, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View style={{ flex: 1, paddingRight: space.md }}>
+            <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>Low-data mode</Text>
+            <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>{PURPOSES.low_data}</Text>
+          </View>
+          <Switch
+            value={lowDataOn}
+            disabled={busy !== null}
+            onValueChange={(on) => change('low_data', on)}
+            accessibilityLabel="Low-data mode"
           />
         </View>
 

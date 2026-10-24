@@ -184,7 +184,7 @@ class VerdictOut(BaseModel):
 
 # Onboarding
 
-Purpose = Literal["account", "ai_explanations", "ai_writing", "reminders", "nbt_results"]
+Purpose = Literal["account", "ai_explanations", "ai_writing", "reminders", "nbt_results", "low_data"]
 
 
 class ProfileIn(Request):

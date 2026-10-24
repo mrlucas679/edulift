@@ -1,3 +1,4 @@
+import { setOffline } from './connectivity';
 import { z } from 'zod';
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -60,8 +61,10 @@ export async function request<T>(path: string, schema: z.ZodType<T>, options: Op
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
     });
   } catch {
+    setOffline(true);
     throw new ApiError('offline', "We can't reach EduLift. Check your connection.", null, 0);
   }
+  setOffline(false);
 
   if (response.status === 204) return schema.parse(undefined);
   const json: unknown = await response.json().catch(() => null);

@@ -11,6 +11,11 @@ import { MarksProvider } from '../src/marks';
 import { SessionProvider } from '../src/session';
 import { useColors } from '../src/theme';
 import { Loading } from '../src/ui';
+import { Maintenance } from '../src/maintenance';
+import { OfflineBanner } from '../src/offline-banner';
+
+// Set EXPO_PUBLIC_MAINTENANCE=1 for a build during a planned outage.
+const MAINTENANCE = process.env.EXPO_PUBLIC_MAINTENANCE === '1';
 
 // The logo screen opens first. It moves on by itself, or on Start.
 export const unstable_settings = { initialRouteName: 'splash' };
@@ -29,9 +34,14 @@ export default function RootLayout() {
       <SessionProvider>
         <MarksProvider>
         <StatusBar style="auto" />
-        <Stack
-          screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}
-        />
+        <OfflineBanner />
+        {MAINTENANCE ? (
+          <Maintenance />
+        ) : (
+          <Stack
+            screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}
+          />
+        )}
         </MarksProvider>
       </SessionProvider>
     </QueryClientProvider>
