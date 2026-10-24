@@ -353,6 +353,7 @@ export default function Onboarding() {
               <Heading>Add your marks</Heading>
               <Body muted>Add your marks so we can match you. You can change them any time.</Body>
               <Button label="Add my marks" onPress={() => router.replace('/my-marks')} />
+              <Button label="Go to my home" onPress={() => router.replace('/(tabs)')} />
             </>
           )}
         </>
