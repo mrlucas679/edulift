@@ -1,7 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
-import { Switch, View } from 'react-native';
+import { Pressable, Switch, Text, View } from 'react-native';
+
+import { font, space, text, touchTarget, useColors } from '../src/theme';
 
 import { ApiError } from '../src/api';
 import { askGuardian, PURPOSES, saveProfile, setConsent, useMe, type MeDetail } from '../src/account';
@@ -112,43 +114,64 @@ function Birthday({ onTooYoung }: { onTooYoung: () => void }) {
 
 function Guardian() {
   const { accessToken } = useSession();
+  const colors = useColors();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [relation, setRelation] = useState<'parent' | 'legal_guardian'>('parent');
   const [sent, setSent] = useState(false);
   const send = useAction(async () => {
     await askGuardian(accessToken, { guardian_name: name.trim(), guardian_email: email.trim() });
     setSent(true);
   });
 
+  if (sent) {
+    return (
+      <>
+        <Heading>Request sent to {email.trim().replace(/^(.).*(@.*)$/, '$1•••$2')}</Heading>
+        <Body muted>When your parent or guardian taps Approve, your account opens and your plan is saved.</Body>
+        <Card>
+          <Title>Status</Title>
+          <Body muted>Sent just now · link works for 72 hours</Body>
+          <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink }}>Waiting</Text>
+        </Card>
+        <Card>
+          <Title>What happens next</Title>
+          <Body>1. They open the email and read what we store.</Body>
+          <Body>2. They confirm they’re your parent or guardian.</Body>
+          <Body>3. They tap Approve. You’ll get a notification.</Body>
+        </Card>
+        <Button label="Keep using as a guest" onPress={() => router.replace('/(tabs)')} />
+        <Button label="Resend the email" onPress={send.run} busy={send.busy} />
+        <Pressable accessibilityRole="button" onPress={() => setSent(false)} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>Use a different email</Text>
+        </Pressable>
+      </>
+    );
+  }
+
   return (
     <>
-      <Heading>Ask a parent or guardian</Heading>
-      <Body muted>
-        You’re 17, so the law needs a parent or guardian to agree before we keep your details.
-        We’ll email them a link. Nothing else is saved until they say yes.
-      </Body>
-      <Field label="Their name" value={name} onChangeText={setName} maxLength={80} />
-      <Field
-        label="Their email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        inputMode="email"
-        maxLength={254}
-      />
-      <ErrorNote error={send.error} />
-      <Button
-        label={sent ? 'Send again' : 'Send the email'}
-        onPress={send.run}
-        busy={send.busy}
-        disabled={!name.trim() || !email.trim()}
-      />
-      {sent && (
-        <Body muted>
-          Sent. Ask them to check their inbox, and spam. The link lasts 72 hours. Come back here once they’ve said yes.
-        </Body>
-      )}
+      <Heading>You can still use everything</Heading>
+      <Body muted>Check your APS, see Plan A and Plan B, and find funding and work — right now.</Body>
+      <Card>
+        <Title>Keep going as a guest</Title>
+        <Body muted>Your marks stay on this phone. Nothing about you is saved on our servers.</Body>
+        <Button label="Continue as a guest" onPress={() => router.replace('/(tabs)')} />
+      </Card>
+      <Card>
+        <Title>Save your plan with a parent’s OK</Title>
+        <Body muted>To save across phones, track applications and get reminders, a parent or guardian approves by email.</Body>
+        <Field label="Parent or guardian’s email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" inputMode="email" maxLength={254} />
+        <Field label="Their name" value={name} onChangeText={setName} maxLength={80} />
+        <Body>They are my</Body>
+        <View style={{ flexDirection: 'row', gap: space.sm }}>
+          <Chip label="Parent" selected={relation === 'parent'} onPress={() => setRelation('parent')} />
+          <Chip label="Legal guardian" selected={relation === 'legal_guardian'} onPress={() => setRelation('legal_guardian')} />
+        </View>
+        <ErrorNote error={send.error} />
+        <Button label="Send approval request" onPress={send.run} busy={send.busy} disabled={!name.trim() || !email.trim()} />
+        <Body muted>We only use their email to send this request.</Body>
+      </Card>
     </>
   );
 }
