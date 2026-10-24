@@ -569,3 +569,234 @@ programmes:
   - *id008
   notes: CAO KN-M-MBC. 6 yrs. Requires at least 65% aggregate, which is not judged.
     No APS is published, so the score is not checked.
+- id: ukzn.b-ed-foundation-phase
+  name: B Ed (Foundation Phase)
+  qualification: degree
+  field: education
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - &id016
+    - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - &id017
+    - subject: life_orientation
+      min: 50
+  - - subject: isizulu_hl
+      min: 50
+    - subject: isizulu_fal
+      min: 50
+  - - subject: maths_literacy
+      min: 50
+    - subject: mathematics
+      min: 40
+  notes: CAO KN-E-BFP. 4 yrs. Isizulu at level 4. Mathematical Literacy at level 4,
+    or Mathematics at level 3.
+- id: ukzn.b-ed-intermediate-phase
+  name: B Ed (Intermediate Phase)
+  qualification: degree
+  field: education
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  notes: CAO KN-E-BIP. 4 yrs. Level 5 in any two of Mathematics, Mathematical Literacy,
+    Technology, Life Sciences or Physical Science. The 'any two' rule is not modelled.
+- id: ukzn.b-ed-senior-phase-further-education-and-training
+  name: B Ed (Senior Phase / Further Education and Training)
+  qualification: degree
+  field: education
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  notes: CAO KN-E-BSN / FET. 4 yrs. Level 4 in the two NSC subjects of the chosen
+    package, at level 5. The package rule is not modelled.
+- id: ukzn.b-a-general-studies
+  name: B A (General Studies)
+  qualification: degree
+  field: humanities
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  - &id018
+    - subject: business_studies
+      min: 50
+    - subject: consumer_studies
+      min: 50
+    - subject: dramatic_arts
+      min: 50
+    - subject: economics
+      min: 50
+    - subject: geography
+      min: 50
+    - subject: history
+      min: 50
+    - subject: it
+      min: 50
+    - subject: life_sciences
+      min: 50
+    - subject: mathematics
+      min: 50
+    - subject: maths_literacy
+      min: 50
+    - subject: music
+      min: 50
+    - subject: visual_arts
+      min: 50
+    - subject: afrikaans_hl
+      min: 60
+    - subject: afrikaans_fal
+      min: 60
+    - subject: isizulu_hl
+      min: 60
+    - subject: isizulu_fal
+      min: 60
+    - subject: isixhosa_hl
+      min: 60
+    - subject: sesotho_hl
+      min: 60
+    - subject: sepedi_hl
+      min: 60
+    - subject: setswana_hl
+      min: 60
+    - subject: xitsonga_hl
+      min: 60
+    - subject: tshivenda_hl
+      min: 60
+  notes: CAO KN-H-BA2 / KN-P-BA2. 3 yrs. One of the listed subjects at level 4, or
+    any language HL/FAL at 60%. Religion Studies is not modelled.
+- id: ukzn.b-a-in-music
+  name: B A in Music
+  qualification: degree
+  field: arts
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  notes: CAO KN-H-BAM. 3 yrs.
+- id: ukzn.b-a-in-music-foundation
+  name: B A in Music Foundation
+  qualification: degree
+  field: arts
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 22
+  requirements:
+  - *id016
+  - *id017
+  notes: CAO KN-H-BMX. 4 yrs. Auditions required.
+- id: ukzn.b-soc-sc-general-studies
+  name: B Soc Sc (General Studies)
+  qualification: degree
+  field: humanities
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  - *id018
+  notes: CAO KN-H-SO2 / KN-P-SO2. 3 yrs. One of the listed subjects at level 4, or
+    any language HL/FAL at 60%. Religion Studies is not modelled.
+- id: ukzn.b-soc-sc-geography-and-environmental-management
+  name: B Soc Sc Geography and Environmental Management
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  - *id018
+  notes: CAO KN-H-SGE / KN-P-SGE. 3 yrs. One of the listed subjects at level 4, or
+    any language HL/FAL at 60%. Religion Studies is not modelled.
+- id: ukzn.b-soc-sc-housing
+  name: B Soc Sc (Housing)
+  qualification: degree
+  field: humanities
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - - subject: mathematics
+      min: 50
+  notes: CAO KN-H-SOR. 3 yrs.
+- id: ukzn.b-social-work
+  name: B Social Work
+  qualification: degree
+  field: humanities
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  - *id018
+  notes: CAO KN-H-BSX. 4 yrs. One of the listed subjects at level 4, or any language
+    HL/FAL at 60%. Religion Studies is not modelled.
+- id: ukzn.ba-philosophy-politics-and-law
+  name: BA Philosophy, Politics and Law
+  qualification: degree
+  field: humanities
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id016
+  - *id017
+  - *id018
+  notes: CAO KN-H-ABP / KN-P-ABP. 3 yrs. One of the listed subjects at level 4, or
+    any language HL/FAL at 60%. Religion Studies is not modelled.
+- id: ukzn.ba-visual-art
+  name: BA Visual Art
+  qualification: degree
+  field: arts
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  - *id018
+  notes: CAO KN-P-AAV. 3 yrs. One of the listed subjects at level 4, or any language
+    HL/FAL at 60%. Religion Studies is not modelled.
+- id: ukzn.b-soc-sc-government-business-and-ethics
+  name: B Soc Sc Government, Business and Ethics
+  qualification: degree
+  field: humanities
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id016
+  - *id017
+  - *id018
+  notes: CAO KN-P-SOG. 3 yrs. One of the listed subjects at level 4, or any language
+    HL/FAL at 60%. Religion Studies is not modelled.
+- id: ukzn.humanities-extended-curriculum
+  name: Humanities Extended Curriculum
+  qualification: degree
+  field: humanities
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 20
+  requirements:
+  - *id016
+  - *id017
+  notes: CAO KN-H-SO4 / KN-P-SO4. 4 yrs. APS range 20 to 27 is printed. The lower
+    bound is used.
