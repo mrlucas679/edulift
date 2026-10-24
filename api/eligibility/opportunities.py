@@ -1,12 +1,9 @@
-"""Funding and work: do an opportunity's criteria fit the learner's facts? Plain data in and out."""
-
 from dataclasses import dataclass, field
 from typing import Literal
 
 Status = Literal["met", "not_met", "unknown"]
 Verdict = Literal["not_matched", "may_qualify", "qualifies"]
 
-# Checks we can evaluate from data the app holds. Anything else is unknown.
 KNOWN_CHECKS = frozenset({"province", "age_min", "age_max", "certificate"})
 
 
@@ -51,7 +48,6 @@ def _member(value: str | None, allowed: tuple[str, ...]) -> Status:
 
 
 def assess(criteria: list[Criterion], facts: Facts) -> Assessment:
-    # Nothing published means nothing confirmed, so never a firm match.
     results = [(c.check, _check(c, facts)) for c in criteria]
     statuses = [s for _, s in results]
     if not criteria or "unknown" in statuses:

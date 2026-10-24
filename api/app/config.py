@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     # Where guardian links point, e.g. https://xyz.cloudfront.net
     app_url: str = ""
     sender_email: str = ""
+    ai_enabled: bool = False
+    bedrock_model_id: str = ""
+    ai_timeout_seconds: float = 8
 
     @model_validator(mode="after")
     def _check(self) -> Self:

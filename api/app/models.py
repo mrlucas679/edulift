@@ -11,6 +11,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
     func,
 )
 from sqlalchemy.dialects.postgresql import JSONB
@@ -159,6 +160,8 @@ class Profile(Base):
     first_name: Mapped[str | None] = mapped_column(String(60))
     birth_date: Mapped[date] = mapped_column(Date)
     province: Mapped[str | None] = mapped_column(String(30))
+    # Only kept while the learner has reminders consent; cleared when it is withdrawn.
+    contact_email: Mapped[str | None] = mapped_column(String(254))
     certificate: Mapped[str | None] = mapped_column(String(10))
 
 
@@ -188,6 +191,8 @@ class GuardianRequest(Base):
     relationship: Mapped[str | None] = mapped_column(String(20))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    withdraw_token_hash: Mapped[str | None] = mapped_column(String(64), unique=True)
+    withdrawn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Mark(Base):
@@ -227,3 +232,95 @@ class Opportunity(Base):
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"))
 
     source: Mapped[Source] = relationship(lazy="joined")
+
+
+class SavedItem(Base):
+    __tablename__ = "saved_items"
+    __table_args__ = (UniqueConstraint("user_id", "target_kind", "target_id"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    target_kind: Mapped[str] = mapped_column(String(20))  # programme, opportunity
+    target_id: Mapped[str] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class Application(Base):
+    __tablename__ = "applications"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    target_kind: Mapped[str] = mapped_column(String(20))
+    target_id: Mapped[str] = mapped_column(String(80))
+    status: Mapped[str] = mapped_column(String(20), server_default="planning")
+    external_reference: Mapped[str | None] = mapped_column(String(60))
+    submitted_on: Mapped[date | None] = mapped_column(Date)
+    offer_deadline: Mapped[date | None] = mapped_column(Date)
+    notes: Mapped[str] = mapped_column(Text, server_default="")
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class ChecklistItem(Base):
+    __tablename__ = "checklist_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    application_id: Mapped[int] = mapped_column(
+        ForeignKey("applications.id", ondelete="CASCADE"), index=True
+    )
+    label: Mapped[str] = mapped_column(Text)
+    done: Mapped[bool] = mapped_column(Boolean, server_default="false")
+    sort_order: Mapped[int] = mapped_column(Integer)
+
+
+class ReminderSent(Base):
+    __tablename__ = "reminders_sent"
+    __table_args__ = (UniqueConstraint("user_id", "target_kind", "target_id", "threshold_days"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    target_kind: Mapped[str] = mapped_column(String(20))
+    target_id: Mapped[str] = mapped_column(String(80))
+    threshold_days: Mapped[int] = mapped_column(Integer)
+    sent_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class AiRequest(Base):
+    """What an AI call cost and why it fell back. Never the text sent or received."""
+
+    __tablename__ = "ai_requests"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id_hash: Mapped[str] = mapped_column(String(64), index=True)  # sha256 of the learner id
+    feature: Mapped[str] = mapped_column(String(20))
+    target_id: Mapped[str] = mapped_column(String(80))
+    outcome_class: Mapped[str] = mapped_column(String(30))
+    provider: Mapped[str] = mapped_column(String(20))
+    fallback_reason: Mapped[str | None] = mapped_column(String(30))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class DocumentDraft(Base):
+    """A CV or motivation letter the learner chose to keep. Written only on Save."""
+
+    __tablename__ = "document_drafts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    kind: Mapped[str] = mapped_column(String(20))  # cv, motivation_letter
+    title: Mapped[str] = mapped_column(String(120))
+    content: Mapped[str] = mapped_column(Text)
+    target_kind: Mapped[str | None] = mapped_column(String(20))
+    target_id: Mapped[str | None] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class AuditEvent(Base):
+    __tablename__ = "audit_events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    # Cleared when the learner is deleted, so the record survives without the person.
+    user_id: Mapped[str | None] = mapped_column(String(64), index=True)
+    action: Mapped[str] = mapped_column(String(30))
+    target: Mapped[str] = mapped_column(String(120), server_default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

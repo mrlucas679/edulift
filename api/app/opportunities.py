@@ -1,5 +1,3 @@
-"""Funding and work for a learner: match what we hold against each opportunity's criteria."""
-
 from datetime import date
 
 from sqlalchemy import select
@@ -41,14 +39,12 @@ def criteria_of(opportunity: m.Opportunity) -> list[Criterion]:
 def matched(
     opportunities: list[m.Opportunity], facts: Facts
 ) -> list[tuple[m.Opportunity, Assessment]]:
-    # A firm "not matched" is removed. Everything else stays, with its status.
     results = [(o, assess(criteria_of(o), facts)) for o in opportunities]
     kept = [(o, a) for o, a in results if a.verdict != "not_matched"]
     return sorted(kept, key=lambda pair: _rank(pair[0], pair[1]))
 
 
 def _rank(opportunity: m.Opportunity, result: Assessment) -> tuple[int, date, str]:
-    # Firm matches first, then closing soonest, then name.
     firm = 0 if result.verdict == "qualifies" else 1
     return (firm, opportunity.closes_on or date.max, opportunity.name)
 

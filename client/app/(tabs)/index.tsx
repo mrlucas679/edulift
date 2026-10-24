@@ -23,6 +23,9 @@ export default function Home() {
       <Button label="Try the APS calculator" onPress={() => router.push('/aps')} />
       <Button label="My plan" onPress={() => router.push('/plan')} />
       <Button label="Funding and work" onPress={() => router.push('/opportunities')} />
+      <Button label="My applications" onPress={() => router.push('/applications')} />
+      <Button label="Ask about programmes" onPress={() => router.push('/ask')} />
+      <Button label="CV and letters" onPress={() => router.push('/draft')} />
 
       <Title>Closing soon</Title>
       <QueryState query={deadlines} empty={deadlines.data?.length === 0}>
