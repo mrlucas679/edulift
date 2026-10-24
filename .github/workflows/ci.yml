@@ -58,15 +58,15 @@ jobs:
       - run: npx tsc --noEmit
       - run: npx expo lint
       - run: npm test
-      # Two known high advisories sit in Expo's build tooling (braces via Metro, node-forge
-      # via update signing) with no fixed release yet.
+      # Known high advisories sit in Expo's build tooling (braces via Metro, node-forge via update
+      # signing, and the Expo packages that depend on it) with no fixed release yet.
       # Anything critical, or any high outside those two packages, fails the build.
       - name: Dependency audit
         run: |
           npm audit --omit=dev --audit-level=critical
           npm audit --omit=dev --json > /tmp/audit.json || true
           node -e '
-            const known = new Set(["braces", "node-forge"]);
+            const known = new Set(["braces", "node-forge", "@expo/cli", "@expo/code-signing-certificates", "expo"]);
             const v = require("/tmp/audit.json").vulnerabilities ?? {};
             const roots = Object.values(v).filter(x => x.severity === "high" &&
               x.via.some(a => typeof a === "object"));
