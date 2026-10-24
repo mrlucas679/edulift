@@ -58,6 +58,16 @@ def test_delete_removes_the_learner_and_keeps_an_audit_line(
     assert "delete" in actions
 
 
+def test_an_old_token_cannot_recreate_a_deleted_account(
+    client: TestClient, inbox: dict[str, str], seeded: None, engine: Engine
+) -> None:
+    s = active(client, inbox, "gone@example.org")
+    assert client.delete("/v1/me", headers=s.headers).status_code == 204
+    # The token still verifies, but the account must not come back as an empty one.
+    assert client.get("/v1/me", headers=s.headers).status_code == 401
+    assert count(engine, m.User) == 0
+
+
 def test_delete_needs_sign_in(client: TestClient, seeded: None) -> None:
     assert client.delete("/v1/me").status_code == 401
 

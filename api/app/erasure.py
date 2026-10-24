@@ -85,5 +85,6 @@ def erase_learner(db: Session, identities: Auth, user: m.User, action: str) -> N
     which rolls back the database deletion too, so the learner can simply try again."""
     record(db, None, action, "learner")
     db.execute(delete(m.User).where(m.User.id == user.id))
+    db.merge(m.DeletedLearner(user_id=user.id))
     db.flush()
     identities.delete_user(user.id)

@@ -37,6 +37,16 @@ class User(Base):
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
+class DeletedLearner(Base):
+    """A tombstone: the id of a deleted learner, with no personal data. Stops an old
+    sign-in token from quietly recreating an empty account."""
+
+    __tablename__ = "deleted_learners"
+
+    user_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    deleted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class RateLimitHit(Base):
     __tablename__ = "rate_limit_hits"
 
