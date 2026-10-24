@@ -27,6 +27,7 @@ export const PURPOSES: Record<string, string> = {
   ai_writing: 'Answer my questions and help draft a CV or letter. What I type goes to an AI service that may be outside South Africa.',
   reminders: 'Email me before deadlines I saved. Nothing else.',
   nbt_results: 'Use my NBT levels to check admission rules that need them. Optional: without them, those rules show as unconfirmed. Removing them deletes them.',
+  low_data: 'Use less data: no course badges, shorter lists. Turn it off any time.',
 };
 
 // Same choices, worded for the parent reading them.

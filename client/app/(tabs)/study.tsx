@@ -4,6 +4,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { font, space, text, touchTarget, useColors } from '../../src/theme';
 
+import { useMe } from '../../src/account';
 import { useBatchChecks, useInstitutions, useProgrammes } from '../../src/reference';
 import { useSession } from '../../src/session';
 import { KindChips } from '../../src/opportunity-views';
@@ -31,7 +32,9 @@ export default function Study() {
   const q = useDebounced(search.trim());
   const colors = useColors();
   const { status, accessToken } = useSession();
-  const batch = useBatchChecks(status === 'signed-in' ? accessToken : null);
+  const me = useMe();
+  const lowData = me.data?.consents.includes('low_data') ?? false;
+  const batch = useBatchChecks(status === 'signed-in' && !lowData ? accessToken : null);
   const outcomeOf = new Map((batch.data ?? []).map((r) => [r.programme_id, r.outcome]));
   const BADGE: Record<string, string> = {
     qualifies: 'You qualify',
@@ -70,7 +73,7 @@ export default function Study() {
       <Body muted>IT COURSES · {programmes.data?.items.length ?? 0}</Body>
 
       <QueryState query={programmes} empty={programmes.data?.items.length === 0}>
-        {programmes.data?.items.map((p) => (
+        {(lowData ? programmes.data?.items.slice(0, 10) : programmes.data?.items)?.map((p) => (
           <Card key={p.id} label={p.name} onPress={() => router.push(`/programme/${p.id}`)}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.sm }}>
               <View style={{ flex: 1 }}>
