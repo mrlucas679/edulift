@@ -28,6 +28,12 @@ export const KIND_LABELS: Record<string, string> = {
   work: 'Work',
 };
 
+export const useOpportunity = (id: string) =>
+  useQuery({
+    queryKey: ['opportunity', id],
+    queryFn: () => request(`/v1/opportunities/${encodeURIComponent(id)}`, opportunity),
+  });
+
 const query = (kind: string | null) => (kind ? `?kind=${encodeURIComponent(kind)}` : '');
 
 export const useOpportunities = (kind: string | null) =>

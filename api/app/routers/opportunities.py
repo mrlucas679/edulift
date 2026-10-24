@@ -5,6 +5,7 @@ from fastapi import APIRouter
 
 from app import models as m
 from app.deps import Db, SignedIn
+from app.errors import NotFoundError
 from app.opportunities import learner_facts, matched, open_opportunities
 from app.routers.marks import active_user
 from app.schemas import CriterionOut, MatchedOpportunityOut, OpportunityOut
@@ -20,6 +21,14 @@ KINDS: tuple[str, ...] = ("bursary", "loan", "learnership", "work")
 def browse(db: Db, kind: Kind | None = None) -> list[OpportunityOut]:
     rows = open_opportunities(db, (kind,) if kind else KINDS)
     return [OpportunityOut.model_validate(o) for o in rows]
+
+
+@router.get("/opportunities/{opportunity_id}")
+def one(opportunity_id: str, db: Db) -> OpportunityOut:
+    row = db.get(m.Opportunity, opportunity_id)
+    if row is None:
+        raise NotFoundError
+    return OpportunityOut.model_validate(row)
 
 
 @router.get("/me/opportunities")

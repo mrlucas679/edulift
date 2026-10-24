@@ -84,10 +84,12 @@ export const useInstitution = (id: string) =>
     queryFn: () => request(`/v1/institutions/${encodeURIComponent(id)}`, institutionDetail),
   });
 
-export const useProgrammes = (params: { q?: string; institution?: string }) => {
+export const useProgrammes = (params: { q?: string; institution?: string; field?: string; qualification?: string }) => {
   const query = new URLSearchParams();
   if (params.q) query.set('q', params.q);
   if (params.institution) query.set('institution', params.institution);
+  if (params.field) query.set('field', params.field);
+  if (params.qualification) query.set('qualification', params.qualification);
   return useQuery({
     queryKey: ['programmes', params],
     queryFn: () => request(`/v1/programmes?${query}`, programmePage),
@@ -154,4 +156,13 @@ export const checkProgramme = (id: string, marks: Record<string, number>, access
     method: 'POST',
     body: { marks },
     accessToken,
+  });
+
+const handoff = z.object({ id: z.string(), name: z.string(), purpose: z.string(), url: z.string() });
+
+export const useHandoffs = () =>
+  useQuery({
+    queryKey: ['handoffs'],
+    queryFn: () => request('/v1/handoffs', z.array(handoff)),
+    staleTime: Infinity,
   });

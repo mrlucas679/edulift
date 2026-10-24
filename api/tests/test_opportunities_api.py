@@ -82,3 +82,9 @@ def test_funding_appears_in_plan_b(client: TestClient, inbox: dict[str, str], se
         "/v1/programmes/uj.bsc-it/alternatives", json={"marks": failing}, headers=s.headers
     ).json()
     assert {o["name"] for o in body["funding"]} == {"Gauteng bursary", "Open bursary"}
+
+
+def test_one_opportunity_by_id(client: TestClient, seeded: None) -> None:
+    body = client.get("/v1/opportunities/gp-bursary").json()
+    assert body["name"] == "Gauteng bursary"
+    assert client.get("/v1/opportunities/nope").status_code == 404
