@@ -1012,3 +1012,11 @@
   provider: TETA
   url: https://www.teta.org.za/index.php/newsroom/unemployed-bursaries
   source: seta-teta
+- id: mqa-bursary-2027
+  name: MQA bursary for employed learners in the mining and minerals sector (2027 academic year)
+  kind: bursary
+  provider: Mining Qualifications Authority
+  url: https://mqa.org.za/bursaries/
+  field: engineering
+  closes_on: 2026-11-19
+  source: seta-mqa

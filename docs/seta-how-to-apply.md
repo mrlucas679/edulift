@@ -61,3 +61,13 @@ Most SETA money goes through employers and training providers, not learners. The
 - **LGSETA:** the learner page gives no criteria. Its homepage has unrelated gambling-site text, so do not link anything from it except the official pages.
 - **CHIETA, discretionary grants:** page reached, but no dates or criteria were read.
 - **Not yet read in this pass:** W&RSETA (no text found), MQA, INSETA (its careers link goes to an outside job site, not allowlisted), EWSETA's grant PDFs.
+
+## Third pass, 2026-10-24
+
+- **EWSETA, Discretionary Grant guidelines (February 2025 window, PDF):** the learnership stipend is funded by NQF level (NQF 1 to 4: R36 000 a year; NQF 5: R38 000; NQF 6: R40 000). Applications are electronic through the DG system, and must be in by midnight on the advertised due date. Two stages: an online expression of interest, then a full proposal. The guideline is from 2025, so check the current window before advising anyone. Learners do not apply directly; the applicant is an employer or provider.
+- **MQA, bursaries (mining and minerals sector):**
+  - **Employed learners:** apply individually at the MQA SIMS link. Closing 19 November 2026. No reply by 15 December 2026 means unsuccessful. Loaded as `mqa-bursary-2027`.
+  - **Unemployed learners:** public universities, universities of technology and TVET colleges apply on their behalf, closing 19 November 2026. Learners reach this through their institution.
+- **LGSETA, DG bursary window:** the page is listed at /learners-dg-bursary-window/ but its text did not load, so no criteria were recorded.
+- **W&RSETA:** the bursaries address returns "page not found". No learner page was found.
+- **CHIETA and INSETA:** no learner criteria captured. INSETA's careers link goes to an outside job site.
