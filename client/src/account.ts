@@ -11,6 +11,7 @@ const me = z.object({
   birth_date: z.string().nullable(),
   consents: z.array(z.string()),
   reconfirm: z.array(z.string()),
+  interests: z.array(z.string()),
 });
 export type MeDetail = z.infer<typeof me>;
 
@@ -45,7 +46,13 @@ export function useMe() {
 
 export const saveProfile = (
   accessToken: string | null,
-  body: { first_name: string; birth_date: string; province: string | null; certificate: 'nsc' | 'ieb' | 'sacai' | null },
+  body: {
+    first_name?: string;
+    birth_date: string;
+    province?: string | null;
+    certificate?: 'nsc' | 'ieb' | 'sacai' | null;
+    interests?: string[];
+  },
 ) =>
   request('/v1/me/profile', me, { method: 'PUT', body, accessToken });
 

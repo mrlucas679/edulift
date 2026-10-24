@@ -6,6 +6,7 @@ import { Switch, View } from 'react-native';
 import { ApiError } from '../src/api';
 import { askGuardian, PURPOSES, saveProfile, setConsent, useMe, type MeDetail } from '../src/account';
 import { useSession } from '../src/session';
+import { useFields } from '../src/reference';
 import { Body, Button, Card, ErrorNote, Field, Heading, Loading, Screen, Title } from '../src/ui';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -211,10 +212,46 @@ function Consents({ me }: { me: MeDetail }) {
   );
 }
 
+
+function Interests({ onDone }: { onDone: () => void }) {
+  const { accessToken } = useSession();
+  const queryClient = useQueryClient();
+  const fields = useFields();
+  const me = useMe();
+  const [picked, setPicked] = useState<string[]>([]);
+  const save = useAction(async () => {
+    await saveProfile(accessToken, { birth_date: me.data?.birth_date ?? '', interests: picked });
+    await queryClient.invalidateQueries({ queryKey: ['me-details'] });
+    onDone();
+  });
+
+  function toggle(id: string) {
+    setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : p.length < 3 ? [...p, id] : p));
+  }
+
+  const topLevel = (fields.data ?? []).filter((f) => f.parent_id === null);
+  return (
+    <>
+      <Heading>What would you enjoy? · step 2 of 2</Heading>
+      <Body muted>Pick up to 3. This only changes the order of results, never what you qualify for.</Body>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {topLevel.map((f) => (
+          <Chip key={f.id} label={f.name} selected={picked.includes(f.id)} onPress={() => toggle(f.id)} />
+        ))}
+      </View>
+      <Body muted>{picked.length} of 3 picked</Body>
+      <ErrorNote error={save.error} />
+      <Button label="Continue" onPress={save.run} busy={save.busy} disabled={picked.length === 0} />
+      <Button label="Not sure yet, skip" onPress={onDone} />
+    </>
+  );
+}
+
 export default function Onboarding() {
   const { status } = useSession();
   const me = useMe();
   const [tooYoung, setTooYoung] = useState(false);
+  const [interestsDone, setInterestsDone] = useState(false);
 
   if (tooYoung) {
     return (
@@ -245,6 +282,8 @@ export default function Onboarding() {
         <Birthday onTooYoung={() => setTooYoung(true)} />
       ) : me.data.status === 'pending_guardian' ? (
         <Guardian />
+      ) : !interestsDone && me.data.interests.length === 0 ? (
+        <Interests onDone={() => setInterestsDone(true)} />
       ) : (
         <>
           <Consents me={me.data} />

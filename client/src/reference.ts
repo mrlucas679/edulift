@@ -166,3 +166,12 @@ export const useHandoffs = () =>
     queryFn: () => request('/v1/handoffs', z.array(handoff)),
     staleTime: Infinity,
   });
+
+const field = z.object({ id: z.string(), name: z.string(), parent_id: z.string().nullable() });
+
+export const useFields = () =>
+  useQuery({
+    queryKey: ['fields'],
+    queryFn: () => request('/v1/fields', z.array(field)),
+    staleTime: Infinity,
+  });

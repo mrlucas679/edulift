@@ -163,6 +163,7 @@ class Profile(Base):
     # Only kept while the learner has reminders consent; cleared when it is withdrawn.
     contact_email: Mapped[str | None] = mapped_column(String(254))
     certificate: Mapped[str | None] = mapped_column(String(10))
+    interests: Mapped[list[str]] = mapped_column(ARRAY(Text), default=list)
 
 
 class Consent(Base):
