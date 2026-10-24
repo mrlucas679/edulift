@@ -69,7 +69,9 @@ def test_batch_verdicts_cover_every_programme(
     client: TestClient, inbox: dict[str, str], seeded: None
 ) -> None:
     session = sign_in(client, inbox, "batch@example.org")
-    body = client.post("/v1/programmes/checks", json={"marks": THANDI}, headers=session.headers).json()
+    body = client.post(
+        "/v1/programmes/checks", json={"marks": THANDI}, headers=session.headers
+    ).json()
     assert isinstance(body, list)
     assert {row["programme_id"] for row in body} == {
         p["id"] for p in client.get("/v1/programmes").json()["items"]
