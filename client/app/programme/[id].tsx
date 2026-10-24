@@ -5,6 +5,7 @@ import { Linking, Pressable, Text, View } from 'react-native';
 import { space, text, touchTarget, useColors } from '../../src/theme';
 
 import { toMarks, useMarks } from '../../src/marks';
+import { latestMarks, useSavedMarks } from '../../src/saved-marks';
 import { checkProgramme, useProgramme, useSubjectNames, type Verdict } from '../../src/reference';
 import { useAlternatives } from '../../src/alternatives';
 import { useExplain } from '../../src/explain';
@@ -65,7 +66,10 @@ export default function ProgrammeScreen() {
   const subjects = useSubjectNames();
   const { status, accessToken } = useSession();
   const [rows] = useMarks();
-  const marks = toMarks(rows);
+  // Marks typed here win; otherwise a signed-in learner's saved marks are used.
+  const savedMarks = useSavedMarks();
+  const typed = toMarks(rows);
+  const marks = Object.keys(typed).length > 0 ? typed : (latestMarks(savedMarks.data) ?? {});
   const check = useMutation({ mutationFn: () => checkProgramme(id, marks, accessToken) });
   const alternatives = useAlternatives(id, accessToken);
   const explain = useExplain(id, accessToken);
