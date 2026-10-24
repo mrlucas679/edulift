@@ -4,5 +4,348 @@ type: university
 province: KwaZulu-Natal
 apply_url: https://applications.ukzn.ac.za/
 route: cao
-source: ukzn-apply
-# cycles and programmes: add once checked against the 2027 prospectus
+source: ukzn-prospectus-2027
+aps_scheme: ukzn_aps
+programmes:
+- id: ukzn.b-sc-eng-agricultural
+  name: 'B Sc Eng: Agricultural'
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements: &id001
+  - - subject: mathematics
+      min: 65
+  - - subject: physical_sciences
+      min: 65
+  - &id002
+    - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - &id003
+    - subject: life_orientation
+      min: 50
+  notes: CAO KN-P-BEA. 4 yrs. Maths and Physical Sciences at level 5 with at least
+    65%.
+- id: ukzn.b-sc-eng-chemical
+  name: 'B Sc Eng: Chemical'
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements: *id001
+  notes: CAO KN-H-BEC. 4 yrs. Maths and Physical Sciences at level 5 with at least
+    65%.
+- id: ukzn.b-sc-eng-civil
+  name: 'B Sc Eng: Civil'
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements: *id001
+  notes: CAO KN-H-BEV / KN-P-BEV. 4 yrs. Maths and Physical Sciences at level 5 with
+    at least 65%.
+- id: ukzn.b-sc-eng-computer
+  name: 'B Sc Eng: Computer'
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements: *id001
+  notes: CAO KN-H-BEK / KN-P-BEK. 4 yrs. Maths and Physical Sciences at level 5 with
+    at least 65%.
+- id: ukzn.b-sc-eng-electrical
+  name: 'B Sc Eng: Electrical'
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements: *id001
+  notes: CAO KN-H-BEE / KN-P-BEE. 4 yrs. Maths and Physical Sciences at level 5 with
+    at least 65%.
+- id: ukzn.b-sc-eng-electronic
+  name: 'B Sc Eng: Electronic'
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements: *id001
+  notes: CAO KN-H-BEF / KN-P-BEF. 4 yrs. Maths and Physical Sciences at level 5 with
+    at least 65%.
+- id: ukzn.b-sc-eng-mechanical
+  name: 'B Sc Eng: Mechanical'
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements: *id001
+  notes: CAO KN-H-BEM / KN-P-BEM. 4 yrs. Maths and Physical Sciences at level 5 with
+    at least 65%.
+- id: ukzn.b-sc-land-surveying
+  name: B Sc Land Surveying
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements: *id001
+  notes: CAO KN-H-BSL. 4 yrs. Maths and Physical Sciences at level 5 with at least
+    65%.
+- id: ukzn.b-architectural-studies
+  name: B Architectural Studies
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - - subject: mathematics
+      min: 60
+  - *id002
+  - *id003
+  notes: 'CAO KN-H-BAR. 3 yrs. Not judged in full: a portfolio, an essay and a questionnaire
+    are required, and the ''one of'' subject list is not modelled.'
+- id: ukzn.b-sc-agric-agricultural-economics
+  name: B Sc Agric. Agricultural Economics
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: &id004
+  - - subject: mathematics
+      min: 50
+  - *id002
+  - *id003
+  - &id005
+    - subject: agricultural_sciences
+      min: 50
+    - subject: life_sciences
+      min: 50
+    - subject: physical_sciences
+      min: 50
+  notes: CAO KN-P-SAE. 4 yrs.
+- id: ukzn.b-agricultural-management
+  name: B Agricultural Management
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id004
+  notes: CAO KN-P-BAQ. 3 yrs.
+- id: ukzn.b-sc-agric-agricultural-plant-sciences
+  name: B Sc Agric. Agricultural Plant Sciences
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id004
+  notes: CAO KN-P-SAP. 4 yrs.
+- id: ukzn.b-sc-agric-agribusiness
+  name: B Sc Agric. Agribusiness
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id004
+  notes: CAO KN-P-BSB. 4 yrs.
+- id: ukzn.b-sc-agric-plant-pathology
+  name: B Sc Agric. Plant Pathology
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id004
+  notes: CAO KN-P-BSP. 4 yrs.
+- id: ukzn.b-sc-agric-soil-science
+  name: B Sc Agric. Soil Science
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: null
+  requirements: *id004
+  notes: CAO KN-P-BS1. 3 yrs. No APS range is printed for this row, so the score is
+    not checked.
+- id: ukzn.b-sc-agric-animal-and-poultry-science
+  name: B Sc Agric. Animal and Poultry Science
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: null
+  requirements: *id004
+  notes: CAO KN-P-SAA. 3 yrs. No APS range is printed for this row, so the score is
+    not checked.
+- id: ukzn.b-sc-stream-les-life-and-earth-sciences
+  name: B Sc Stream (LES) Life and Earth Sciences
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: null
+  requirements: *id004
+  notes: CAO KN-P-BS2 / KN-W-BS2. 3 yrs. No APS range is printed for this row, so
+    the score is not checked.
+- id: ukzn.b-sc-stream-m-mathematics
+  name: B Sc Stream M (Mathematics)
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - - subject: mathematics
+      min: 60
+  - *id002
+  - *id003
+  - *id005
+  notes: CAO KN-P-BS3 / KN-W-BS3. 3 yrs.
+- id: ukzn.b-sc-geographic-information-systems-and-earth-observation
+  name: B Sc Geographic Information Systems and Earth Observation
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - - subject: mathematics
+      min: 60
+  - *id002
+  - *id003
+  - *id005
+  notes: CAO KN-P-GEO. 3 yrs. Earth Science is listed as an alternative. It is not
+    modelled, so this row checks agricultural, life and physical sciences only.
+- id: ukzn.b-sc-computer-science-and-information-technology
+  name: B Sc Computer Science and Information Technology
+  qualification: degree
+  field: it
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - - subject: mathematics
+      min: 60
+  - *id002
+  - *id003
+  - *id005
+  notes: CAO KN-P-BSU / KN-W-BSU. 3 yrs.
+- id: ukzn.b-sc-applied-chemistry
+  name: B Sc Applied Chemistry
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: &id006
+  - - subject: mathematics
+      min: 50
+  - *id002
+  - *id003
+  - *id005
+  notes: CAO KN-W-BSR. 3 yrs.
+- id: ukzn.b-sc-chemistry-and-chemical-technology
+  name: B Sc Chemistry and Chemical Technology
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id006
+  notes: CAO KN-P-SIK. 3 yrs.
+- id: ukzn.b-sc-crop-and-horticultural-science
+  name: B Sc Crop and Horticultural Science
+  qualification: degree
+  field: agriculture
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id006
+  notes: CAO KN-P-SIH. 3 yrs.
+- id: ukzn.b-sc-environmental-science
+  name: B Sc Environmental Science
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id006
+  notes: CAO KN-P-BSS / KN-W-BSS. 3 yrs.
+- id: ukzn.b-sc-environmental-and-earth-science
+  name: B Sc Environmental and Earth Science
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id006
+  notes: CAO KN-P-EES. 3 yrs.
+- id: ukzn.b-sc-geological-science
+  name: B Sc Geological Science
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id006
+  notes: CAO KN-W-BSG. 3 yrs.
+- id: ukzn.b-sc-marine-biology
+  name: B Sc Marine Biology
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements: *id006
+  notes: CAO KN-W-BSM. 3 yrs.
+- id: ukzn.b-sc-augmented-programme
+  name: B Sc Augmented Programme
+  qualification: degree
+  field: science
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 26
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: life_orientation
+      min: 50
+  - - subject: mathematics
+      min: 50
+  - - subject: agricultural_sciences
+      min: 40
+    - subject: life_sciences
+      min: 40
+    - subject: physical_sciences
+      min: 40
+  notes: CAO KN-P-BS4 / KN-W-BS4. 4 yrs. Agricultural, life or physical sciences at
+    level 3 (40%).
+- id: ukzn.b-sc-engineering-access
+  name: B Sc Engineering Access
+  qualification: degree
+  field: engineering
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - *id002
+  - *id003
+  - - subject: mathematics
+      min: 50
+  - - subject: physical_sciences
+      min: 50
+  notes: CAO KN-H-UNT. 5 yrs.

@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import Engine
 
 from app.seed import read, write
+from eligibility.aps import score
 
 REPO_DATA = Path(__file__).parents[2] / "data"
 
@@ -49,3 +50,31 @@ def test_rate_limited(client: TestClient, real_data: None) -> None:
         client.post("/v1/aps/preview", json={"marks": THANDI}).status_code for _ in range(31)
     ]
     assert statuses[-1] == 429
+
+
+def test_ukzn_six_subjects_count_in_full() -> None:
+    # Prospectus p.17 worked example, with ratings turned into percents for each level.
+    marks = {"english_hl": 62, "english_fal": 75, "mathematics": 62, "accounting": 75,
+             "business_studies": 75, "it": 85, "life_orientation": 55}  # fmt: skip
+    assert score("ukzn_aps", marks) == 5 + 6 + 5 + 6 + 6 + 7
+
+
+def test_ukzn_gives_eight_points_from_ninety() -> None:
+    marks = dict.fromkeys(["english_hl", "mathematics", "physical_sciences", "geography",
+                           "life_sciences", "isizulu_fal"], 90)  # fmt: skip
+    assert score("ukzn_aps", marks) == 48
+
+
+def test_ukzn_seven_subjects_keep_english_maths_and_best_four() -> None:
+    marks = {
+        "english_hl": 40,
+        "english_fal": 65,
+        "mathematics": 50,
+        "physical_sciences": 90,
+        "geography": 85,
+        "life_sciences": 70,
+        "history": 55,
+        "life_orientation": 90,
+    }
+    # English 65 -> 5, Maths 50 -> 4, best four others: 8, 7, 6, 4
+    assert score("ukzn_aps", marks) == 5 + 4 + 8 + 7 + 6 + 4
