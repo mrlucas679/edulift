@@ -6,9 +6,33 @@ import { Switch, View } from 'react-native';
 import { ApiError } from '../src/api';
 import { askGuardian, PURPOSES, saveProfile, setConsent, useMe, type MeDetail } from '../src/account';
 import { useSession } from '../src/session';
+import { useFields } from '../src/reference';
 import { Body, Button, Card, ErrorNote, Field, Heading, Loading, Screen, Title } from '../src/ui';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
+const PROVINCES = [
+  'Eastern Cape',
+  'Free State',
+  'Gauteng',
+  'KwaZulu-Natal',
+  'Limpopo',
+  'Mpumalanga',
+  'North West',
+  'Northern Cape',
+  'Western Cape',
+];
+const CERTIFICATES = [
+  { id: 'nsc', label: 'NSC' },
+  { id: 'ieb', label: 'IEB' },
+  { id: 'sacai', label: 'SACAI' },
+] as const;
+type Certificate = (typeof CERTIFICATES)[number]['id'];
+
+function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
+  return (
+    <Button label={label} onPress={onPress} disabled={selected} />
+  );
+}
 
 function useAction<T>(fn: () => Promise<T>) {
   const [busy, setBusy] = useState(false);
@@ -32,9 +56,16 @@ function Birthday({ onTooYoung }: { onTooYoung: () => void }) {
   const queryClient = useQueryClient();
   const [name, setName] = useState('');
   const [birth, setBirth] = useState('');
+  const [province, setProvince] = useState<string | null>(null);
+  const [certificate, setCertificate] = useState<Certificate | null>(null);
   const save = useAction(async () => {
     try {
-      await saveProfile(accessToken, { first_name: name.trim(), birth_date: birth });
+      await saveProfile(accessToken, {
+        first_name: name.trim(),
+        birth_date: birth,
+        province,
+        certificate,
+      });
       await queryClient.invalidateQueries({ queryKey: ['me-details'] });
     } catch (e) {
       if (e instanceof ApiError && e.code === 'too_young') return onTooYoung();
@@ -44,8 +75,8 @@ function Birthday({ onTooYoung }: { onTooYoung: () => void }) {
 
   return (
     <>
-      <Heading>About you</Heading>
-      <Body muted>We only ask what we need to match you.</Body>
+      <Heading>About you · step 1 of 2</Heading>
+      <Body muted>We only ask what we need to match you. We never ask for your ID number, income or race.</Body>
       <Field label="First name" value={name} onChangeText={setName} maxLength={60} autoComplete="given-name" />
       <Field
         label="Date of birth (YYYY-MM-DD)"
@@ -55,6 +86,19 @@ function Birthday({ onTooYoung }: { onTooYoung: () => void }) {
         inputMode="numeric"
         maxLength={10}
       />
+      <Title>Province you live in</Title>
+      <Body muted>Used to show nearby colleges first. We never limit you to one province.</Body>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {PROVINCES.map((p) => (
+          <Chip key={p} label={p} selected={province === p} onPress={() => setProvince(p)} />
+        ))}
+      </View>
+      <Title>Which certificate are you writing?</Title>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {CERTIFICATES.map((c) => (
+          <Chip key={c.id} label={c.label} selected={certificate === c.id} onPress={() => setCertificate(c.id)} />
+        ))}
+      </View>
       <ErrorNote error={save.error} />
       <Button label="Continue" onPress={save.run} busy={save.busy} disabled={!DATE.test(birth)} />
     </>
@@ -168,10 +212,46 @@ function Consents({ me }: { me: MeDetail }) {
   );
 }
 
+
+function Interests({ onDone }: { onDone: () => void }) {
+  const { accessToken } = useSession();
+  const queryClient = useQueryClient();
+  const fields = useFields();
+  const me = useMe();
+  const [picked, setPicked] = useState<string[]>([]);
+  const save = useAction(async () => {
+    await saveProfile(accessToken, { birth_date: me.data?.birth_date ?? '', interests: picked });
+    await queryClient.invalidateQueries({ queryKey: ['me-details'] });
+    onDone();
+  });
+
+  function toggle(id: string) {
+    setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : p.length < 3 ? [...p, id] : p));
+  }
+
+  const topLevel = (fields.data ?? []).filter((f) => f.parent_id === null);
+  return (
+    <>
+      <Heading>What would you enjoy? · step 2 of 2</Heading>
+      <Body muted>Pick up to 3. This only changes the order of results, never what you qualify for.</Body>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {topLevel.map((f) => (
+          <Chip key={f.id} label={f.name} selected={picked.includes(f.id)} onPress={() => toggle(f.id)} />
+        ))}
+      </View>
+      <Body muted>{picked.length} of 3 picked</Body>
+      <ErrorNote error={save.error} />
+      <Button label="Continue" onPress={save.run} busy={save.busy} disabled={picked.length === 0} />
+      <Button label="Not sure yet, skip" onPress={onDone} />
+    </>
+  );
+}
+
 export default function Onboarding() {
   const { status } = useSession();
   const me = useMe();
   const [tooYoung, setTooYoung] = useState(false);
+  const [interestsDone, setInterestsDone] = useState(false);
 
   if (tooYoung) {
     return (
@@ -202,13 +282,16 @@ export default function Onboarding() {
         <Birthday onTooYoung={() => setTooYoung(true)} />
       ) : me.data.status === 'pending_guardian' ? (
         <Guardian />
+      ) : !interestsDone && me.data.interests.length === 0 ? (
+        <Interests onDone={() => setInterestsDone(true)} />
       ) : (
         <>
           <Consents me={me.data} />
           {me.data.status === 'active' && (
             <>
-              <Title>You’re set up</Title>
-              <Button label="Enter my marks" onPress={() => router.replace('/aps')} />
+              <Title>You’re set up · step 2 of 2</Title>
+              <Body muted>Next, add your marks. You can change them any time.</Body>
+              <Button label="Add my marks" onPress={() => router.replace('/my-marks')} />
             </>
           )}
         </>

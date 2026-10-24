@@ -1,100 +1,93 @@
-import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Share } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { useMe } from '../../src/account';
-import { ApiError, meResponse, request } from '../../src/api';
-import { deleteAccount, exportData } from '../../src/data-rights';
+import { usePlan } from '../../src/plan';
 import { useSession } from '../../src/session';
-import { Body, Button, ErrorNote, Heading, Loading, Screen, Title } from '../../src/ui';
+import { useSaved, useApplications } from '../../src/tracking';
+import { font, space, text, touchTarget, useColors } from '../../src/theme';
+import { Body, Button, Heading, Loading, Screen, Title } from '../../src/ui';
+
+function Row({ label, detail, onPress }: { label: string; detail?: string; onPress: () => void }) {
+  const colors = useColors();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={[styles.row, { borderColor: colors.border, backgroundColor: colors.surface }]}
+    >
+      <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>{label}</Text>
+      <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>
+        {detail ?? '›'}
+      </Text>
+    </Pressable>
+  );
+}
 
 export default function Profile() {
-  const { status, accessToken, signOut } = useSession();
-  const details = useMe();
-  const me = useQuery({
-    queryKey: ['me', accessToken],
-    queryFn: () => request('/v1/me', meResponse, { accessToken }),
-    enabled: status === 'signed-in',
-  });
-
-  // Token rejected: sign out.
-  const rejected = me.error instanceof ApiError && me.error.status === 401;
-  useEffect(() => {
-    if (rejected) void signOut();
-  }, [rejected, signOut]);
-
-  const [busy, setBusy] = useState<'export' | 'delete' | null>(null);
-  const [actionError, setActionError] = useState<unknown>(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
-  async function download() {
-    setBusy('export');
-    setActionError(null);
-    try {
-      const data = await exportData(accessToken);
-      await Share.share({ message: JSON.stringify(data, null, 2), title: 'My EduLift data' });
-    } catch (e) {
-      setActionError(e);
-    } finally {
-      setBusy(null);
-    }
-  }
-
-  async function remove() {
-    setBusy('delete');
-    setActionError(null);
-    try {
-      await deleteAccount(accessToken);
-      await signOut();
-    } catch (e) {
-      setActionError(e);
-    } finally {
-      setBusy(null);
-    }
-  }
+  const { status, signOut, accessToken } = useSession();
+  const me = useMe();
+  const plan = usePlan(status === 'signed-in' ? accessToken : null);
+  const saved = useSaved(status === 'signed-in' ? accessToken : null);
+  const applications = useApplications(status === 'signed-in' ? accessToken : null);
 
   if (status === 'restoring') return <Loading />;
 
   if (status !== 'signed-in') {
     return (
       <Screen>
-        <Heading>Profile</Heading>
-        <Body muted>Sign in to save your marks, check where you qualify and track applications.</Body>
+        <Heading>Your profile</Heading>
+        <Body muted>
+          Sign in to keep your plan, applications and reminders on any phone. Under 18? A parent or guardian approves by
+          email.
+        </Body>
         <Button label="Sign in" onPress={() => router.push('/sign-in')} />
+        <Button label="Create a free account" onPress={() => router.push('/sign-in')} />
+        <Button label="Manage my data" onPress={() => router.push('/my-data')} />
+        <Button label="Settings" onPress={() => router.push('/settings')} />
+        <Button label="Help" onPress={() => router.push('/help')} />
       </Screen>
     );
   }
 
+  const name = me.data?.first_name ?? 'You';
   return (
     <Screen>
-      <Heading>Profile</Heading>
-      {me.isPending && <Loading />}
-      {me.data && <Body muted>Account {me.data.id}</Body>}
-      {details.data && details.data.status !== 'active' && (
-        <Button label="Finish setting up" onPress={() => router.push('/onboarding')} />
-      )}
-      {details.data?.status === 'active' && (
-        <Button label="My choices" onPress={() => router.push('/onboarding')} />
-      )}
-      {me.isError && !rejected && <ErrorNote error={me.error} />}
-      <Title>Your data</Title>
-      <Button label="Download my data" busy={busy === 'export'} onPress={download} />
-      {!confirmDelete ? (
-        <Button label="Delete my account" onPress={() => setConfirmDelete(true)} />
-      ) : (
-        <>
-          <Body>This deletes your marks, choices, saved items and applications. It can’t be undone.</Body>
-          <Button label="Yes, delete everything" busy={busy === 'delete'} onPress={remove} />
-          <Button label="Keep my account" onPress={() => setConfirmDelete(false)} />
-        </>
-      )}
-      <ErrorNote error={actionError} />
+      <Heading>{name}</Heading>
+      <Body muted>Your marks, plan and applications.</Body>
 
-      <Title>About EduLift</Title>
-      <Button label="Privacy notice" onPress={() => router.push('/privacy')} />
-      <Button label="Help" onPress={() => router.push('/help')} />
+      <Title>My plan</Title>
+      <Row label="My plan" detail={plan.data ? `${plan.data.targets.length} of 3` : undefined} onPress={() => router.push('/plan')} />
+      <Row label="My marks" onPress={() => router.push('/my-marks')} />
+      <Row label="My scores" onPress={() => router.push('/scores')} />
+
+      <Title>Tracking</Title>
+      <Row
+        label="My applications"
+        detail={applications.data ? `${applications.data.length} tracked` : undefined}
+        onPress={() => router.push('/applications')}
+      />
+      <Row label="Saved" detail={saved.data ? `${saved.data.length} items` : undefined} onPress={() => router.push('/saved')} />
+
+      <Title>Account</Title>
+      <Row label="Settings and choices" onPress={() => router.push('/settings')} />
+      <Row label="My data" onPress={() => router.push('/my-data')} />
+      <Row label="Help and talk to a person" onPress={() => router.push('/help')} />
       <Button label="Sign out" onPress={signOut} />
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    minHeight: touchTarget,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: space.lg,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: space.md,
+  },
+});
