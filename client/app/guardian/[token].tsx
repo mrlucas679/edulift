@@ -1,9 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, Switch, Text, View } from 'react-native';
+import { Pressable, Switch, Text, View , Share } from 'react-native';
 
-import { decideGuardianRequest, GUARDIAN_PURPOSES, viewGuardianRequest } from '../../src/account';
+import {
+  approveGuardianRequest,
+  decideGuardianRequest,
+  GUARDIAN_PURPOSES,
+  guardianExport,
+  viewGuardianRequest,
+  withdrawGuardianApproval,
+} from '../../src/account';
+
 import { font, space, text, touchTarget, useColors } from '../../src/theme';
 import { Body, Button, Card, ErrorNote, Heading, QueryState, Screen, Title } from '../../src/ui';
 
@@ -15,6 +23,7 @@ export default function GuardianApproval() {
   const [declared, setDeclared] = useState(false);
   const [purposes, setPurposes] = useState<string[]>([]);
   const [done, setDone] = useState<string | null>(null);
+  const [withdrawToken, setWithdrawToken] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const learner = view.data?.learner_first_name ?? 'They';
@@ -23,8 +32,19 @@ export default function GuardianApproval() {
     setBusy(true);
     setError(null);
     try {
-      await decideGuardianRequest(token, { decision, relationship: 'parent', declaration: declared, purposes });
-      setDone(decision === 'approve' ? `Thank you. ${learner}’s account is approved.` : 'Done. We’ve deleted what was entered.');
+      if (decision === 'approve') {
+        const { withdraw_token } = await approveGuardianRequest(token, {
+          decision,
+          relationship: 'parent',
+          declaration: declared,
+          purposes,
+        });
+        setWithdrawToken(withdraw_token);
+        setDone(`Thank you. ${learner}’s account is open.`);
+      } else {
+        await decideGuardianRequest(token, { decision, relationship: 'parent', declaration: declared, purposes });
+        setDone('Done. We’ve deleted what was entered.');
+      }
     } catch (e) {
       setError(e);
     } finally {
@@ -37,6 +57,52 @@ export default function GuardianApproval() {
       <Screen>
         <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink }}>Matric Pathways</Text>
         <Heading>{done}</Heading>
+        {withdrawToken && (
+          <>
+            <Body>We’ve let {learner} know. Keep this email — its link lets you see or delete their data later.</Body>
+            <Card>
+              <Title>Changed your mind?</Title>
+              <Body muted>Withdrawing deletes their saved account. They can still use the app as a guest.</Body>
+              <Button
+                label="Withdraw approval and delete data"
+                busy={busy}
+                onPress={async () => {
+                  setBusy(true);
+                  setError(null);
+                  try {
+                    await withdrawGuardianApproval(withdrawToken);
+                    setWithdrawToken(null);
+                    setDone('Approval withdrawn. Their saved account is deleted.');
+                  } catch (e) {
+                    setError(e);
+                  } finally {
+                    setBusy(false);
+                  }
+                }}
+              />
+            </Card>
+            <Card>
+              <Title>Want a copy of what we hold?</Title>
+              <Button
+                label={`Download ${learner}’s data`}
+                busy={busy}
+                onPress={async () => {
+                  setBusy(true);
+                  setError(null);
+                  try {
+                    const data = await guardianExport(withdrawToken);
+                    await Share.share({ message: JSON.stringify(data, null, 2), title: `${learner}’s EduLift data` });
+                  } catch (e) {
+                    setError(e);
+                  } finally {
+                    setBusy(false);
+                  }
+                }}
+              />
+            </Card>
+            <ErrorNote error={error} />
+          </>
+        )}
       </Screen>
     );
   }

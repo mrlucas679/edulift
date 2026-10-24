@@ -85,3 +85,15 @@ export const saveMarks = (accessToken: string | null, period: string, marks: Rec
     body: { marks },
     accessToken,
   });
+
+const decided = z.object({ withdraw_token: z.string() });
+
+// Approve returns the withdraw token, which the approved page needs.
+export const approveGuardianRequest = (token: string, body: object) =>
+  request(`/v1/guardian/${encodeURIComponent(token)}`, decided, { method: 'POST', body });
+
+export const guardianExport = (withdrawToken: string) =>
+  request(`/v1/guardian/withdraw/${encodeURIComponent(withdrawToken)}/export`, z.record(z.string(), z.unknown()));
+
+export const withdrawGuardianApproval = (withdrawToken: string) =>
+  request(`/v1/guardian/withdraw/${encodeURIComponent(withdrawToken)}`, z.undefined(), { method: 'POST' });

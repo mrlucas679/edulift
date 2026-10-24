@@ -14,6 +14,7 @@ from app import rate_limit
 from app.accounts import ensure_account
 from app.age import ADULT, MIN_AGE, age_on
 from app.deps import AppSettings, ClientIp, Db, DbEngine, Identities, Mail, SignedIn
+from app.erasure import export_learner
 from app.errors import AppError, NotFoundError, UpstreamUnavailableError
 from app.schemas import (
     ConsentRequest,
@@ -289,7 +290,7 @@ def view_request(token: str, ip: ClientIp, db: Db, engine: DbEngine) -> Guardian
     )
 
 
-@router.post("/guardian/{token}", status_code=204)
+@router.post("/guardian/{token}", response_model=None)
 def decide(
     token: str,
     body: GuardianDecision,
@@ -299,7 +300,7 @@ def decide(
     engine: DbEngine,
     mail: Mail,
     settings: AppSettings,
-) -> Response:
+) -> Response | dict[str, str]:
     rate_limit.check(engine, "guardian:ip", ip, limit=10, window_seconds=60)
     req = _open_request(db, token)
     req.decided_at = datetime.now(UTC)
@@ -332,7 +333,8 @@ def decide(
             "You can change your decision any time",
             _confirmation_email(req.guardian_name, profile.first_name or "Your child", link),
         )
-    return Response(status_code=204)
+    # The guardian is still on the approve page, so it gets the same link there.
+    return {"withdraw_token": withdraw_token}
 
 
 def _confirmation_email(guardian: str, learner: str, link: str) -> str:
@@ -367,6 +369,14 @@ def view_withdrawal(token: str, ip: ClientIp, db: Db, engine: DbEngine) -> Withd
         learner_first_name=(profile.first_name if profile else None) or "Your child",
         guardian_name=req.guardian_name,
     )
+
+
+@router.get("/guardian/withdraw/{token}/export")
+def export_for_guardian(token: str, ip: ClientIp, db: Db, engine: DbEngine) -> dict[str, object]:
+    """What we hold about the learner, for the guardian who approved it."""
+    rate_limit.check(engine, "guardian:ip", ip, limit=10, window_seconds=60)
+    req = _open_withdrawal(db, token)
+    return export_learner(db, req.user_id)
 
 
 @router.post("/guardian/withdraw/{token}", status_code=204)
