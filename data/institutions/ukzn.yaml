@@ -800,3 +800,142 @@ programmes:
   - *id017
   notes: CAO KN-H-SO4 / KN-P-SO4. 4 yrs. APS range 20 to 27 is printed. The lower
     bound is used.
+- id: ukzn.bachelor-of-laws
+  name: Bachelor of Laws
+  qualification: degree
+  field: humanities.law
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 32
+  requirements: &id019
+  - - subject: english_hl
+      min: 60
+    - subject: english_fal
+      min: 70
+  - - subject: mathematics
+      min: 40
+    - subject: maths_literacy
+      min: 60
+  - &id020
+    - subject: life_orientation
+      min: 50
+  notes: CAO KN-H-BL1 / KN-P-BL1. 4 yrs. English HL at level 5 or FAL at level 6.
+    Mathematics at level 3 or Mathematical Literacy at level 5.
+- id: ukzn.bachelor-of-laws-part-time
+  name: Bachelor of Laws (part-time)
+  qualification: degree
+  field: humanities.law
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 32
+  requirements: *id019
+  notes: CAO KN-H-BLZ. 6 yrs. English HL at level 5 or FAL at level 6. Mathematics
+    at level 3 or Mathematical Literacy at level 5.
+- id: ukzn.bachelor-of-administration
+  name: Bachelor of Administration
+  qualification: degree
+  field: commerce
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 26
+  requirements:
+  - &id021
+    - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - *id020
+  - &id022
+    - subject: mathematics
+      min: 40
+  notes: CAO KN-W-BAD. 3 yrs.
+- id: ukzn.bachelor-of-business-administration-evening-classes
+  name: Bachelor of Business Administration (Evening classes)
+  qualification: degree
+  field: commerce
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 26
+  requirements:
+  - *id021
+  - *id020
+  - *id022
+  notes: CAO KN-W-BBA / KN-P-BBA. 3 yrs.
+- id: ukzn.bachelor-of-business-science-in-finance
+  name: Bachelor of Business Science in Finance
+  qualification: degree
+  field: commerce
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements:
+  - - subject: mathematics
+      min: 60
+  - *id021
+  - *id020
+  notes: CAO KN-W-B5F. 4 yrs. Mathematics at level 6.
+- id: ukzn.bachelor-of-business-science-in-investment-science
+  name: Bachelor of Business Science in Investment Science
+  qualification: degree
+  field: commerce
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 33
+  requirements:
+  - - subject: mathematics
+      min: 70
+  - *id021
+  - *id020
+  notes: CAO KN-W-B5I. 4 yrs. Mathematics at level 6 (70%).
+- id: ukzn.b-com-general
+  name: B Com (General)
+  qualification: degree
+  field: commerce
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 30
+  requirements:
+  - *id021
+  - *id020
+  - - subject: mathematics
+      min: 50
+  notes: CAO KN-P-BC1 / KN-W-BC1. 3 yrs.
+- id: ukzn.b-com-accounting
+  name: B Com (Accounting)
+  qualification: degree
+  field: commerce
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 32
+  requirements:
+  - - subject: mathematics
+      min: 60
+  - *id021
+  - *id020
+  notes: CAO KN-P-BCN / KN-W-BCN. 3 yrs. Mathematics at level 5.
+- id: ukzn.bcom-4-general-extended-curriculum
+  name: BCom 4 General (Extended Curriculum)
+  qualification: degree
+  field: commerce
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 26
+  requirements:
+  - - subject: mathematics
+      min: 40
+  - *id020
+  - *id021
+  notes: CAO KN-P-BCG / KN-W-BCG. 4 yrs.
+- id: ukzn.bcom-4-accounting-extended-curriculum
+  name: BCom 4 Accounting (Extended Curriculum)
+  qualification: degree
+  field: commerce
+  source: ukzn-prospectus-2027
+  aps_scheme: ukzn_aps
+  min_aps: 28
+  requirements:
+  - - subject: mathematics
+      min: 50
+  - *id020
+  - *id021
+  notes: CAO KN-P-BCO / KN-W-BCO. 4 yrs.
