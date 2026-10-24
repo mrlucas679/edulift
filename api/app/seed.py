@@ -22,7 +22,33 @@ from app.db import new_engine
 
 # Official sites only. Anything else needs a deliberate addition here.
 ALLOWED_SUFFIXES = (".ac.za", ".gov.za", ".edu.za")
-ALLOWED_HOSTS = {"www.nsfas.org.za", "sayouth.mobi", "www.sayouth.mobi"}
+ALLOWED_HOSTS = {
+    "bankseta.org.za",
+    "mqa.org.za",
+    "sayouth.mobi",
+    "www.agriseta.co.za",
+    "www.bankseta.org.za",
+    "www.cathsseta.org.za",
+    "www.ceta.org.za",
+    "www.chieta.org.za",
+    "www.etdpseta.org.za",
+    "www.ewseta.org.za",
+    "www.fasset.org.za",
+    "www.foodbev.co.za",
+    "www.fpmseta.org.za",
+    "www.hwseta.org.za",
+    "www.inseta.org.za",
+    "www.lgseta.org.za",
+    "www.merseta.org.za",
+    "www.mict.org.za",
+    "www.mqa.org.za",
+    "www.nsfas.org.za",
+    "www.sayouth.mobi",
+    "www.servicesseta.org.za",
+    "www.teta.org.za",
+    "www.wrseta.org.za",
+    "www.zabursaries.co.za",
+}
 
 
 def official_url(url: str) -> str:

@@ -74,3 +74,108 @@
   url: https://www.sayouth.mobi/
   publisher: SA Youth
   checked_on: 2026-10-24
+- id: zabursaries-listings
+  title: Zabursaries government bursary listings (aggregator; check each listing before applying)
+  url: https://www.zabursaries.co.za/government-bursaries-south-africa/
+  publisher: Zabursaries
+  checked_on: 2026-10-24
+- id: dbe-funza-lushaka
+  title: Funza Lushaka Bursary Scheme (DBE)
+  url: https://www.education.gov.za/Programmes/FunzaLushaka.aspx
+  publisher: Department of Basic Education
+  checked_on: 2026-10-24
+- id: seta-agriseta
+  title: AgriSETA website
+  url: https://www.agriseta.co.za/
+  publisher: AgriSETA
+  checked_on: 2026-10-24
+- id: seta-bankseta
+  title: BANKSETA website
+  url: https://www.bankseta.org.za/
+  publisher: BANKSETA
+  checked_on: 2026-10-24
+- id: seta-cathsseta
+  title: CATHSSETA website
+  url: https://www.cathsseta.org.za/
+  publisher: CATHSSETA
+  checked_on: 2026-10-24
+- id: seta-ceta
+  title: CETA website
+  url: https://www.ceta.org.za/
+  publisher: CETA
+  checked_on: 2026-10-24
+- id: seta-chieta
+  title: CHIETA website
+  url: https://www.chieta.org.za/
+  publisher: CHIETA
+  checked_on: 2026-10-24
+- id: seta-etdpseta
+  title: ETDP SETA website
+  url: https://www.etdpseta.org.za/
+  publisher: ETDP SETA
+  checked_on: 2026-10-24
+- id: seta-ewseta
+  title: EWSETA website
+  url: https://www.ewseta.org.za/
+  publisher: EWSETA
+  checked_on: 2026-10-24
+- id: seta-fasset
+  title: FASSET website
+  url: https://www.fasset.org.za/
+  publisher: FASSET
+  checked_on: 2026-10-24
+- id: seta-foodbev
+  title: FoodBev SETA website
+  url: https://www.foodbev.co.za/
+  publisher: FoodBev SETA
+  checked_on: 2026-10-24
+- id: seta-fpmseta
+  title: FP&M SETA website
+  url: https://www.fpmseta.org.za/
+  publisher: FP&M SETA
+  checked_on: 2026-10-24
+- id: seta-hwseta
+  title: HWSETA website
+  url: https://www.hwseta.org.za/
+  publisher: HWSETA
+  checked_on: 2026-10-24
+- id: seta-inseta
+  title: INSETA website
+  url: https://www.inseta.org.za/
+  publisher: INSETA
+  checked_on: 2026-10-24
+- id: seta-lgseta
+  title: LGSETA website
+  url: https://www.lgseta.org.za/
+  publisher: LGSETA
+  checked_on: 2026-10-24
+- id: seta-mict
+  title: MICT SETA website
+  url: https://www.mict.org.za/
+  publisher: MICT SETA
+  checked_on: 2026-10-24
+- id: seta-mqa
+  title: MQA website
+  url: https://www.mqa.org.za/
+  publisher: MQA
+  checked_on: 2026-10-24
+- id: seta-servicesseta
+  title: Services SETA website
+  url: https://www.servicesseta.org.za/
+  publisher: Services SETA
+  checked_on: 2026-10-24
+- id: seta-teta
+  title: TETA website
+  url: https://www.teta.org.za/
+  publisher: TETA
+  checked_on: 2026-10-24
+- id: seta-wrseta
+  title: W&RSETA website
+  url: https://www.wrseta.org.za/
+  publisher: W&RSETA
+  checked_on: 2026-10-24
+- id: seta-merseta
+  title: MerSETA website
+  url: https://www.merseta.org.za/
+  publisher: MerSETA
+  checked_on: 2026-10-24

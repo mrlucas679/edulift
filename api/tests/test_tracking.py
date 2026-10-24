@@ -78,7 +78,7 @@ def test_new_application_seeds_the_checklist(
     r = client.post("/v1/me/applications", json=PROGRAMME, headers=s.headers)
     assert r.status_code == 201
     assert r.json()["status"] == "planning"
-    assert len(r.json()["checklist"]) == 3
+    assert len(r.json()["checklist"]) == 5
 
 
 def test_submitted_without_reference_is_flagged(

@@ -65,6 +65,9 @@ export default function ApplicationScreen() {
               })}
             </View>
 
+            {application.data.status === 'submitted' && application.data.submitted_on && (
+              <Body muted>Submitted on {application.data.submitted_on}</Body>
+            )}
             <Field
               label="Your reference number"
               value={reference ?? application.data.external_reference ?? ''}
