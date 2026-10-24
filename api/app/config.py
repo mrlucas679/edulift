@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     db_name: str = ""
     db_user: str = ""
     db_password: str = ""
+    # Migrations need DDL rights, so they can use the owner. The server uses db_user.
+    migration_db_user: str = ""
+    migration_db_password: str = ""
 
     aws_region: str = ""
     cognito_user_pool_id: str = ""
@@ -64,6 +67,16 @@ class Settings(BaseSettings):
         password = quote(self.db_password, safe="")
         return (
             f"postgresql+psycopg://{quote(self.db_user, safe='')}:{password}"
+            f"@{self.db_host}:{self.db_port}/{self.db_name}?sslmode=require"
+        )
+
+    @property
+    def migration_sqlalchemy_url(self) -> str:
+        if not self.migration_db_user:
+            return self.sqlalchemy_url
+        password = quote(self.migration_db_password, safe="")
+        return (
+            f"postgresql+psycopg://{quote(self.migration_db_user, safe='')}:{password}"
             f"@{self.db_host}:{self.db_port}/{self.db_name}?sslmode=require"
         )
 
