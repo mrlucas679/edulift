@@ -43,7 +43,10 @@ export function useMe() {
   });
 }
 
-export const saveProfile = (accessToken: string | null, body: { first_name: string; birth_date: string }) =>
+export const saveProfile = (
+  accessToken: string | null,
+  body: { first_name: string; birth_date: string; province: string | null; certificate: 'nsc' | 'ieb' | 'sacai' | null },
+) =>
   request('/v1/me/profile', me, { method: 'PUT', body, accessToken });
 
 export const setConsent = (
