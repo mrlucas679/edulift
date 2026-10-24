@@ -52,8 +52,8 @@ export default function OpportunityScreen() {
 
             {host ? (
               <>
-                <Body muted>EduLift never submits for you. You are going to {host}.</Body>
-                <Button label={`Apply on ${host}`} onPress={() => Linking.openURL(opportunity.data.url)} />
+                <Body muted>EduLift never submits for you. You are going to {host}. Some bursaries are applied for through a university or training provider, not by you: check the page first.</Body>
+                <Button label={`Go to ${host}`} onPress={() => Linking.openURL(opportunity.data.url)} />
               </>
             ) : (
               <Body muted>We don’t have a safe link for this yet. Check with the provider.</Body>
