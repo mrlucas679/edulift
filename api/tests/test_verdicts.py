@@ -84,10 +84,10 @@ def test_batch_verdicts_are_cached_until_marks_change(
 ) -> None:
     batch._BATCH_CACHE.clear()
     session = sign_in(client, inbox, "cache@example.org")
-    client.post("/v1/programmes/checks", json={"marks": THANDI}, headers=session.headers)
+    client.post("/v1/programmes/me/outcomes", json={"marks": THANDI}, headers=session.headers)
     before = len(batch._BATCH_CACHE)
-    client.post("/v1/programmes/checks", json={"marks": THANDI}, headers=session.headers)
+    client.post("/v1/programmes/me/outcomes", json={"marks": THANDI}, headers=session.headers)
     assert len(batch._BATCH_CACHE) == before
     changed = {**THANDI, "mathematics": 40}
-    client.post("/v1/programmes/checks", json={"marks": changed}, headers=session.headers)
+    client.post("/v1/programmes/me/outcomes", json={"marks": changed}, headers=session.headers)
     assert len(batch._BATCH_CACHE) == before + 1
