@@ -5,4 +5,9 @@ province: Gauteng
 apply_url: https://www.uj.ac.za/
 route: direct
 source: uj-site
-# cycles and programmes: add once checked against the 2027 prospectus
+cycles:
+  - intake_year: 2027
+    opens_on: 2026-04-01
+    closes_on: 2026-10-31
+    source: uj-prospectus-2027
+# programmes: add once checked against the 2027 prospectus

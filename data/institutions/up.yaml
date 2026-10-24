@@ -5,4 +5,9 @@ province: Gauteng
 apply_url: https://www.up.ac.za/online-application
 route: direct
 source: up-apply
-# cycles and programmes: add once checked against the 2027 prospectus
+cycles:
+  - intake_year: 2027
+    opens_on: 2026-04-01
+    closes_on: 2026-06-30
+    source: up-prospectus-2027
+# programmes: add once checked against the 2027 prospectus

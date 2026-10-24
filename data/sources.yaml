@@ -44,3 +44,18 @@
   url: https://uct.ac.za/sites/default/files/media/documents/2027-national-senior-certificate-nsc-guidelines-for-admissions.pdf
   publisher: University of Cape Town
   checked_on: 2026-10-23
+- id: uj-prospectus-2027
+  title: University of Johannesburg 2027 Undergraduate Prospectus
+  url: https://www.uj.ac.za/
+  publisher: University of Johannesburg
+  checked_on: 2026-10-24
+- id: up-prospectus-2027
+  title: University of Pretoria 2027 Undergraduate Prospectus (NSC/IEB)
+  url: https://www.up.ac.za/
+  publisher: University of Pretoria
+  checked_on: 2026-10-24
+- id: uct-prospectus-2027
+  title: University of Cape Town 2027 Undergraduate Prospectus
+  url: https://www.uct.ac.za/
+  publisher: University of Cape Town
+  checked_on: 2026-10-24
