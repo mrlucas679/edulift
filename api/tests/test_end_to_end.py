@@ -63,7 +63,7 @@ def test_learner_journey_end_to_end(
     verdict = client.post(f"/v1/programmes/{first}/check", json={}, headers=h)
     assert verdict.status_code == 200
     assert verdict.json()["outcome"]
-    batch = client.post("/v1/programmes/checks", json={}, headers=h)
+    batch = client.post("/v1/programmes/me/outcomes", json={}, headers=h)
     assert batch.status_code == 200
     assert first in {row["programme_id"] for row in batch.json()}
 
