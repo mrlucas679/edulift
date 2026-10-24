@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text } from 'react-native';
 
 import { useSession } from '../src/session';
-import { font, space, text, touchTarget, useColors } from '../src/theme';
+import { font, text, touchTarget, useColors } from '../src/theme';
 import { Body, Button, Card, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
 
 export default function SignIn() {

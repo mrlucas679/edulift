@@ -7,7 +7,7 @@ import { useSession } from '../../src/session';
 import { useSaved, useApplications } from '../../src/tracking';
 import { latestMarks, useSavedMarks } from '../../src/saved-marks';
 import { font, space, text, touchTarget, useColors } from '../../src/theme';
-import { Body, Button, Heading, Loading, Screen, Title } from '../../src/ui';
+import { Body, Button, Heading, Loading, Screen } from '../../src/ui';
 
 function Row({ label, detail, onPress }: { label: string; detail?: string; onPress: () => void }) {
   const colors = useColors();

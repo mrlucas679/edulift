@@ -7,7 +7,7 @@ import { KIND_LABELS, useMyOpportunities, useOpportunity } from '../../src/oppor
 import { safeHost } from '../../src/links';
 import { ScamNotice, VERDICT_TEXT } from '../../src/opportunity-views';
 import { useSession } from '../../src/session';
-import { Body, Button, Card, ErrorNote, Heading, QueryState, Screen, SourceLine, Title } from '../../src/ui';
+import { Body, Button, ErrorNote, Heading, QueryState, Screen, SourceLine } from '../../src/ui';
 
 export default function OpportunityScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
