@@ -1006,3 +1006,9 @@
   field: commerce
   closes_on: 2026-11-13
   source: seta-bankseta
+- id: teta-unemployed-bursary
+  name: TETA unemployed bursary (transport sector; criteria on the page are for 2025-2026)
+  kind: bursary
+  provider: TETA
+  url: https://www.teta.org.za/index.php/newsroom/unemployed-bursaries
+  source: seta-teta

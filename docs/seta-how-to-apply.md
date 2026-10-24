@@ -52,3 +52,12 @@ Requirements differ by SETA and programme. None of the pages above listed a full
 ## Pattern
 
 Most SETA money goes through employers and training providers, not learners. The app should tell learners to ask their employer or a training provider to apply for them, and should not present SETA pages as individual application forms.
+
+## Second pass, 2026-10-24
+
+- **TETA, unemployed bursary (learners apply):** the page lists these criteria: South African citizen; aged 18 to 35; unemployed; enrolled at a public university, university of technology, TVET college or accredited flying school; aiming at NQF level 6 or above; at least 50% average in the previous year; household income under R350 000 a year. Documents: one application per qualification; certified ID (stamp under 3 months old); proof of registration or acceptance letter; latest academic record with institution stamp; certified matric results for first-years; parent or guardian ID and proof of income. The page's guidelines are for 2025-2026. The 2026/27 advert is aimed at institutions (published 11 October 2026). Confirm the current rules before giving them to learners. Loaded as `teta-unemployed-bursary`, with no closing date.
+- **Services SETA, 2026/27 discretionary grants:** for employers, sectoral associations, professional bodies, trade unions and accredited providers, not individual learners. Closing 6 November 2026. Questions to dgwindow2627@serviceseta.org.za. Not loaded as learner opportunities.
+- **HWSETA:** expression of interest for small and micro enterprises (10 September 2026). Not for learners.
+- **LGSETA:** the learner page gives no criteria. Its homepage has unrelated gambling-site text, so do not link anything from it except the official pages.
+- **CHIETA, discretionary grants:** page reached, but no dates or criteria were read.
+- **Not yet read in this pass:** W&RSETA (no text found), MQA, INSETA (its careers link goes to an outside job site, not allowlisted), EWSETA's grant PDFs.
