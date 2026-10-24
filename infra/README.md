@@ -49,4 +49,4 @@ Run once as the database owner, after the database exists:
 psql -h <db-host> -U edulift -d edulift -v app_password="<new password>" -f infra/db/app_role.sql
 ```
 
-Store the role's username and password in Secrets Manager, and point the API task at them instead of the owner secret. Migrations keep running as the owner.
+The stack creates the secret `AppDbSecret` (username `edulift_app`, generated password). Read its password from Secrets Manager and pass it as `app_password` to the script above. The API task then connects as `edulift_app`. Migrations run at start-up as the owner, through `MIGRATION_DB_USER` and `MIGRATION_DB_PASSWORD`.

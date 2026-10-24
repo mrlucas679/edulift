@@ -72,3 +72,23 @@ def test_demo_needs_a_sender_and_https_link() -> None:
             origin_secret="s" * 40,
             _env_file=None,
         )
+
+
+def test_migrations_use_their_own_credentials() -> None:
+    s = Settings(
+        database_url="", db_host="db", db_name="edulift", db_user="edulift_app", db_password="app-pw",
+        migration_db_user="edulift", migration_db_password="owner-pw",
+    )  # fmt: skip
+    assert "edulift_app" in s.sqlalchemy_url
+    assert "edulift:owner-pw" in s.migration_sqlalchemy_url
+
+
+def test_migrations_fall_back_to_the_app_user_without_their_own() -> None:
+    s = Settings(
+        database_url="",
+        db_host="db",
+        db_name="edulift",
+        db_user="edulift_app",
+        db_password="app-pw",
+    )
+    assert s.migration_sqlalchemy_url == s.sqlalchemy_url

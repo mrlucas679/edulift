@@ -14,7 +14,7 @@ MIGRATION_LOCK = 724_001
 
 
 def _url() -> str:
-    return str(config.attributes.get("database_url") or Settings().sqlalchemy_url)
+    return str(config.attributes.get("database_url") or Settings().migration_sqlalchemy_url)
 
 
 def run_migrations_offline() -> None:

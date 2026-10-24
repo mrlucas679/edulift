@@ -106,6 +106,17 @@ export class EduLiftStack extends Stack {
       ],
     });
     dbSecret.grantRead(executionRole);
+    // The API connects as edulift_app. Its password is set once, by infra/db/app_role.sql.
+    const appDbSecret = new secrets.Secret(this, 'AppDbSecret', {
+      description: 'Restricted database role used by the API (edulift_app)',
+      generateSecretString: {
+        secretStringTemplate: JSON.stringify({ username: 'edulift_app' }),
+        generateStringKey: 'password',
+        excludePunctuation: true,
+        passwordLength: 48,
+      },
+    });
+    appDbSecret.grantRead(executionRole);
     originSecret.grantRead(executionRole);
     image.repository.grantPull(executionRole);
 
@@ -174,8 +185,11 @@ export class EduLiftStack extends Stack {
           { name: 'APP_URL', value: props.appUrl ?? '' },
         ],
         secrets: [
-          fromSecret('DB_USER', dbSecret, 'username'),
-          fromSecret('DB_PASSWORD', dbSecret, 'password'),
+          fromSecret('DB_USER', appDbSecret, 'username'),
+          fromSecret('DB_PASSWORD', appDbSecret, 'password'),
+          // Used only by `alembic upgrade head` at start-up.
+          fromSecret('MIGRATION_DB_USER', dbSecret, 'username'),
+          fromSecret('MIGRATION_DB_PASSWORD', dbSecret, 'password'),
           fromSecret('ORIGIN_SECRET', originSecret),
         ],
       },
