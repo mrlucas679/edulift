@@ -239,15 +239,25 @@ function Consents({ me }: { me: MeDetail }) {
               {purpose === 'account' && <Body muted>Needed to save</Body>}
               <Body muted>{text}</Body>
             </View>
-            <Switch
-              accessibilityLabel={PURPOSE_TITLES[purpose] ?? purpose}
-              value={me.consents.includes(purpose)}
-              disabled={pending !== null}
-              onValueChange={(on) => toggle(purpose, on)}
-            />
+            {purpose !== 'account' && (
+              <Switch
+                accessibilityLabel={PURPOSE_TITLES[purpose] ?? purpose}
+                value={me.consents.includes(purpose)}
+                disabled={pending !== null}
+                onValueChange={(on) => toggle(purpose, on)}
+              />
+            )}
           </View>
         </Card>
       ))}
+      {!me.consents.includes('account') && (
+        <Button
+          label="Agree and continue"
+          busy={pending === 'account'}
+          disabled={pending !== null}
+          onPress={() => toggle('account', true)}
+        />
+      )}
       <Pressable accessibilityRole="link" onPress={() => router.push('/privacy')} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>Read the full privacy notice</Text>
       </Pressable>
