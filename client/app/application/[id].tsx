@@ -99,7 +99,7 @@ export default function ApplicationScreen() {
               onPress={() => update.mutate({ notes: notes ?? '' })}
             />
             {application.data.deadline_soon && <Body>Offer deadline within a week.</Body>}
-            <Button label="Documents I need to apply" onPress={() => router.push(`/documents/${String(numericId)}`)} />
+            <Button label="Documents I need to apply" onPress={() => router.push({ pathname: "/documents/[id]", params: { id: String(numericId) } })} />
 
             {(() => {
               const domain = safeHost(application.data.apply_url);
