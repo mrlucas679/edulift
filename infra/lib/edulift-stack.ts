@@ -17,7 +17,12 @@ import * as secrets from 'aws-cdk-lib/aws-secretsmanager';
 import type { Construct } from 'constructs';
 
 // appUrl is the CloudFront URL, known after the first deploy.
-type Props = StackProps & { senderEmail: string; githubRepo: string; appUrl?: string; webAclArn: string };
+type Props = StackProps & {
+  senderEmail: string;
+  githubSubject: string;
+  appUrl?: string;
+  webAclArn: string;
+};
 
 const API_PORT = 8000;
 // Claude 5 models aren't enabled on this AWS account yet; Haiku 4.5 is the closest match.
@@ -309,7 +314,7 @@ export class EduLiftStack extends Stack {
       assumedBy: new iam.WebIdentityPrincipal(github.oidcProviderArn, {
         StringEquals: {
           'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-          'token.actions.githubusercontent.com:sub': `repo:${props.githubRepo}:environment:production`,
+          'token.actions.githubusercontent.com:sub': props.githubSubject,
         },
       }),
       maxSessionDuration: Duration.hours(1),
