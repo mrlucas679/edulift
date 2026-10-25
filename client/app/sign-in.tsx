@@ -18,7 +18,8 @@ export default function SignIn() {
     setDemoError(null);
     try {
       await tryDemo();
-      router.replace('/');
+      // A demo learner starts at onboarding, like any new account.
+      router.replace('/onboarding');
     } catch (e) {
       setDemoError(e);
     } finally {
