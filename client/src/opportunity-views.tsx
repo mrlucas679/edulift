@@ -10,6 +10,7 @@ import { Body, Card, Title } from './ui';
 export const VERDICT_TEXT = {
   qualifies: 'Meets the criteria we could check',
   may_qualify: 'You may qualify. Confirm with the provider.',
+  not_checked: 'Finish setting up your account to see if you may qualify.',
 } as const;
 
 export function KindChips({
