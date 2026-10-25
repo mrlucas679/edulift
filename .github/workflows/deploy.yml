@@ -31,12 +31,16 @@ jobs:
 
       - name: Deploy the stacks
         working-directory: infra
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          BUDGET_EMAIL: ${{ secrets.BUDGET_EMAIL }}
+          APP_URL: ${{ vars.APP_URL }}
         run: |
           npm ci --ignore-scripts
           npx cdk deploy --all --require-approval never \
-            -c senderEmail=${{ vars.SENDER_EMAIL }} \
-            -c budgetEmail=${{ vars.BUDGET_EMAIL }} \
-            -c appUrl=${{ vars.APP_URL }}
+            -c "senderEmail=${SENDER_EMAIL}" \
+            -c "budgetEmail=${BUDGET_EMAIL}" \
+            -c "appUrl=${APP_URL}"
 
       - name: Read the site outputs
         id: out
