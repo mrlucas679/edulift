@@ -10,6 +10,7 @@ from app.assist import AskProvider, DraftProvider
 from app.auth import Auth, Identity
 from app.config import Settings
 from app.db import transaction
+from app.demo import demo_identity
 from app.errors import UnauthenticatedError
 from app.explain import ExplanationProvider
 from app.mail import Mailer
@@ -44,10 +45,15 @@ def _db(request: Request) -> Iterator[Session]:
 def _signed_in(
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)],
     provider: Annotated[Auth, Depends(_auth)],
+    settings: Annotated[Settings, Depends(_settings)],
 ) -> Identity:
     # Identity comes from the token only.
     if credentials is None:
         raise UnauthenticatedError
+    if settings.demo_secret:
+        demo = demo_identity(credentials.credentials, settings.demo_secret)
+        if demo is not None:
+            return demo
     return provider.check_token(credentials.credentials)
 
 
