@@ -300,7 +300,7 @@ export class EduLiftStack extends Stack {
       },
     });
 
-    // GitHub Actions, main branch only.
+    // GitHub Actions can assume this role only through the production environment.
     const github = new iam.OidcProviderNative(this, 'GitHub', {
       url: 'https://token.actions.githubusercontent.com',
       clientIds: ['sts.amazonaws.com'],
@@ -309,7 +309,7 @@ export class EduLiftStack extends Stack {
       assumedBy: new iam.WebIdentityPrincipal(github.oidcProviderArn, {
         StringEquals: {
           'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-          'token.actions.githubusercontent.com:sub': `repo:${props.githubRepo}:ref:refs/heads/main`,
+          'token.actions.githubusercontent.com:sub': `repo:${props.githubRepo}:environment:production`,
         },
       }),
       maxSessionDuration: Duration.hours(1),
