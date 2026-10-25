@@ -1,805 +1,805 @@
 # Funding and work. Add an entry only after its page has been checked and
 # its source recorded in sources.yaml.
 - id: zab-alfred-nzo-district-municipality-bursary
-  name: Alfred Nzo District Municipality Bursary
+  name: "Alfred Nzo District Municipality Bursary"
   kind: bursary
   provider: Alfred Nzo District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/alfred-nzo-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-buffalo-city-metropolitan-municipality-bursary
-  name: Buffalo City Metropolitan Municipality Bursary
+  name: "Buffalo City Metropolitan Municipality Bursary"
   kind: bursary
   provider: Buffalo City Metropolitan Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/buffalo-city-metropolitan-municipality-bursary/
   source: zabursaries-listings
 - id: zab-chris-hani-district-municipality-bursary
-  name: Chris Hani District Municipality Bursary
+  name: "Chris Hani District Municipality Bursary"
   kind: bursary
   provider: Chris Hani District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/chris-hani-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-dedea-bursary
-  name: DEDEAT Bursary
+  name: "DEDEAT Bursary"
   kind: bursary
   provider: DEDEAT
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/dedea-bursary/
   source: zabursaries-listings
 - id: zab-department-of-environment-forestry-and-fisheries-bursary
-  name: Department of Forestry, Fisheries and the Environment (DFFE) Bursary
+  name: "Department of Forestry, Fisheries and the Environment (DFFE) Bursary"
   kind: bursary
   provider: Department of Forestry, Fisheries and the Environment (DFFE)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/department-of-environment-forestry-and-fisheries-bursary/
   source: zabursaries-listings
 - id: zab-eastern-cape-dept-of-economic-development-environmental-affa
-  name: Dept of Economic Development, Environmental Affairs and Tourism (EC) Bursary
+  name: "Dept of Economic Development, Environmental Affairs and Tourism (EC) Bursary"
   kind: bursary
   provider: Dept of Economic Development, Environmental Affairs and Tourism (EC)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-dept-of-economic-development-environmental-affairs-and-tourism-bursary/
   source: zabursaries-listings
 - id: zab-department-of-rural-development-and-agrarian-reform-drdar-bu
-  name: Department of Rural Development and Agrarian Reform (DRDAR) Bursary
+  name: "Department of Rural Development and Agrarian Reform (DRDAR) Bursary"
   kind: bursary
   provider: Department of Rural Development and Agrarian Reform (DRDAR)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/department-of-rural-development-and-agrarian-reform-drdar-bursary/
   source: zabursaries-listings
 - id: zab-east-london-idz-bursary
-  name: East London Industrial Development Zone (ELIDZ) Bursary
+  name: "East London Industrial Development Zone (ELIDZ) Bursary"
   kind: bursary
   provider: East London Industrial Development Zone (ELIDZ)
   url: https://www.zabursaries.co.za/science-bursaries-south-africa/east-london-idz-bursary/
   source: zabursaries-listings
 - id: zab-eastern-cape-department-of-agriculture-bursary
-  name: Eastern Cape Department of Agriculture Bursary
+  name: "Eastern Cape Department of Agriculture Bursary"
   kind: bursary
   provider: Eastern Cape Department of Agriculture
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-department-of-agriculture-bursary/
   source: zabursaries-listings
 - id: zab-eastern-cape-department-of-education-ecdoe
-  name: Eastern Cape Department of Education (ECDOE) Bursary
+  name: "Eastern Cape Department of Education (ECDOE) Bursary"
   kind: bursary
   provider: Eastern Cape Department of Education (ECDOE)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-department-of-education-ecdoe/
   source: zabursaries-listings
 - id: zab-eastern-cape-department-of-health-bursary
-  name: Eastern Cape Department of Health Bursary
+  name: "Eastern Cape Department of Health Bursary"
   kind: bursary
   provider: Eastern Cape Department of Health
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-department-of-health-bursary/
   source: zabursaries-listings
 - id: zab-eastern-cape-dept-of-roads-and-public-works-bursary
-  name: Eastern Cape Department of Public Works and Infrastructure Bursary
+  name: "Eastern Cape Department of Public Works and Infrastructure Bursary"
   kind: bursary
   provider: Eastern Cape Department of Public Works and Infrastructure
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-dept-of-roads-and-public-works-bursary/
   source: zabursaries-listings
 - id: zab-eastern-cape-department-of-transport-bursary
-  name: Eastern Cape Department of Transport Bursary
+  name: "Eastern Cape Department of Transport Bursary"
   kind: bursary
   provider: Eastern Cape Department of Transport
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-department-of-transport-bursary/
   source: zabursaries-listings
 - id: zab-eastern-cape-department-of-transport-traffic-bursary
-  name: Eastern Cape Department of Transport Traffic Bursary
+  name: "Eastern Cape Department of Transport Traffic Bursary"
   kind: bursary
   provider: Eastern Cape Department of Transport Traffic
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-department-of-transport-traffic-bursary/
   source: zabursaries-listings
 - id: zab-eastern-cape-office-of-the-premier-ecotp-bursary
-  name: Eastern Cape Office of the Premier Bursary
+  name: "Eastern Cape Office of the Premier Bursary"
   kind: bursary
   provider: Eastern Cape Office of the Premier
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-office-of-the-premier-ecotp-bursary/
   source: zabursaries-listings
 - id: zab-eastern-cape-provincial-treasury-bursary
-  name: Eastern Cape Provincial Treasury Bursary
+  name: "Eastern Cape Provincial Treasury Bursary"
   kind: bursary
   provider: Eastern Cape Provincial Treasury
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/eastern-cape-provincial-treasury-bursary/
   source: zabursaries-listings
 - id: zab-dr-ab-xuma-local-municipality-bursary
-  name: Dr AB Xuma Local Municipality Bursary
+  name: "Dr AB Xuma Local Municipality Bursary"
   kind: bursary
   provider: Dr AB Xuma Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/dr-ab-xuma-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-fasset-bursary
-  name: FASSET Bursary
+  name: "FASSET Bursary"
   kind: bursary
   provider: FASSET
   url: https://www.zabursaries.co.za/accounting-bursaries-south-africa/fasset-bursary/
   source: zabursaries-listings
 - id: zab-ingquza-hill-local-municipality-bursary
-  name: Ingquza Hill Local Municipality Bursary
+  name: "Ingquza Hill Local Municipality Bursary"
   kind: bursary
   provider: Ingquza Hill Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/ingquza-hill-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-nelson-mandela-bay-municipality-bursary
-  name: Nelson Mandela Bay Municipality Bursary
+  name: "Nelson Mandela Bay Municipality Bursary"
   kind: bursary
   provider: Nelson Mandela Bay Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/nelson-mandela-bay-municipality-bursary/
   source: zabursaries-listings
 - id: zab-thabo-mofutsanyana-district-municipality-bursary
-  name: Thabo Mofutsanyane District Municipality Bursary
+  name: "Thabo Mofutsanyane District Municipality Bursary"
   kind: bursary
   provider: Thabo Mofutsanyane District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/thabo-mofutsanyana-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-city-of-johannesburg-bursary
-  name: City of Johannesburg Bursary
+  name: "City of Johannesburg Bursary"
   kind: bursary
   provider: City of Johannesburg
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/city-of-johannesburg-bursary/
   source: zabursaries-listings
 - id: zab-city-of-johannesburg-ems-bursary
-  name: City of Johannesburg EMS Bursary
+  name: "City of Johannesburg EMS Bursary"
   kind: bursary
   provider: City of Johannesburg EMS
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/city-of-johannesburg-ems-bursary/
   source: zabursaries-listings
 - id: zab-compensation-fund-bursary
-  name: Compensation Fund Bursary
+  name: "Compensation Fund Bursary"
   kind: bursary
   provider: Compensation Fund
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/compensation-fund-bursary/
   source: zabursaries-listings
 - id: zab-ekurhuleni-metropolitan-municipality-bursaries
-  name: Ekurhuleni Metropolitan Municipality Bursary
+  name: "Ekurhuleni Metropolitan Municipality Bursary"
   kind: bursary
   provider: Ekurhuleni Metropolitan Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/ekurhuleni-metropolitan-municipality-bursaries/
   source: zabursaries-listings
 - id: zab-emfuleni-local-municipality-bursary
-  name: Emfuleni Local Municipality Bursary
+  name: "Emfuleni Local Municipality Bursary"
   kind: bursary
   provider: Emfuleni Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/emfuleni-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-city-region-academy-bursary
-  name: Gauteng City Region Academy (GCRA) Bursary
+  name: "Gauteng City Region Academy (GCRA) Bursary"
   kind: bursary
   provider: Gauteng City Region Academy (GCRA)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-city-region-academy-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-cogta-bursary
-  name: Gauteng COGTA Bursary
+  name: "Gauteng COGTA Bursary"
   kind: bursary
   provider: Gauteng COGTA
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-cogta-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-department-of-agriculture-and-rural-development-burs
-  name: Gauteng Department of Agriculture and Rural Development Bursary
+  name: "Gauteng Department of Agriculture and Rural Development Bursary"
   kind: bursary
   provider: Gauteng Department of Agriculture and Rural Development
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-department-of-agriculture-and-rural-development-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-department-of-e-government-bursary
-  name: Gauteng Department of e-Government Bursary
+  name: "Gauteng Department of e-Government Bursary"
   kind: bursary
   provider: Gauteng Department of e-Government
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-department-of-e-government-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-department-of-health-bursary-to-study-medicine-in-cu
-  name: Gauteng Department of Health Bursary to Study Medicine in Cuba
+  name: "Gauteng Department of Health Bursary to Study Medicine in Cuba"
   kind: bursary
   provider: Gauteng Department of Health Bursary to Study Medicine in Cuba
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-department-of-health-bursary-to-study-medicine-in-cuba/
   source: zabursaries-listings
 - id: zab-gauteng-dept-of-infrastructure-development-bursary
-  name: Gauteng Dept of Infrastructure Development Bursary
+  name: "Gauteng Dept of Infrastructure Development Bursary"
   kind: bursary
   provider: Gauteng Dept of Infrastructure Development
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-dept-of-infrastructure-development-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-department-of-roads-and-transport-bursary
-  name: Gauteng Department of Roads and Transport Bursary
+  name: "Gauteng Department of Roads and Transport Bursary"
   kind: bursary
   provider: Gauteng Department of Roads and Transport
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-department-of-roads-and-transport-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-department-of-social-development-bursary
-  name: Gauteng Department of Social Development Bursary
+  name: "Gauteng Department of Social Development Bursary"
   kind: bursary
   provider: Gauteng Department of Social Development
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-department-of-social-development-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-film-commission-gfc-bursary
-  name: Gauteng Film Commission (GFC) Bursary
+  name: "Gauteng Film Commission (GFC) Bursary"
   kind: bursary
   provider: Gauteng Film Commission (GFC)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-film-commission-gfc-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-provincial-department-of-human-settlements-bursary
-  name: Gauteng Provincial Department of Human Settlements Bursary
+  name: "Gauteng Provincial Department of Human Settlements Bursary"
   kind: bursary
   provider: Gauteng Provincial Department of Human Settlements
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-provincial-department-of-human-settlements-bursary/
   source: zabursaries-listings
 - id: zab-gauteng-provincial-treasury-bursary
-  name: Gauteng Provincial Treasury Bursary
+  name: "Gauteng Provincial Treasury Bursary"
   kind: bursary
   provider: Gauteng Provincial Treasury
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-provincial-treasury-bursary/
   source: zabursaries-listings
 - id: zab-johannesburg-water-bursary
-  name: Johannesburg Water Bursary
+  name: "Johannesburg Water Bursary"
   kind: bursary
   provider: Johannesburg Water
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/johannesburg-water-bursary/
   source: zabursaries-listings
 - id: zab-o-r-tambo-district-municipality-bursary
-  name: O.R. Tambo District Municipality Bursary
+  name: "O.R. Tambo District Municipality Bursary"
   kind: bursary
   provider: O.R. Tambo District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/o-r-tambo-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-rand-west-city-local-municipality-bursary
-  name: Rand West City Local Municipality Bursary
+  name: "Rand West City Local Municipality Bursary"
   kind: bursary
   provider: Rand West City Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/rand-west-city-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-dube-tradeport-bursary
-  name: Dube TradePort Bursary
+  name: "Dube TradePort Bursary"
   kind: bursary
   provider: Dube TradePort
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/dube-tradeport-bursary/
   source: zabursaries-listings
 - id: zab-durban-ethekwini-municipality-bursary
-  name: eThekwini Municipality Bursary
+  name: "eThekwini Municipality Bursary"
   kind: bursary
   provider: eThekwini Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/durban-ethekwini-municipality-bursary/
   source: zabursaries-listings
 - id: zab-emadlangeni-municipality-bursary
-  name: Emadlangeni Municipality Bursary
+  name: "Emadlangeni Municipality Bursary"
   kind: bursary
   provider: Emadlangeni Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/emadlangeni-municipality-bursary/
   source: zabursaries-listings
 - id: zab-kwadukuza-municipality-bursary
-  name: KwaDukuza Municipality Bursary
+  name: "KwaDukuza Municipality Bursary"
   kind: bursary
   provider: KwaDukuza Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/kwadukuza-municipality-bursary/
   source: zabursaries-listings
 - id: zab-kwazulu-natal-dept-of-edtea-bursary
-  name: KwaZulu-Natal Department of Economic Development, Tourism and Environmental Affairs (EDTEA) Bursary
+  name: "KwaZulu-Natal Department of Economic Development, Tourism and Environmental Affairs (EDTEA) Bursary"
   kind: bursary
   provider: KwaZulu-Natal Department of Economic Development, Tourism and Environmental Affairs (EDTEA)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/kwazulu-natal-dept-of-edtea-bursary/
   source: zabursaries-listings
 - id: zab-kzn-department-of-health-bursary
-  name: KwaZulu-Natal Department of Health Bursary
+  name: "KwaZulu-Natal Department of Health Bursary"
   kind: bursary
   provider: KwaZulu-Natal Department of Health
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/kzn-department-of-health-bursary/
   source: zabursaries-listings
 - id: zab-kzn-department-of-human-settlements-bursary
-  name: KwaZulu-Natal Department of Human Settlements Bursary
+  name: "KwaZulu-Natal Department of Human Settlements Bursary"
   kind: bursary
   provider: KwaZulu-Natal Department of Human Settlements
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/kzn-department-of-human-settlements-bursary/
   source: zabursaries-listings
 - id: zab-kzn-department-of-sport-arts-and-culture-bursary
-  name: KZN Department of Sport, Arts and Culture Bursary
+  name: "KZN Department of Sport, Arts and Culture Bursary"
   kind: bursary
   provider: KZN Department of Sport, Arts and Culture
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/kzn-department-of-sport-arts-and-culture-bursary/
   source: zabursaries-listings
 - id: zab-kwazulu-natal-department-of-transport-bursary
-  name: KwaZulu-Natal Department of Transport Bursary
+  name: "KwaZulu-Natal Department of Transport Bursary"
   kind: bursary
   provider: KwaZulu-Natal Department of Transport
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/kwazulu-natal-department-of-transport-bursary/
   source: zabursaries-listings
 - id: zab-kzn-provincial-government-bursaries
-  name: KwaZulu-Natal Government Bursaries
+  name: "KwaZulu-Natal Government Bursaries"
   kind: bursary
   provider: KwaZulu-Natal Government
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/kzn-provincial-government-bursaries/
   source: zabursaries-listings
 - id: zab-kzn-provincial-treasury-bursary
-  name: KZN Provincial Treasury Bursary
+  name: "KZN Provincial Treasury Bursary"
   kind: bursary
   provider: KZN Provincial Treasury
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/kzn-provincial-treasury-bursary/
   source: zabursaries-listings
 - id: zab-mhlathuze-water-bursary
-  name: Mhlathuze Water Bursary
+  name: "Mhlathuze Water Bursary"
   kind: bursary
   provider: Mhlathuze Water
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/mhlathuze-water-bursary/
   source: zabursaries-listings
 - id: zab-ndwedwe-local-municipality-bursary
-  name: Ndwedwe Local Municipality Bursary
+  name: "Ndwedwe Local Municipality Bursary"
   kind: bursary
   provider: Ndwedwe Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/ndwedwe-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-newcastle-municipality-bursary
-  name: Newcastle Municipality Bursary
+  name: "Newcastle Municipality Bursary"
   kind: bursary
   provider: Newcastle Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/newcastle-municipality-bursary/
   source: zabursaries-listings
 - id: zab-okhahlamba-local-municipality-bursary
-  name: Okhahlamba Local Municipality Bursary
+  name: "Okhahlamba Local Municipality Bursary"
   kind: bursary
   provider: Okhahlamba Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/okhahlamba-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-ray-nkonyeni-municipality-bursary
-  name: Ray Nkonyeni Municipality Bursary
+  name: "Ray Nkonyeni Municipality Bursary"
   kind: bursary
   provider: Ray Nkonyeni Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/ray-nkonyeni-municipality-bursary/
   source: zabursaries-listings
 - id: zab-the-msunduzi-municipality-bursary
-  name: The Msunduzi Municipality Bursary
+  name: "The Msunduzi Municipality Bursary"
   kind: bursary
   provider: The Msunduzi Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/the-msunduzi-municipality-bursary/
   source: zabursaries-listings
 - id: zab-ubuhlebezwe-municipality-bursary
-  name: Ubuhlebezwe Municipality Bursary
+  name: "Ubuhlebezwe Municipality Bursary"
   kind: bursary
   provider: Ubuhlebezwe Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/ubuhlebezwe-municipality-bursary/
   source: zabursaries-listings
 - id: zab-umlalazi-municipality-bursary
-  name: uMlalazi Municipality Bursary
+  name: "uMlalazi Municipality Bursary"
   kind: bursary
   provider: uMlalazi Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/umlalazi-municipality-bursary/
   source: zabursaries-listings
 - id: zab-ba-phalaborwa-municipality-bursary
-  name: Ba-Phalaborwa Municipality Bursary
+  name: "Ba-Phalaborwa Municipality Bursary"
   kind: bursary
   provider: Ba-Phalaborwa Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/ba-phalaborwa-municipality-bursary/
   source: zabursaries-listings
 - id: zab-blouberg-municipality-bursary
-  name: Blouberg Municipality Bursary
+  name: "Blouberg Municipality Bursary"
   kind: bursary
   provider: Blouberg Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/blouberg-municipality-bursary/
   source: zabursaries-listings
 - id: zab-bushbuckridge-local-municipality-bursary
-  name: Bushbuckridge Local Municipality Bursary
+  name: "Bushbuckridge Local Municipality Bursary"
   kind: bursary
   provider: Bushbuckridge Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/bushbuckridge-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-capricorn-district-municipality-bursary
-  name: Capricorn District Municipality Bursary
+  name: "Capricorn District Municipality Bursary"
   kind: bursary
   provider: Capricorn District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/capricorn-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-city-of-polokwane-bursary
-  name: City of Polokwane Bursary
+  name: "City of Polokwane Bursary"
   kind: bursary
   provider: City of Polokwane
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/city-of-polokwane-bursary/
   source: zabursaries-listings
 - id: zab-elias-motsoaledi-local-municipality-bursary
-  name: Elias Motsoaledi Local Municipality Bursary
+  name: "Elias Motsoaledi Local Municipality Bursary"
   kind: bursary
   provider: Elias Motsoaledi Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/elias-motsoaledi-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-ephraim-mogale-local-municipality-bursary
-  name: Ephraim Mogale Local Municipality Bursary
+  name: "Ephraim Mogale Local Municipality Bursary"
   kind: bursary
   provider: Ephraim Mogale Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/ephraim-mogale-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-greater-letaba-municipality-bursary
-  name: Greater Letaba Municipality Bursary
+  name: "Greater Letaba Municipality Bursary"
   kind: bursary
   provider: Greater Letaba Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/greater-letaba-municipality-bursary/
   source: zabursaries-listings
 - id: zab-limpopo-department-of-agriculture-and-rural-development-ldar
-  name: Limpopo Department of Agriculture and Rural Development (LDARD) Bursary
+  name: "Limpopo Department of Agriculture and Rural Development (LDARD) Bursary"
   kind: bursary
   provider: Limpopo Department of Agriculture and Rural Development (LDARD)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/limpopo-department-of-agriculture-and-rural-development-ldard-bursary/
   source: zabursaries-listings
 - id: zab-limpopo-department-of-transport-and-community-safety-bursary
-  name: Limpopo Department of Transport and Community Safety Bursary
+  name: "Limpopo Department of Transport and Community Safety Bursary"
   kind: bursary
   provider: Limpopo Department of Transport and Community Safety
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/limpopo-department-of-transport-and-community-safety-bursary/
   source: zabursaries-listings
 - id: zab-limpopo-provincial-treasury-bursary
-  name: Limpopo Provincial Treasury Bursary
+  name: "Limpopo Provincial Treasury Bursary"
   kind: bursary
   provider: Limpopo Provincial Treasury
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/limpopo-provincial-treasury-bursary/
   source: zabursaries-listings
 - id: zab-limpopo-provincial-government-bursary
-  name: Limpopo Department of Public Works Bursary
+  name: "Limpopo Department of Public Works Bursary"
   kind: bursary
   provider: Limpopo Department of Public Works
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/limpopo-provincial-government-bursary/
   source: zabursaries-listings
 - id: zab-makhuduthamaga-local-municipality-bursary
-  name: Makhuduthamaga Local Municipality Bursary
+  name: "Makhuduthamaga Local Municipality Bursary"
   kind: bursary
   provider: Makhuduthamaga Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/makhuduthamaga-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-mopani-district-municipality-bursary
-  name: Mopani District Municipality Bursary
+  name: "Mopani District Municipality Bursary"
   kind: bursary
   provider: Mopani District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/mopani-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-musina-local-municipality-bursary
-  name: Musina Local Municipality Bursary
+  name: "Musina Local Municipality Bursary"
   kind: bursary
   provider: Musina Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/musina-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-vhembe-district-municipality-mayoral-bursary
-  name: Vhembe District Municipality Mayoral Bursary
+  name: "Vhembe District Municipality Mayoral Bursary"
   kind: bursary
   provider: Vhembe District Municipality Mayoral
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/vhembe-district-municipality-mayoral-bursary/
   source: zabursaries-listings
 - id: zab-dr-js-moroka-local-municipality-bursary
-  name: Dr JS Moroka Local Municipality Bursary
+  name: "Dr JS Moroka Local Municipality Bursary"
   kind: bursary
   provider: Dr JS Moroka Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/dr-js-moroka-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-emalahleni-local-municipality-bursary
-  name: Emalahleni Local Municipality Bursary
+  name: "Emalahleni Local Municipality Bursary"
   kind: bursary
   provider: Emalahleni Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/emalahleni-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-mpumalanga-dept-of-health-bursary
-  name: Mpumalanga Department of Health Bursary
+  name: "Mpumalanga Department of Health Bursary"
   kind: bursary
   provider: Mpumalanga Department of Health
   url: https://www.zabursaries.co.za/medical-bursaries-south-africa/mpumalanga-dept-of-health-bursary/
   source: zabursaries-listings
 - id: zab-mpumalanga-department-of-health-bursary-to-study-medicine-in
-  name: Mpumalanga Department of Health Bursary to Study Medicine in Cuba
+  name: "Mpumalanga Department of Health Bursary to Study Medicine in Cuba"
   kind: bursary
   provider: Mpumalanga Department of Health Bursary to Study Medicine in Cuba
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/mpumalanga-department-of-health-bursary-to-study-medicine-in-cuba/
   source: zabursaries-listings
 - id: zab-mpumalanga-provincial-government-bursary
-  name: Mpumalanga Provincial Government Bursary
+  name: "Mpumalanga Provincial Government Bursary"
   kind: bursary
   provider: Mpumalanga Provincial Government
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/mpumalanga-provincial-government-bursary/
   source: zabursaries-listings
 - id: zab-nkangala-district-municipality-bursary
-  name: Nkangala District Municipality Bursary
+  name: "Nkangala District Municipality Bursary"
   kind: bursary
   provider: Nkangala District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/nkangala-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-steve-tshwete-local-municipality-bursary
-  name: Steve Tshwete Local Municipality Bursary
+  name: "Steve Tshwete Local Municipality Bursary"
   kind: bursary
   provider: Steve Tshwete Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/steve-tshwete-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-thaba-chweu-local-municipality-bursary
-  name: Thaba Chweu Local Municipality Bursary
+  name: "Thaba Chweu Local Municipality Bursary"
   kind: bursary
   provider: Thaba Chweu Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/thaba-chweu-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-joe-morolong-assmang-bursary
-  name: Joe Morolong Assmang Bursary
+  name: "Joe Morolong Assmang Bursary"
   kind: bursary
   provider: Joe Morolong Assmang
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/joe-morolong-assmang-bursary/
   source: zabursaries-listings
 - id: zab-northern-cape-dept-of-transport-safety-liaison-bursary
-  name: Northern Cape Dept of Transport, Safety & Liaison Bursary
+  name: "Northern Cape Dept of Transport, Safety & Liaison Bursary"
   kind: bursary
   provider: Northern Cape Dept of Transport, Safety & Liaison
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/northern-cape-dept-of-transport-safety-liaison-bursary/
   source: zabursaries-listings
 - id: zab-northern-cape-provincial-government-bursary
-  name: Northern Cape Provincial Government Bursary
+  name: "Northern Cape Provincial Government Bursary"
   kind: bursary
   provider: Northern Cape Provincial Government
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/northern-cape-provincial-government-bursary/
   source: zabursaries-listings
 - id: zab-city-of-matlosana-bursary
-  name: City of Matlosana Bursary
+  name: "City of Matlosana Bursary"
   kind: bursary
   provider: City of Matlosana
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/city-of-matlosana-bursary/
   source: zabursaries-listings
 - id: zab-dr-ruth-s-mompati-district-municipality-bursary
-  name: Dr Ruth S Mompati District Municipality Bursary
+  name: "Dr Ruth S Mompati District Municipality Bursary"
   kind: bursary
   provider: Dr Ruth S Mompati District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/dr-ruth-s-mompati-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-north-west-department-of-health-bursary
-  name: North West Department of Health Bursary
+  name: "North West Department of Health Bursary"
   kind: bursary
   provider: North West Department of Health
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/north-west-department-of-health-bursary/
   source: zabursaries-listings
 - id: zab-north-west-provincial-government-office-of-the-premier-bursa
-  name: North West Provincial Government (NWPG) Bursary
+  name: "North West Provincial Government (NWPG) Bursary"
   kind: bursary
   provider: North West Provincial Government (NWPG)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/north-west-provincial-government-office-of-the-premier-bursary/
   source: zabursaries-listings
 - id: zab-ratlou-local-municipality-bursary
-  name: Ratlou Local Municipality Bursary
+  name: "Ratlou Local Municipality Bursary"
   kind: bursary
   provider: Ratlou Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/ratlou-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-bergrivier-municipality-bursary
-  name: Bergrivier Municipality Bursary
+  name: "Bergrivier Municipality Bursary"
   kind: bursary
   provider: Bergrivier Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/bergrivier-municipality-bursary/
   source: zabursaries-listings
 - id: zab-bitou-municipality-mayoral-bursary
-  name: Bitou Municipality Bursary
+  name: "Bitou Municipality Bursary"
   kind: bursary
   provider: Bitou Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/bitou-municipality-mayoral-bursary/
   source: zabursaries-listings
 - id: zab-breede-valley-municipality-bursary
-  name: Breede Valley Municipality Bursary
+  name: "Breede Valley Municipality Bursary"
   kind: bursary
   provider: Breede Valley Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/breede-valley-municipality-bursary/
   source: zabursaries-listings
 - id: zab-cape-agulhas-municipality-bursary
-  name: Cape Agulhas Municipality Bursary
+  name: "Cape Agulhas Municipality Bursary"
   kind: bursary
   provider: Cape Agulhas Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/cape-agulhas-municipality-bursary/
   source: zabursaries-listings
 - id: zab-cape-winelands-district-municipality-bursary
-  name: Cape Winelands District Municipality Bursary
+  name: "Cape Winelands District Municipality Bursary"
   kind: bursary
   provider: Cape Winelands District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/cape-winelands-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-cederberg-municipality-bursary
-  name: Cederberg Municipality Bursary
+  name: "Cederberg Municipality Bursary"
   kind: bursary
   provider: Cederberg Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/cederberg-municipality-bursary/
   source: zabursaries-listings
 - id: zab-city-of-cape-town-bursary
-  name: City of Cape Town Bursary
+  name: "City of Cape Town Bursary"
   kind: bursary
   provider: City of Cape Town
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/city-of-cape-town-bursary/
   source: zabursaries-listings
 - id: zab-drakenstein-municipality-bursary
-  name: Drakenstein Municipality Bursary
+  name: "Drakenstein Municipality Bursary"
   kind: bursary
   provider: Drakenstein Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/drakenstein-municipality-bursary/
   source: zabursaries-listings
 - id: zab-garden-route-district-municipality-bursary
-  name: Garden Route District Municipality Bursary
+  name: "Garden Route District Municipality Bursary"
   kind: bursary
   provider: Garden Route District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/garden-route-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-george-municipality-bursary
-  name: George Municipality Bursary
+  name: "George Municipality Bursary"
   kind: bursary
   provider: George Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/george-municipality-bursary/
   source: zabursaries-listings
 - id: zab-hessequa-local-municipality-bursary
-  name: Hessequa Local Municipality Bursary
+  name: "Hessequa Local Municipality Bursary"
   kind: bursary
   provider: Hessequa Local Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/hessequa-local-municipality-bursary/
   source: zabursaries-listings
 - id: zab-knysna-municipality-mayoral-bursary
-  name: Knysna Municipality Bursary
+  name: "Knysna Municipality Bursary"
   kind: bursary
   provider: Knysna Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/knysna-municipality-mayoral-bursary/
   source: zabursaries-listings
 - id: zab-langeberg-municipality-bursary
-  name: Langeberg Municipality Bursary
+  name: "Langeberg Municipality Bursary"
   kind: bursary
   provider: Langeberg Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/langeberg-municipality-bursary/
   source: zabursaries-listings
 - id: zab-masakhisizwe-bursary
-  name: Masakh'iSizwe (WC Dept of Transport and Public Works) Bursary
+  name: "Masakh'iSizwe (WC Dept of Transport and Public Works) Bursary"
   kind: bursary
   provider: Masakh'iSizwe (WC Dept of Transport and Public Works)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/masakhisizwe-bursary/
   source: zabursaries-listings
 - id: zab-mossel-bay-municipality-bursary
-  name: Mossel Bay Municipality Bursary
+  name: "Mossel Bay Municipality Bursary"
   kind: bursary
   provider: Mossel Bay Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/mossel-bay-municipality-bursary/
   source: zabursaries-listings
 - id: zab-oudtshoorn-municipality-bursary
-  name: Oudtshoorn Municipality Bursary
+  name: "Oudtshoorn Municipality Bursary"
   kind: bursary
   provider: Oudtshoorn Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/oudtshoorn-municipality-bursary/
   source: zabursaries-listings
 - id: zab-overberg-district-municipality-bursary
-  name: Overberg District Municipality Bursary
+  name: "Overberg District Municipality Bursary"
   kind: bursary
   provider: Overberg District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/overberg-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-overstrand-municipality-bursary
-  name: Overstrand Municipality Bursary
+  name: "Overstrand Municipality Bursary"
   kind: bursary
   provider: Overstrand Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/overstrand-municipality-bursary/
   source: zabursaries-listings
 - id: zab-prince-albert-municipality-bursary
-  name: Prince Albert Municipality Bursary
+  name: "Prince Albert Municipality Bursary"
   kind: bursary
   provider: Prince Albert Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/prince-albert-municipality-bursary/
   source: zabursaries-listings
 - id: zab-saldanha-bay-municipality-bursary
-  name: Saldanha Bay Municipality Bursary
+  name: "Saldanha Bay Municipality Bursary"
   kind: bursary
   provider: Saldanha Bay Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/saldanha-bay-municipality-bursary/
   source: zabursaries-listings
 - id: zab-stellenbosch-municipality-bursary
-  name: Stellenbosch Municipality Bursary
+  name: "Stellenbosch Municipality Bursary"
   kind: bursary
   provider: Stellenbosch Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/stellenbosch-municipality-bursary/
   source: zabursaries-listings
 - id: zab-swartland-municipality-bursary
-  name: Swartland Municipality Bursary
+  name: "Swartland Municipality Bursary"
   kind: bursary
   provider: Swartland Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/swartland-municipality-bursary/
   source: zabursaries-listings
 - id: zab-theewaterskloof-municipality-bursary
-  name: Theewaterskloof Municipality Bursary
+  name: "Theewaterskloof Municipality Bursary"
   kind: bursary
   provider: Theewaterskloof Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/theewaterskloof-municipality-bursary/
   source: zabursaries-listings
 - id: zab-western-cape-department-of-health
-  name: Western Cape Department of Health and Wellness Bursary
+  name: "Western Cape Department of Health and Wellness Bursary"
   kind: bursary
   provider: Western Cape Department of Health and Wellness
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/western-cape-department-of-health/
   source: zabursaries-listings
 - id: zab-western-cape-dept-of-agriculture-elsenburg-agricultural-trai
-  name: Western Cape Dept of Agriculture - Elsenburg Agricultural Training Institute Bursary
+  name: "Western Cape Dept of Agriculture - Elsenburg Agricultural Training Institute Bursary"
   kind: bursary
   provider: Western Cape Dept of Agriculture - Elsenburg Agricultural Training Institute
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/western-cape-dept-of-agriculture-elsenburg-agricultural-training-institute-bursary/
   source: zabursaries-listings
 - id: zab-west-coast-district-municipality-bursary
-  name: West Coast District Municipality Bursary
+  name: "West Coast District Municipality Bursary"
   kind: bursary
   provider: West Coast District Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/west-coast-district-municipality-bursary/
   source: zabursaries-listings
 - id: zab-western-cape-provincial-treasury-bursary
-  name: Western Cape Provincial Treasury Bursary
+  name: "Western Cape Provincial Treasury Bursary"
   kind: bursary
   provider: Western Cape Provincial Treasury
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/western-cape-provincial-treasury-bursary/
   source: zabursaries-listings
 - id: zab-witzenberg-municipality-bursary
-  name: Witzenberg Municipality Bursary
+  name: "Witzenberg Municipality Bursary"
   kind: bursary
   provider: Witzenberg Municipality
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/witzenberg-municipality-bursary/
   source: zabursaries-listings
 - id: zab-dalrrd-bursary
-  name: Department of Agriculture, Land Reform and Rural Development (DALRRD) Bursary
+  name: "Department of Agriculture, Land Reform and Rural Development (DALRRD) Bursary"
   kind: bursary
   provider: Department of Agriculture, Land Reform and Rural Development (DALRRD)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/dalrrd-bursary/
   source: zabursaries-listings
 - id: zab-department-of-correctional-services-bursary
-  name: Department of Correctional Services Bursary
+  name: "Department of Correctional Services Bursary"
   kind: bursary
   provider: Department of Correctional Services
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/department-of-correctional-services-bursary/
   source: zabursaries-listings
 - id: zab-department-of-military-veterans-bursary
-  name: Department of Military Veterans Bursary
+  name: "Department of Military Veterans Bursary"
   kind: bursary
   provider: Department of Military Veterans
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/department-of-military-veterans-bursary/
   source: zabursaries-listings
 - id: zab-department-of-mineral-resources-bursary
-  name: Department of Mineral Resources Bursary
+  name: "Department of Mineral Resources Bursary"
   kind: bursary
   provider: Department of Mineral Resources
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/department-of-mineral-resources-bursary/
   source: zabursaries-listings
 - id: zab-department-of-public-works-bursary
-  name: Department of Public Works Bursary
+  name: "Department of Public Works Bursary"
   kind: bursary
   provider: Department of Public Works
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/department-of-public-works-bursary/
   source: zabursaries-listings
 - id: zab-department-of-sport-arts-and-culture-bursary-dsac
-  name: Department of Sport, Arts and Culture (DSAC) Bursary
+  name: "Department of Sport, Arts and Culture (DSAC) Bursary"
   kind: bursary
   provider: Department of Sport, Arts and Culture (DSAC)
   url: https://www.zabursaries.co.za/universities/department-of-sport-arts-and-culture-bursary-dsac/
   source: zabursaries-listings
 - id: zab-department-of-tourism-bursary
-  name: Department of Tourism Bursary
+  name: "Department of Tourism Bursary"
   kind: bursary
   provider: Department of Tourism
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/department-of-tourism-bursary/
   source: zabursaries-listings
 - id: zab-department-of-water-sanitation-bursary
-  name: Department of Water & Sanitation Bursary
+  name: "Department of Water & Sanitation Bursary"
   kind: bursary
   provider: Department of Water & Sanitation
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/department-of-water-sanitation-bursary/
   source: zabursaries-listings
 - id: zab-national-agricultural-marketing-council-namc-bursary
-  name: National Agricultural Marketing Council (NAMC) Bursary
+  name: "National Agricultural Marketing Council (NAMC) Bursary"
   kind: bursary
   provider: National Agricultural Marketing Council (NAMC)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/national-agricultural-marketing-council-namc-bursary/
   source: zabursaries-listings
 - id: zab-national-department-of-social-development-bursary
-  name: National Department of Social Development Bursary
+  name: "National Department of Social Development Bursary"
   kind: bursary
   provider: National Department of Social Development
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/national-department-of-social-development-bursary/
   source: zabursaries-listings
 - id: zab-national-disaster-management-centre-ndmc-bursary
-  name: National Disaster Management Centre (NDMC) Bursary
+  name: "National Disaster Management Centre (NDMC) Bursary"
   kind: bursary
   provider: National Disaster Management Centre (NDMC)
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/national-disaster-management-centre-ndmc-bursary/
   source: zabursaries-listings
 - id: zab-national-treasury-bursary
-  name: National Treasury Bursary
+  name: "National Treasury Bursary"
   kind: bursary
   provider: National Treasury
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/national-treasury-bursary/
   source: zabursaries-listings
 - id: zab-nfvf-bursary
-  name: NFVF Bursary
+  name: "NFVF Bursary"
   kind: bursary
   provider: NFVF
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/nfvf-bursary/
   source: zabursaries-listings
 - id: zab-nfvf-international-bursary
-  name: NFVF International Bursary
+  name: "NFVF International Bursary"
   kind: bursary
   provider: NFVF International
   url: https://www.zabursaries.co.za/international-scholarships-bursaries-south-africa/nfvf-international-bursary/
   source: zabursaries-listings
 - id: funza-lushaka-bursary
-  name: Funza Lushaka bursary (teaching)
+  name: "Funza Lushaka bursary (teaching)"
   kind: bursary
   provider: Department of Basic Education
   url: https://www.education.gov.za/Programmes/FunzaLushaka.aspx
@@ -807,199 +807,199 @@
   closes_on: 2027-01-31
   source: dbe-funza-lushaka
 - id: merseta-learnership-01
-  name: First Line Production Supervisor (NQF 4, 86 credits, SAQA 115722)
+  name: "First Line Production Supervisor (NQF 4, 86 credits, SAQA 115722)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-02
-  name: Production Process Machine Operator and Assembler (NQF 3, 103 credits, SAQA 102580)
+  name: "Production Process Machine Operator and Assembler (NQF 3, 103 credits, SAQA 102580)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-03
-  name: Automotive Motor Mechanic (NQF 4, 540 credits, SAQA 97990)
+  name: "Automotive Motor Mechanic (NQF 4, 540 credits, SAQA 97990)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-04
-  name: Unitary Air Conditioning Installer (NQF 2, 190 credits, SAQA 103269)
+  name: "Unitary Air Conditioning Installer (NQF 2, 190 credits, SAQA 103269)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-05
-  name: Automotive Drive Train Repairer (NQF 2, 142 credits, SAQA 118727)
+  name: "Automotive Drive Train Repairer (NQF 2, 142 credits, SAQA 118727)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-06
-  name: Metal Manufacturing, Melting and Refining Process Controller (NQF 4, 241 credits, SAQA 102159)
+  name: "Metal Manufacturing, Melting and Refining Process Controller (NQF 4, 241 credits, SAQA 102159)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-07
-  name: Metal Manufacturing, Electrolysis Process Controller (NQF 4, 201 credits, SAQA 102154)
+  name: "Metal Manufacturing, Electrolysis Process Controller (NQF 4, 201 credits, SAQA 102154)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-08
-  name: Metal Manufacturing, Casting Process Controller (NQF 4, 205 credits, SAQA 102160)
+  name: "Metal Manufacturing, Casting Process Controller (NQF 4, 205 credits, SAQA 102160)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-09
-  name: Metal Manufacturing, Rolling Process Controller (NQF 4, 205 credits, SAQA 102155)
+  name: "Metal Manufacturing, Rolling Process Controller (NQF 4, 205 credits, SAQA 102155)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-10
-  name: Metal Manufacturing, Finishing Process Controller (NQF 4, 201 credits, SAQA 102153)
+  name: "Metal Manufacturing, Finishing Process Controller (NQF 4, 201 credits, SAQA 102153)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-11
-  name: Metal Manufacturing, Material Preparation Process Controller (NQF 4, 201 credits, SAQA 102157)
+  name: "Metal Manufacturing, Material Preparation Process Controller (NQF 4, 201 credits, SAQA 102157)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-12
-  name: Automotive Engine Fitter (NQF 4, 540 credits, SAQA 119423)
+  name: "Automotive Engine Fitter (NQF 4, 540 credits, SAQA 119423)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-13
-  name: Solar Photovoltaic Standalone Service Technician (Higher Occupational Certificate) (NQF 3, 133 credits, SAQA 119428)
+  name: "Solar Photovoltaic Standalone Service Technician (Higher Occupational Certificate) (NQF 3, 133 credits, SAQA 119428)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-14
-  name: Mechatronics Technician (NQF 5, 293 credits, SAQA 102064)
+  name: "Mechatronics Technician (NQF 5, 293 credits, SAQA 102064)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-15
-  name: Production Supervisor (NQF 5, 216 credits, SAQA 115723)
+  name: "Production Supervisor (NQF 5, 216 credits, SAQA 115723)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-16
-  name: CNC Turning Machinist (NQF 4, 139 credits, SAQA 103099)
+  name: "CNC Turning Machinist (NQF 4, 139 credits, SAQA 103099)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-17
-  name: Toolmaker (NQF 5, 432 credits, SAQA 91796)
+  name: "Toolmaker (NQF 5, 432 credits, SAQA 91796)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-18
-  name: Insulation Installer (NQF 2, 161 credits, SAQA 109560)
+  name: "Insulation Installer (NQF 2, 161 credits, SAQA 109560)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-19
-  name: Solar Photovoltaic Standalone System Mounter (NQF 4, 84 credits, SAQA 120885)
+  name: "Solar Photovoltaic Standalone System Mounter (NQF 4, 84 credits, SAQA 120885)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-20
-  name: Extrusion Machine Operator (NQF 5, 180 credits, SAQA 110315)
+  name: "Extrusion Machine Operator (NQF 5, 180 credits, SAQA 110315)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-21
-  name: Automotive Suspension Repairer (NQF 2, 123 credits, SAQA 117471)
+  name: "Automotive Suspension Repairer (NQF 2, 123 credits, SAQA 117471)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-22
-  name: Injection Moulding Machine Setter (NQF 5, 301 credits, SAQA 110318)
+  name: "Injection Moulding Machine Setter (NQF 5, 301 credits, SAQA 110318)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-23
-  name: Blow Moulding Machine Setter (NQF 5, 305 credits, SAQA 110313)
+  name: "Blow Moulding Machine Setter (NQF 5, 305 credits, SAQA 110313)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-24
-  name: Production Process Controller (NQF 4, 140 credits, SAQA 119977)
+  name: "Production Process Controller (NQF 4, 140 credits, SAQA 119977)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-25
-  name: Automotive Engine Assembler (NQF 3, 93 credits, SAQA 119428)
+  name: "Automotive Engine Assembler (NQF 3, 93 credits, SAQA 119428)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-26
-  name: Solar Photovoltaic Standalone Systems Installer (National Occupational Certificate) (NQF 4, 211 credits, SAQA 120883)
+  name: "Solar Photovoltaic Standalone Systems Installer (National Occupational Certificate) (NQF 4, 211 credits, SAQA 120883)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-27
-  name: Solar Photovoltaic Standalone Service Technician (Higher Occupational Certificate) (NQF 4, 133 credits, SAQA 120863)
+  name: "Solar Photovoltaic Standalone Service Technician (Higher Occupational Certificate) (NQF 4, 133 credits, SAQA 120863)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-28
-  name: Automotive Sales Advisor (NQF 4, 224 credits, SAQA 118097)
+  name: "Automotive Sales Advisor (NQF 4, 224 credits, SAQA 118097)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-29
-  name: Plastics Manufacturing Machine Operator (NQF 3, 150 credits, SAQA 118697)
+  name: "Plastics Manufacturing Machine Operator (NQF 3, 150 credits, SAQA 118697)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-30
-  name: Tooling Machinist (NQF 5, 457 credits, SAQA 103142)
+  name: "Tooling Machinist (NQF 5, 457 credits, SAQA 103142)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-31
-  name: Automotive Engine Dismantler (NQF 2, 106 credits, SAQA 119440)
+  name: "Automotive Engine Dismantler (NQF 2, 106 credits, SAQA 119440)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: merseta-learnership-32
-  name: Production Operator (NQF 3, 122 credits, SAQA 120037)
+  name: "Production Operator (NQF 3, 122 credits, SAQA 120037)"
   kind: learnership
   provider: merSETA
   url: https://www.merseta.org.za/wp-content/uploads/2026/09/Approved-Learnerships_Ready-For-Implementation_.pdf
   source: seta-merseta
 - id: bankseta-unemployed-learners-bursaries
-  name: BANKSETA bursaries for unemployed learners (applied for by public universities and universities of technology)
+  name: "BANKSETA bursaries for unemployed learners (applied for by public universities and universities of technology)"
   kind: bursary
   provider: BANKSETA
   url: https://bankseta.org.za/funding-window-1/discretionary-grant-unemployed-learners-granted-bursaries-new-continuing/
@@ -1007,16 +1007,52 @@
   closes_on: 2026-11-13
   source: seta-bankseta
 - id: teta-unemployed-bursary
-  name: TETA unemployed bursary (transport sector; criteria on the page are for 2025-2026)
+  name: "TETA unemployed bursary (transport sector; criteria on the page are for 2025-2026)"
   kind: bursary
   provider: TETA
   url: https://www.teta.org.za/index.php/newsroom/unemployed-bursaries
   source: seta-teta
 - id: mqa-bursary-2027
-  name: MQA bursary for employed learners in the mining and minerals sector (2027 academic year)
+  name: "MQA bursary for employed learners in the mining and minerals sector (2027 academic year)"
   kind: bursary
   provider: Mining Qualifications Authority
   url: https://mqa.org.za/bursaries/
   field: engineering
   closes_on: 2026-11-19
   source: seta-mqa
+- id: loan-standard-bank
+  name: "Standard Bank student loan"
+  kind: loan
+  provider: Standard Bank
+  url: https://www.standardbank.co.za/southafrica/personal/products-and-services/borrow-for-your-needs/student-loans/student-loans
+  source: loan-providers-demo
+- id: loan-nedbank
+  name: "Nedbank student loan"
+  kind: loan
+  provider: Nedbank
+  url: https://personal.nedbank.co.za/borrow/student-loans.html
+  source: loan-providers-demo
+- id: loan-student-hero
+  name: "Student Hero (compare and apply: ABSA, FNB and others)"
+  kind: loan
+  provider: Student Hero
+  url: https://www.studenthero.co.za/home
+  source: loan-providers-demo
+- id: loan-fundi
+  name: "Fundi education finance"
+  kind: loan
+  provider: Fundi
+  url: https://www.fundi.co.za/
+  source: loan-providers-demo
+- id: loan-capitec
+  name: "Capitec education finance (listing)"
+  kind: loan
+  provider: Capitec
+  url: https://www.mbse.ac.za/qualifications/qualification-fees/student-loan-providers/
+  source: loan-providers-demo
+- id: loan-manati
+  name: "Manati alternative student funding (listing)"
+  kind: loan
+  provider: Manati
+  url: https://www.mbse.ac.za/qualifications/qualification-fees/student-loan-providers/
+  source: loan-providers-demo
