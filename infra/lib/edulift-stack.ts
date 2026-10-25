@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 
-import { CfnOutput, Duration, RemovalPolicy, Stack, TimeZone, type StackProps } from 'aws-cdk-lib';
+import { CfnOutput, Duration, Fn, RemovalPolicy, Stack, TimeZone, type StackProps } from 'aws-cdk-lib';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
@@ -100,7 +100,8 @@ export class EduLiftStack extends Stack {
     });
 
     const image = new DockerImageAsset(this, 'ApiImage', {
-      directory: path.join(__dirname, '..', '..', 'api'),
+      directory: path.join(__dirname, '..', '..'),
+      file: 'api/Dockerfile',
       platform: Platform.LINUX_AMD64,
     });
     const executionRole = new iam.Role(this, 'ApiExecutionRole', {
@@ -179,7 +180,7 @@ export class EduLiftStack extends Stack {
     ];
 
     const api = new ecs.CfnExpressGatewayService(this, 'Api', {
-      serviceName: 'edulift-api',
+      serviceName: 'edulift',
       executionRoleArn: executionRole.roleArn,
       infrastructureRoleArn: infrastructureRole.roleArn,
       taskRoleArn: taskRole.roleArn,
@@ -237,6 +238,9 @@ export class EduLiftStack extends Stack {
     daily('Retention', 'app.jobs.retention', 3);
 
     // Web and API share one CloudFront URL.
+    // The service reports its endpoint as https://host; CloudFront wants the bare host.
+    const apiHost = Fn.select(1, Fn.split('//', api.attrEndpoint));
+
     const site = new s3.Bucket(this, 'Site', {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       encryption: s3.BucketEncryption.S3_MANAGED,
@@ -277,7 +281,7 @@ export class EduLiftStack extends Stack {
       },
       additionalBehaviors: {
         '/v1/*': {
-          origin: new origins.HttpOrigin(api.attrEndpoint, {
+          origin: new origins.HttpOrigin(apiHost, {
             protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
             customHeaders: { 'X-Origin-Secret': originSecret.secretValue.unsafeUnwrap() },
           }),

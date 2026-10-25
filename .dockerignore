@@ -1,0 +1,12 @@
+# The API image is built from the repo root so it can include data/.
+*
+!api/
+!data/
+api/.venv
+api/.env
+api/.env.*
+api/**/__pycache__
+api/.mypy_cache
+api/.pytest_cache
+api/.ruff_cache
+api/tests
