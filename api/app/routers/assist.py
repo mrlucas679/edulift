@@ -19,6 +19,7 @@ from app.errors import NotFoundError, RateLimitedError
 from app.routers.marks import active_user, latest_marks
 from app.schemas import Request
 from app.tracking import target_summary
+from app.verdicts import subject_names
 
 router = APIRouter(tags=["assist"])
 DRAFT_LABEL = "Draft — check and edit before you send."
@@ -68,6 +69,19 @@ class SavedDraftOut(BaseModel):
     kind: str
     title: str
     content: str
+
+
+def _consents_ai_explanations(db: Db, user_id: str) -> bool:
+    return (
+        db.scalar(
+            select(m.Consent.id).where(
+                m.Consent.user_id == user_id,
+                m.Consent.purpose == "ai_explanations",
+                m.Consent.withdrawn_at.is_(None),
+            )
+        )
+        is not None
+    )
 
 
 def _consents_ai_writing(db: Db, user_id: str) -> bool:
@@ -121,6 +135,12 @@ def ask_question(body: AskIn, *, me: SignedIn, db: Db, engine: DbEngine, asker: 
         records = []
     else:
         records = retrieve(db, body.question)
+        marks = latest_marks(db, user.id)
+        if marks and _consents_ai_explanations(db, user.id):
+            # The learner's own marks, only if they agreed to AI explanations of their result.
+            names = subject_names(db, marks)
+            facts = [f"{names.get(s, s)}: {p}%" for s, p in sorted(marks.items())]
+            records = [Record(id="your-marks", title="Your marks", facts=facts, url=None), *records]
         answer, provider, reason = ask(body.question, records, asker)
     _log(db, user_id=user.id, feature="ask", target="-", provider=provider, reason=reason)
     by_id = {r.id: r for r in records}
