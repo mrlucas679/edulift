@@ -17,7 +17,7 @@ type Preview = { scheme: string | null; score: number | null }[];
 // Shows "score / maximum" for the first institution on this scheme.
 function summaryFor(rows: Preview, scheme: string, max: number | null): string {
   const hit = rows.find((r) => r.scheme === scheme);
-  if (!hit || hit.score === null) return '[score]';
+  if (!hit || hit.score === null) return 'Not checked yet';
   return max === null ? String(hit.score) : `${hit.score} / ${max}`;
 }
 
