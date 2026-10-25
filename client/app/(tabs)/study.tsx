@@ -60,6 +60,9 @@ export default function Study() {
           <Pressable accessibilityRole="link" onPress={() => router.push('/scores')} style={{ minHeight: touchTarget, justifyContent: 'center' }}>
             <Body>My scores</Body>
           </Pressable>
+          <Pressable accessibilityRole="link" onPress={() => router.push('/ask')} style={{ minHeight: touchTarget, justifyContent: 'center' }}>
+            <Body>Ask a question about your options</Body>
+          </Pressable>
         </View>
       </Card>
 
