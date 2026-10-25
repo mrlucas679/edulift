@@ -5,7 +5,8 @@ import { Pressable, Text, View } from 'react-native';
 
 import { saveMarks, useMe } from '../src/account';
 import { resolveSubjects, toMarks, type Row } from '../src/marks';
-import { useSubjectNames } from '../src/reference';
+import { useSubjectNames, useSubjects } from '../src/reference';
+import { SubjectSuggestions } from '../src/subject-suggest';
 import { NBT_COMPONENTS, NBT_LEVELS, removeNbtLevel, saveNbtLevel, useNbt, type NbtComponent, type NbtLevel } from '../src/nbt';
 import { PERIODS, useSavedMarks } from '../src/saved-marks';
 import { useSession } from '../src/session';
@@ -28,6 +29,7 @@ export default function MyMarks() {
   const rows = edits[period] ?? fromServer;
   const setRows = (next: Row[]) => setEdits({ ...edits, [period]: next });
   const subjectNames = useSubjectNames();
+  const subjectList = useSubjects();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState(false);
@@ -88,6 +90,7 @@ export default function MyMarks() {
           <View key={i} style={{ flexDirection: 'row', gap: space.sm, alignItems: 'flex-end' }}>
             <View style={{ flex: 2 }}>
               <Field label="Subject" value={row.subject} onChangeText={(v) => update(i, { subject: v })} maxLength={60} />
+              <SubjectSuggestions all={subjectList.data} typed={row.subject} onPick={(name) => update(i, { subject: name })} />
             </View>
             <View style={{ flex: 1 }}>
               <Field

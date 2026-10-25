@@ -179,3 +179,7 @@
   url: https://www.merseta.org.za/
   publisher: MerSETA
   checked_on: 2026-10-24
+- id: loan-providers-demo
+  title: Student loan providers (demo list; not yet verified)
+  url: https://www.mbse.ac.za/qualifications/qualification-fees/student-loan-providers/
+  publisher: Demo list
