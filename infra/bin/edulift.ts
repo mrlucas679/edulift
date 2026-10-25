@@ -43,4 +43,8 @@ new BudgetStack(app, 'EduLiftBudget', {
   monthlyUsd: 50,
 });
 
-Tags.of(app).add('project', 'edulift');
+// Not on the Express service: it copies its tags onto the load balancer, and AWS's
+// managed role refuses to create one carrying tags other than its own.
+Tags.of(app).add('project', 'edulift', {
+  excludeResourceTypes: ['AWS::ECS::ExpressGatewayService'],
+});
