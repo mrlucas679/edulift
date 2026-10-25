@@ -4,6 +4,7 @@ type: university
 province: Gauteng
 apply_url: https://www.uj.ac.za/
 route: direct
+aps_scheme: standard_best6
 source: uj-site
 programmes:
 - id: uj.b8ba3q
