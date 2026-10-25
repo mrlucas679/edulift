@@ -16,7 +16,7 @@ const opportunity = z.object({
 export type Opportunity = z.infer<typeof opportunity>;
 
 export const matched = opportunity.extend({
-  verdict: z.enum(['qualifies', 'may_qualify']),
+  verdict: z.enum(['qualifies', 'may_qualify', 'not_checked']),
   checks: z.array(z.object({ check: z.string(), status: z.enum(['met', 'not_met', 'unknown']) })),
 });
 export type Matched = z.infer<typeof matched>;
