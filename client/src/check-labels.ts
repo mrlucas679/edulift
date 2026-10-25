@@ -15,3 +15,9 @@ export function checkLabel(name: string, scheme: string | null): string {
   if (name === 'next_three') return 'Other subjects';
   return name;
 }
+
+// Plain name for a scoring scheme, for the scores screen.
+export function schemeLabel(scheme: string | null): string {
+  if (!scheme) return 'Scheme not verified yet';
+  return SCHEME_NAME[scheme] ?? 'Score';
+}
