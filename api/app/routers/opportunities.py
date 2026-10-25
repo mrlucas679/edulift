@@ -35,8 +35,9 @@ def one(opportunity_id: str, db: Db) -> OpportunityOut:
 def for_me(me: SignedIn, db: Db, kind: Kind | None = None) -> list[MatchedOpportunityOut]:
     user = ensure_account(db, me.subject)
     if user.status != "active":
-        # Nothing to match against yet: no matches, rather than an error or a guess.
-        return []
+        # Not set up yet: show the open listings, unchecked, rather than guessing a match.
+        open_now = open_opportunities(db, (kind,) if kind else KINDS)
+        return [unchecked_out(o) for o in open_now]
     facts = learner_facts(db, user, date.today())
     pairs = matched(open_opportunities(db, (kind,) if kind else KINDS), facts)
     return [to_matched(o, a.verdict, a.results) for o, a in pairs]
@@ -51,4 +52,12 @@ def to_matched(
         **OpportunityOut.model_validate(opportunity).model_dump(),
         verdict=verdict,
         checks=[CriterionOut(check=c, status=s) for c, s in results],
+    )
+
+
+def unchecked_out(opportunity: m.Opportunity) -> MatchedOpportunityOut:
+    return MatchedOpportunityOut(
+        **OpportunityOut.model_validate(opportunity).model_dump(),
+        verdict="not_checked",
+        checks=[],
     )

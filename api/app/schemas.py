@@ -320,5 +320,5 @@ class CriterionOut(BaseModel):
 
 class MatchedOpportunityOut(OpportunityOut):
     # "may_qualify" means some criteria are unknown: confirm with the provider.
-    verdict: Literal["qualifies", "may_qualify"]
+    verdict: Literal["qualifies", "may_qualify", "not_checked"]
     checks: list[CriterionOut]
