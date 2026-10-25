@@ -326,6 +326,15 @@ export class EduLiftStack extends Stack {
       }),
     );
     deployRole.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ['ssm:GetParameter'],
+        resources: [
+          `arn:aws:ssm:us-east-1:${this.account}:parameter/cdk-bootstrap/hnb659fds/version`,
+          `arn:aws:ssm:af-south-1:${this.account}:parameter/cdk-bootstrap/hnb659fds/version`,
+        ],
+      }),
+    );
+    deployRole.addToPolicy(
       new iam.PolicyStatement({ actions: ['s3:ListBucket'], resources: [site.bucketArn] }),
     );
     deployRole.addToPolicy(
