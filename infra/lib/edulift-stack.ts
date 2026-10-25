@@ -322,7 +322,10 @@ export class EduLiftStack extends Stack {
     deployRole.addToPolicy(
       new iam.PolicyStatement({
         actions: ['sts:AssumeRole'],
-        resources: [`arn:aws:iam::${this.account}:role/cdk-hnb659fds-*-${this.account}-${this.region}`],
+        resources: [
+          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-*-${this.account}-af-south-1`,
+          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-*-${this.account}-us-east-1`,
+        ],
       }),
     );
     deployRole.addToPolicy(
