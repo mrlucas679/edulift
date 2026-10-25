@@ -4,10 +4,10 @@ from typing import Literal
 from fastapi import APIRouter
 
 from app import models as m
+from app.accounts import ensure_account
 from app.deps import Db, SignedIn
 from app.errors import NotFoundError
 from app.opportunities import learner_facts, matched, open_opportunities
-from app.routers.marks import active_user
 from app.schemas import CriterionOut, MatchedOpportunityOut, OpportunityOut
 from eligibility.opportunities import Status, Verdict
 
@@ -33,7 +33,10 @@ def one(opportunity_id: str, db: Db) -> OpportunityOut:
 
 @router.get("/me/opportunities")
 def for_me(me: SignedIn, db: Db, kind: Kind | None = None) -> list[MatchedOpportunityOut]:
-    user = active_user(db, me.subject)
+    user = ensure_account(db, me.subject)
+    if user.status != "active":
+        # Nothing to match against yet: no matches, rather than an error or a guess.
+        return []
     facts = learner_facts(db, user, date.today())
     pairs = matched(open_opportunities(db, (kind,) if kind else KINDS), facts)
     return [to_matched(o, a.verdict, a.results) for o, a in pairs]
