@@ -5,7 +5,7 @@ from fastapi import APIRouter, Request, Response
 from app import rate_limit
 from app.auth import TokenSet
 from app.config import Settings
-from app.demo import DEMO_SECONDS, demo_token, ensure_demo_learner
+from app.demo import DEMO_SECONDS, demo_token, reset_demo_learner
 from app.deps import ClientIp, DbEngine, Identities, SignedIn
 from app.errors import NotFoundError
 from app.schemas import (
@@ -69,7 +69,7 @@ def try_demo(request: Request) -> TokenResponse:
     if not settings.demo_secret:
         raise NotFoundError
     with request.app.state.sessions() as db, db.begin():
-        ensure_demo_learner(db)
+        reset_demo_learner(db)
     return TokenResponse(
         access_token=demo_token(settings.demo_secret),
         refresh_token=None,
