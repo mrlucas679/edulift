@@ -22,7 +22,33 @@ from app.db import new_engine
 
 # Official sites only. Anything else needs a deliberate addition here.
 ALLOWED_SUFFIXES = (".ac.za", ".gov.za", ".edu.za")
-ALLOWED_HOSTS = {"www.nsfas.org.za", "sayouth.mobi", "www.sayouth.mobi"}
+ALLOWED_HOSTS = {
+    "bankseta.org.za",
+    "mqa.org.za",
+    "sayouth.mobi",
+    "www.agriseta.co.za",
+    "www.bankseta.org.za",
+    "www.cathsseta.org.za",
+    "www.ceta.org.za",
+    "www.chieta.org.za",
+    "www.etdpseta.org.za",
+    "www.ewseta.org.za",
+    "www.fasset.org.za",
+    "www.foodbev.co.za",
+    "www.fpmseta.org.za",
+    "www.hwseta.org.za",
+    "www.inseta.org.za",
+    "www.lgseta.org.za",
+    "www.merseta.org.za",
+    "www.mict.org.za",
+    "www.mqa.org.za",
+    "www.nsfas.org.za",
+    "www.sayouth.mobi",
+    "www.servicesseta.org.za",
+    "www.teta.org.za",
+    "www.wrseta.org.za",
+    "www.zabursaries.co.za",
+}
 
 
 def official_url(url: str) -> str:
@@ -242,7 +268,7 @@ def read(folder: Path) -> Data:
 
 TABLES = [
     m.FpsBand, m.Requirement, m.Programme, m.Cycle, m.Institution,
-    m.Opportunity, m.Handoff, m.Subject, m.Field, m.Source,
+    m.Opportunity, m.Handoff, m.Field,
 ]  # fmt: skip
 
 
@@ -250,14 +276,17 @@ def write(engine: Engine, data: Data) -> None:
     with Session(engine) as db, db.begin():
         for table in TABLES:
             db.execute(delete(table))
-        db.add_all(m.Source(**s.model_dump()) for s in data.sources)
+        # Sources are updated in place: subjects and marks point at them.
+        for src in data.sources:
+            db.merge(m.Source(**src.model_dump()))
         db.flush()
         # Parents before children.
         for f in sorted(data.fields, key=lambda f: f.parent is not None):
             db.add(m.Field(id=f.id, name=f.name, parent_id=f.parent))
             db.flush()
+        # Subjects are updated in place, never deleted: learners' marks point at them.
         for s in data.subjects.subjects:
-            db.add(m.Subject(**s.model_dump(), source_id=data.subjects.source))
+            db.merge(m.Subject(**s.model_dump(), source_id=data.subjects.source))
         for h in data.handoffs:
             db.add(m.Handoff(**h.model_dump(exclude={"source"}), source_id=h.source))
         db.flush()

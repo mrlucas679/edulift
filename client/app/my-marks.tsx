@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { saveMarks, useMe } from '../src/account';
-import { toMarks, type Row } from '../src/marks';
+import { resolveSubjects, toMarks, type Row } from '../src/marks';
+import { useSubjectNames } from '../src/reference';
 import { NBT_COMPONENTS, NBT_LEVELS, removeNbtLevel, saveNbtLevel, useNbt, type NbtComponent, type NbtLevel } from '../src/nbt';
 import { PERIODS, useSavedMarks } from '../src/saved-marks';
 import { useSession } from '../src/session';
@@ -26,6 +27,7 @@ export default function MyMarks() {
     : [{ subject: '', percent: '' }];
   const rows = edits[period] ?? fromServer;
   const setRows = (next: Row[]) => setEdits({ ...edits, [period]: next });
+  const subjectNames = useSubjectNames();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState(false);
@@ -39,7 +41,7 @@ export default function MyMarks() {
     setBusy(true);
     setError(null);
     try {
-      await saveMarks(accessToken, period, toMarks(rows));
+      await saveMarks(accessToken, period, toMarks(resolveSubjects(rows, subjectNames.data ?? new Map())));
       setDone(true);
       await queryClient.invalidateQueries({ queryKey: ['saved-marks'] });
     } catch (e) {

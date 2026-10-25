@@ -118,7 +118,7 @@ export default function PlanScreen() {
   return (
     <Screen>
       <Heading>My plan</Heading>
-      <QueryState query={plan} empty={plan.data?.targets.length === 0}>
+      <QueryState query={plan}>
         {plan.data && plan.data.targets.length === 0 && (
           <Body muted>
             No programmes yet. Open a programme and choose “Add to my plan”, up to three.

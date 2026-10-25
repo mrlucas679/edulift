@@ -1,3 +1,4 @@
+import { schemeLabel } from '../src/check-labels';
 import { router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { Pressable, Text, View } from 'react-native';
@@ -55,7 +56,7 @@ export default function ScoresScreen() {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.md }}>
                   <View style={{ flex: 1 }}>
                     <Title>{row.institution}</Title>
-                    <Body muted>{row.scheme ?? 'Scheme not verified yet'}</Body>
+                    <Body muted>{schemeLabel(row.scheme)}</Body>
                   </View>
                   <ScorePill value={row.score === null ? '—' : String(row.score)} />
                 </View>

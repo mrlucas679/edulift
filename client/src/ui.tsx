@@ -145,11 +145,12 @@ export function Empty({ message }: { message: string }) {
 
 // Loading, error and empty, so every screen handles all three the same way.
 export function QueryState({ query, empty, children }: {
-  query: { isPending: boolean; error: unknown; refetch: () => unknown };
+  query: { isPending: boolean; fetchStatus?: string; error: unknown; refetch: () => unknown };
   empty?: boolean;
   children: React.ReactNode;
 }) {
-  if (query.isPending) return <ActivityIndicator accessibilityLabel="Loading" />;
+  // A disabled query (for example, saved marks for a guest) is pending but never fetches: do not spin for it.
+  if (query.isPending && query.fetchStatus !== 'idle') return <ActivityIndicator accessibilityLabel="Loading" />;
   if (query.error) {
     return (
       <>

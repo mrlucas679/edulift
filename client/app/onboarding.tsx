@@ -337,6 +337,10 @@ export default function Onboarding() {
   }
   if (status !== 'signed-in') return <Redirect href="/sign-in" />;
   if (me.isPending) return <Loading />;
+  // A learner who already finished setup comes back to Home, not the consent screen.
+  if (me.data?.status === 'active' && me.data.birth_date && me.data.interests.length > 0) {
+    return <Redirect href="/(tabs)" />;
+  }
   if (!me.data) {
     return (
       <Screen>

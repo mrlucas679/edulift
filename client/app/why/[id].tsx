@@ -1,3 +1,4 @@
+import { checkLabel } from '../../src/check-labels';
 import { useMutation } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
@@ -33,7 +34,7 @@ export default function WhyThisResult() {
           {check.data.checks.map((c) => (
             <Card key={c.name}>
               <Body>{RESULT[c.result]}</Body>
-              <Body muted>Needs: {c.required}</Body>
+              <Body muted>{checkLabel(c.name, check.data.scheme)} needs: {c.required}</Body>
               <Body muted>Yours: {c.yours}</Body>
             </Card>
           ))}

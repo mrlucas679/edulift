@@ -26,7 +26,8 @@ def test_scores_verified_schemes_and_says_so_for_the_rest(
     body = client.post("/v1/aps/preview", json={"marks": THANDI}).json()
     by_id = {row["institution_id"]: row for row in body}
     assert by_id["wits"]["score"] == 41
-    assert by_id["uj"]["score"] is None  # not verified yet
+    assert by_id["uj"]["score"] == 33  # standard APS, from the UJ prospectus
+    assert by_id["up"]["score"] is None  # scheme not verified yet
 
 
 def test_unknown_subject_is_refused(client: TestClient, real_data: None) -> None:

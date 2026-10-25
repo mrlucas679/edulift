@@ -16,6 +16,16 @@ export function useMarks() {
   return ctx;
 }
 
+// Learners type a subject's name ("English Home Language"); the API keys marks by id.
+// Names match case-insensitively. Anything else is sent as typed, so the server can say which one is unknown.
+export function resolveSubjects(rows: Row[], names: Map<string, string>): Row[] {
+  const byName = new Map([...names].map(([id, name]) => [name.toLowerCase(), id]));
+  return rows.map((r) => {
+    const key = r.subject.trim().toLowerCase();
+    return { ...r, subject: names.has(key) ? key : (byName.get(key) ?? r.subject.trim()) };
+  });
+}
+
 export function toMarks(rows: Row[]): Record<string, number> {
   return Object.fromEntries(rows.filter((r) => r.percent !== '').map((r) => [r.subject, Number(r.percent)]));
 }
