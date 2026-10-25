@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 
-import { CfnOutput, Duration, RemovalPolicy, Stack, type StackProps } from 'aws-cdk-lib';
+import { CfnOutput, Duration, RemovalPolicy, Stack, TimeZone, type StackProps } from 'aws-cdk-lib';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
@@ -11,6 +11,8 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as scheduler from 'aws-cdk-lib/aws-scheduler';
+import * as targets from 'aws-cdk-lib/aws-scheduler-targets';
 import * as secrets from 'aws-cdk-lib/aws-secretsmanager';
 import type { Construct } from 'constructs';
 
@@ -18,6 +20,8 @@ import type { Construct } from 'constructs';
 type Props = StackProps & { senderEmail: string; githubRepo: string; appUrl?: string; webAclArn: string };
 
 const API_PORT = 8000;
+// Claude 5 models aren't enabled on this AWS account yet; Haiku 4.5 is the closest match.
+const MODEL = 'anthropic.claude-haiku-4-5-20251001-v1:0';
 
 export class EduLiftStack extends Stack {
   // Fixed so synth needs no AWS lookup.
@@ -125,6 +129,21 @@ export class EduLiftStack extends Stack {
       }),
     );
 
+    const profile = `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/global.${MODEL}`;
+    taskRole.addToPolicy(
+      new iam.PolicyStatement({ actions: ['bedrock:InvokeModel'], resources: [profile] }),
+    );
+    taskRole.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ['bedrock:InvokeModel'],
+        resources: [
+          `arn:aws:bedrock:${this.region}::foundation-model/${MODEL}`,
+          `arn:aws:bedrock:::foundation-model/${MODEL}`,
+        ],
+        conditions: { StringEquals: { 'bedrock:InferenceProfileArn': profile } },
+      }),
+    );
+
     const infrastructureRole = new iam.Role(this, 'ApiInfrastructureRole', {
       assumedBy: new iam.ServicePrincipal('ecs.amazonaws.com'),
       managedPolicies: [
@@ -138,10 +157,26 @@ export class EduLiftStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const fromSecret = (name: string, secret: secrets.ISecret, key?: string) => ({
-      name,
-      valueFrom: key ? `${secret.secretArn}:${key}::` : secret.secretArn,
-    });
+    const settings: Record<string, string> = {
+      EDULIFT_ENV: 'demo',
+      IDENTITY_PROVIDER: 'cognito',
+      AWS_REGION: this.region,
+      COGNITO_USER_POOL_ID: users.userPoolId,
+      COGNITO_APP_CLIENT_ID: appClient.userPoolClientId,
+      DB_HOST: database.dbInstanceEndpointAddress,
+      DB_PORT: database.dbInstanceEndpointPort,
+      DB_NAME: 'edulift',
+      TRUSTED_PROXY_HOPS: '2',
+      SENDER_EMAIL: props.senderEmail,
+      APP_URL: props.appUrl ?? '',
+      AI_ENABLED: 'true',
+      BEDROCK_MODEL_ID: `global.${MODEL}`,
+    };
+    const secretRefs: [string, secrets.ISecret, string?][] = [
+      ['DB_USER', dbSecret, 'username'],
+      ['DB_PASSWORD', dbSecret, 'password'],
+      ['ORIGIN_SECRET', originSecret],
+    ];
 
     const api = new ecs.CfnExpressGatewayService(this, 'Api', {
       serviceName: 'edulift-api',
@@ -160,27 +195,46 @@ export class EduLiftStack extends Stack {
         image: image.imageUri,
         containerPort: API_PORT,
         awsLogsConfiguration: { logGroup: apiLogs.logGroupName, logStreamPrefix: 'api' },
-        environment: [
-          { name: 'EDULIFT_ENV', value: 'demo' },
-          { name: 'IDENTITY_PROVIDER', value: 'cognito' },
-          { name: 'AWS_REGION', value: this.region },
-          { name: 'COGNITO_USER_POOL_ID', value: users.userPoolId },
-          { name: 'COGNITO_APP_CLIENT_ID', value: appClient.userPoolClientId },
-          { name: 'DB_HOST', value: database.dbInstanceEndpointAddress },
-          { name: 'DB_PORT', value: database.dbInstanceEndpointPort },
-          { name: 'DB_NAME', value: 'edulift' },
-          { name: 'TRUSTED_PROXY_HOPS', value: '2' },
-          { name: 'SENDER_EMAIL', value: props.senderEmail },
-          { name: 'APP_URL', value: props.appUrl ?? '' },
-        ],
-        secrets: [
-          fromSecret('DB_USER', dbSecret, 'username'),
-          fromSecret('DB_PASSWORD', dbSecret, 'password'),
-          fromSecret('ORIGIN_SECRET', originSecret),
-        ],
+        environment: Object.entries(settings).map(([name, value]) => ({ name, value })),
+        secrets: secretRefs.map(([name, secret, key]) => ({
+          name,
+          valueFrom: key ? `${secret.secretArn}:${key}::` : secret.secretArn,
+        })),
       },
     });
     api.node.addDependency(executionRole, taskRole, infrastructureRole, database);
+
+    const jobs = new ecs.FargateTaskDefinition(this, 'Jobs', {
+      cpu: 256,
+      memoryLimitMiB: 512,
+      executionRole,
+      taskRole,
+    });
+    jobs.addContainer('job', {
+      image: ecs.ContainerImage.fromDockerImageAsset(image),
+      environment: settings,
+      secrets: Object.fromEntries(
+        secretRefs.map(([name, secret, key]) => [name, ecs.Secret.fromSecretsManager(secret, key)]),
+      ),
+      logging: ecs.LogDrivers.awsLogs({ logGroup: apiLogs, streamPrefix: 'job' }),
+    });
+    // Express Mode runs in the account's default cluster.
+    const cluster = ecs.Cluster.fromClusterAttributes(this, 'Default', { clusterName: 'default', vpc });
+    const daily = (id: string, module: string, hour: number) =>
+      new scheduler.Schedule(this, id, {
+        schedule: scheduler.ScheduleExpression.cron({ hour: String(hour), minute: '0', timeZone: TimeZone.AFRICA_JOHANNESBURG }),
+        target: new targets.EcsRunFargateTask(cluster, {
+          taskDefinition: jobs,
+          assignPublicIp: true,
+          vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
+          securityGroups: [apiTasks],
+          input: scheduler.ScheduleTargetInput.fromObject({
+            containerOverrides: [{ name: 'job', command: ['python', '-m', module] }],
+          }),
+        }),
+      });
+    daily('Reminders', 'app.jobs.reminders', 7);
+    daily('Retention', 'app.jobs.retention', 3);
 
     // Web and API share one CloudFront URL.
     const site = new s3.Bucket(this, 'Site', {
@@ -270,6 +324,13 @@ export class EduLiftStack extends Stack {
         resources: [
           `arn:aws:cloudfront::${this.account}:distribution/${distribution.distributionId}`,
         ],
+      }),
+    );
+    // The workflow reads the stack outputs to find the bucket and distribution.
+    deployRole.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ['cloudformation:DescribeStacks'],
+        resources: [this.stackId],
       }),
     );
 
