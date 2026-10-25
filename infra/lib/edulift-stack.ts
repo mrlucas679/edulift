@@ -112,6 +112,12 @@ export class EduLiftStack extends Stack {
     });
     dbSecret.grantRead(executionRole);
     originSecret.grantRead(executionRole);
+
+    // Signs the shared demo sign-in. Generated here, never typed or written to a file.
+    const demoSecret = new secrets.Secret(this, 'DemoSecret', {
+      generateSecretString: { passwordLength: 48, excludePunctuation: true },
+    });
+    demoSecret.grantRead(executionRole);
     image.repository.grantPull(executionRole);
 
     const taskRole = new iam.Role(this, 'ApiTaskRole', {
@@ -177,6 +183,7 @@ export class EduLiftStack extends Stack {
       ['DB_USER', dbSecret, 'username'],
       ['DB_PASSWORD', dbSecret, 'password'],
       ['ORIGIN_SECRET', originSecret],
+      ['DEMO_SECRET', demoSecret],
     ];
 
     const api = new ecs.CfnExpressGatewayService(this, 'Api', {

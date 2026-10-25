@@ -31,9 +31,7 @@ def test_demo_is_off_without_a_secret(client: TestClient) -> None:
     assert client.post("/v1/auth/demo").status_code == 404
 
 
-def test_demo_token_is_only_accepted_with_the_secret(
-    demo: TestClient
-) -> None:
+def test_demo_token_is_only_accepted_with_the_secret(demo: TestClient) -> None:
     token = demo_token(SECRET)
     assert demo.get("/v1/me", headers={"authorization": f"Bearer {token}"}).status_code == 200
     forged = demo_token("y" * 40)
