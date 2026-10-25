@@ -1,3 +1,4 @@
+import { checkLabel } from '../../src/check-labels';
 import { useMutation } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, Pressable, Text, View } from 'react-native';
@@ -45,7 +46,7 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
         >
           <Text style={{ fontSize: text.h3, color: colors.ink }}>{RESULT[c.result]}</Text>
           <View style={{ flex: 1 }}>
-            <Body>{c.required}</Body>
+            <Body>{checkLabel(c.name, verdict.scheme)}: {c.required}</Body>
             <Body muted>Yours: {c.yours}</Body>
           </View>
         </Pressable>

@@ -45,7 +45,8 @@ export default function Study() {
     not_eligible: 'Not eligible',
   };
   const institutions = useInstitutions();
-  const programmes = useProgrammes({ q, field: 'it', qualification: level ?? undefined });
+  // IT is the default. Typing a search looks across every field.
+  const programmes = useProgrammes({ q, field: q ? undefined : 'it', qualification: level ?? undefined });
 
   return (
     <Screen>
@@ -70,7 +71,7 @@ export default function Study() {
         placeholder="Search courses, e.g. computer science"
       />
       <KindChips kinds={Object.keys(LEVELS)} value={level} onChange={setLevel} labels={LEVELS} />
-      <Body muted>IT COURSES · {programmes.data?.items.length ?? 0}</Body>
+      <Body muted>{q ? 'COURSES' : 'IT COURSES'} · {programmes.data?.items.length ?? 0}</Body>
 
       <QueryState query={programmes} empty={programmes.data?.items.length === 0}>
         {(lowData ? programmes.data?.items.slice(0, 10) : programmes.data?.items)?.map((p) => (

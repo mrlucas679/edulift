@@ -7,7 +7,8 @@ import { font, text, touchTarget, useColors } from '../src/theme';
 import { Body, Button, Card, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
 
 export default function SignIn() {
-  const { sendCode } = useSession();
+  const { sendCode, tryDemo } = useSession();
+  const [demoError, setDemoError] = useState<unknown>(null);
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
@@ -43,6 +44,20 @@ export default function SignIn() {
       />
       <ErrorNote error={error} />
       <Button label="Send my code" onPress={submit} busy={busy} disabled={!email.trim()} />
+      <Button
+        label="Try the demo"
+        onPress={async () => {
+          setDemoError(null);
+          try {
+            await tryDemo();
+            router.replace('/');
+          } catch (e) {
+            setDemoError(e);
+          }
+        }}
+      />
+      <Body muted>A sample learner with made-up marks. No email needed.</Body>
+      <ErrorNote error={demoError} />
       <Card>
         <Title>No email address?</Title>
         <Body muted>You can use every feature as a guest. Your marks stay on this phone.</Body>

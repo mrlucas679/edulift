@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     # Where guardian links point, e.g. https://xyz.cloudfront.net
     app_url: str = ""
     sender_email: str = ""
+    # Set to turn on the "Try the demo" sign-in. Empty keeps it off.
+    demo_secret: str = ""
     ai_enabled: bool = False
     bedrock_model_id: str = ""
     ai_timeout_seconds: float = 8
@@ -47,6 +49,8 @@ class Settings(BaseSettings):
                 raise ValueError("APP_URL must be https in demo")
             if len(self.origin_secret) < 32:  # noqa: PLR2004
                 raise ValueError("demo needs ORIGIN_SECRET (32+ characters)")
+        if self.demo_secret and len(self.demo_secret) < 32:  # noqa: PLR2004
+            raise ValueError("DEMO_SECRET must be 32+ characters")
         if self.identity_provider == "cognito" and not (
             self.aws_region and self.cognito_user_pool_id and self.cognito_app_client_id
         ):
