@@ -15,7 +15,9 @@ def upgrade() -> None:
     op.create_table(
         "deleted_learners",
         sa.Column("user_id", sa.String(length=64), primary_key=True),
-        sa.Column("deleted_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            "deleted_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False
+        ),
     )
 
 
