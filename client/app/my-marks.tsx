@@ -4,14 +4,13 @@ import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { saveMarks, useMe } from '../src/account';
-import { resolveSubjects, toMarks, type Row } from '../src/marks';
-import { useSubjectNames, useSubjects } from '../src/reference';
-import { SubjectSuggestions } from '../src/subject-suggest';
+import { type Row } from '../src/marks';
+import { ApsSummary, blankRows, MarksEditor, useResolvedMarks } from '../src/marks-editor';
 import { NBT_COMPONENTS, NBT_LEVELS, removeNbtLevel, saveNbtLevel, useNbt, type NbtComponent, type NbtLevel } from '../src/nbt';
 import { PERIODS, useSavedMarks } from '../src/saved-marks';
 import { useSession } from '../src/session';
 import { font, space, text, touchTarget, useColors } from '../src/theme';
-import { Body, Button, ErrorNote, Field, Heading, QueryState, Screen, Title } from '../src/ui';
+import { Body, Button, Chips, ErrorNote, QueryState, Screen, Section, Title } from '../src/ui';
 
 type PeriodId = (typeof PERIODS)[number]['id'];
 
@@ -19,34 +18,26 @@ export default function MyMarks() {
   const { accessToken } = useSession();
   const saved = useSavedMarks();
   const queryClient = useQueryClient();
-  const colors = useColors();
+  const me = useMe();
   const [period, setPeriod] = useState<PeriodId>('gr12_june');
   const [edits, setEdits] = useState<Partial<Record<PeriodId, Row[]>>>({});
-  const saved_ = saved.data?.[period];
-  const fromServer: Row[] = saved_
-    ? Object.entries(saved_).map(([subject, percent]) => ({ subject, percent: String(percent) }))
-    : [{ subject: '', percent: '' }];
-  const rows = edits[period] ?? fromServer;
-  const setRows = (next: Row[]) => setEdits({ ...edits, [period]: next });
-  const subjectNames = useSubjectNames();
-  const subjectList = useSubjects();
+  const fromServer = saved.data?.[period];
+  const rows =
+    edits[period] ??
+    (fromServer ? Object.entries(fromServer).map(([subject, percent]) => ({ subject, percent: String(percent) })) : blankRows());
+  const marks = useResolvedMarks(rows);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState(false);
-  const me = useMe();
-
-  function update(index: number, patch: Partial<Row>) {
-    setRows(rows.map((r, i) => (i === index ? { ...r, ...patch } : r)));
-    setDone(false);
-  }
 
   async function save() {
     setBusy(true);
     setError(null);
     try {
-      await saveMarks(accessToken, period, toMarks(resolveSubjects(rows, subjectNames.data ?? new Map())));
+      await saveMarks(accessToken, period, marks);
       setDone(true);
       await queryClient.invalidateQueries({ queryKey: ['saved-marks'] });
+      await queryClient.invalidateQueries({ queryKey: ['plan'] });
     } catch (e) {
       setError(e);
     } finally {
@@ -56,69 +47,34 @@ export default function MyMarks() {
 
   if (me.data && me.data.status !== 'active') {
     return (
-      <Screen>
-        <Heading>My marks</Heading>
+      <Screen title="My marks" footer={<Button label="Finish setting up" onPress={() => router.replace('/onboarding')} />}>
         <Body>Finish setting up your account to save marks.</Body>
-        <Button label="Finish setting up" onPress={() => router.replace('/onboarding')} />
       </Screen>
     );
   }
 
   return (
-    <Screen>
-      <Heading>My marks</Heading>
-      <Body muted>Newest results are used for matching. Older ones are kept so you can compare.</Body>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm }}>
-        {PERIODS.map((p) => {
-          const selected = period === p.id;
-          return (
-            <Pressable
-              key={p.id}
-              accessibilityRole="button"
-              accessibilityState={{ selected }}
-              onPress={() => setPeriod(p.id)}
-              style={{
-                minHeight: touchTarget,
-                paddingHorizontal: space.lg,
-                justifyContent: 'center',
-                borderRadius: 999,
-                borderWidth: 1,
-                borderColor: colors.border,
-                backgroundColor: selected ? colors.accent : colors.surface,
-              }}
-            >
-              <Text style={{ fontFamily: font.bold, color: selected ? colors.onAccent : colors.ink, fontSize: text.small }}>
-                {p.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-
+    <Screen
+      title="My marks"
+      footer={
+        <>
+          <Body muted small>Saving updates your scores and Plan B straight away.</Body>
+          {done ? (
+            <Button label="See my plan" onPress={() => router.push('/plan')} />
+          ) : (
+            <Button label="Save marks" busy={busy} disabled={Object.keys(marks).length === 0} onPress={save} />
+          )}
+        </>
+      }
+    >
+      <Title>Which results?</Title>
+      <Chips options={[...PERIODS]} value={period} onChange={(p) => { setPeriod(p); setDone(false); }} />
+      <Body muted small>Newest results are used for matching. Older ones are kept so you can compare.</Body>
       <QueryState query={saved}>
-        <Title>Subjects</Title>
-        {rows.map((row, i) => (
-          <View key={i} style={{ flexDirection: 'row', gap: space.sm, alignItems: 'flex-end' }}>
-            <View style={{ flex: 2 }}>
-              <Field label="Subject" value={row.subject} onChangeText={(v) => update(i, { subject: v })} maxLength={60} />
-              <SubjectSuggestions all={subjectList.data} typed={row.subject} onPick={(name) => update(i, { subject: name })} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Field
-                label="Mark %"
-                value={row.percent}
-                onChangeText={(v) => update(i, { percent: v.replace(/[^0-9]/g, '').slice(0, 3) })}
-                keyboardType="number-pad"
-                maxLength={3}
-              />
-            </View>
-          </View>
-        ))}
-        <Button label="Add a subject" onPress={() => setRows([...rows, { subject: '', percent: '' }])} />
-        <Button label={done ? 'Saved' : 'Save marks'} busy={busy} disabled={done} onPress={save} />
-        <ErrorNote error={error} />
-        <Body muted>Saving updates your scores and Plan B straight away.</Body>
+        <MarksEditor rows={rows} setRows={(next) => { setEdits({ ...edits, [period]: next }); setDone(false); }} />
+        <ApsSummary marks={marks} />
       </QueryState>
+      <ErrorNote error={error} />
       <NbtSection />
     </Screen>
   );
@@ -145,13 +101,13 @@ function NbtSection() {
 
   return (
     <>
-      <Title>NBT results (optional)</Title>
+      <Section>NBT results (optional)</Section>
       {!on ? (
         <>
           <Body muted>
             Some admission rules need your NBT levels. Turn this on in Settings to add them. Without them, those rules show as unconfirmed.
           </Body>
-          <Button label="Open settings" onPress={() => router.push('/settings')} />
+          <Button label="Open settings" variant="secondary" onPress={() => router.push('/settings')} />
         </>
       ) : (
         NBT_COMPONENTS.map((c) => {
