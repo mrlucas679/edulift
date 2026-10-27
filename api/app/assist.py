@@ -237,11 +237,19 @@ class BedrockAsk:
         )
         text = converse(self._client, self._model_id, ASK_SYSTEM, payload)
         try:
-            return Answer.model_validate(
-                json.loads(text.strip().removeprefix("```json").removesuffix("```"))
-            )
+            # The model sometimes wraps the JSON in a code fence or a sentence.
+            data = json.loads(text[text.index("{") : text.rindex("}") + 1])
+            data["answer"] = shorten(str(data.get("answer", "")))
+            return Answer.model_validate(data)
         except (ValueError, ValidationError) as err:
             raise ValueError("reply was not the expected JSON") from err
+
+
+def shorten(text: str) -> str:
+    """Cut an over-long answer at a word, rather than throw the whole answer away."""
+    if len(text) <= MAX_ANSWER:
+        return text
+    return text[: MAX_ANSWER - 1].rsplit(" ", 1)[0].rstrip(",;:") + "…"
 
 
 class BedrockDraft:
