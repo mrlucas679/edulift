@@ -20,6 +20,7 @@ its own rules on top.
 
 - Model: Claude Haiku 5.5 on Bedrock (`BEDROCK_MODEL_ID` env var).
   **Changed 2026-10-25:** Claude 5 models aren't enabled on the AWS account ("not available for this account"), so production uses Claude Haiku 4.5 through the global inference profile. Switch back once AWS enables 5.5.
+  **Changed 2026-10-27:** Haiku 4.5 needs the Anthropic use-case form submitted in the Bedrock console first. Until then production uses Claude Opus 4.6, the only Claude model the account can call. The per-learner daily limits cap the cost.
 - Consent: `ai_explanations` covers explanations and translations; a separate optional
   `ai_writing` consent covers chat and CV drafting, because those send the learner's own
   words offshore. For a 17-year-old, each requires the guardian to have allowed it.
