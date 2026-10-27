@@ -61,7 +61,7 @@ export default function SignInCode() {
 
   const digits = code.split('');
   return (
-    <Screen>
+    <Screen title="Sign in">
       <Heading>Enter your code</Heading>
       <Body muted>We sent a 6-digit code to {mask(pendingEmail)}. Check spam if you can’t see it.</Body>
       <Pressable accessibilityLabel="6-digit code" onPress={() => undefined} style={{ flexDirection: 'row', gap: space.sm }}>

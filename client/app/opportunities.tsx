@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { KIND_LABELS, useMyOpportunities, useOpportunities, type Matched, type Opportunity } from '../src/opportunities';
 import { useSession } from '../src/session';
-import { Body, Button, Card, Empty, Heading, QueryState, Screen, SourceLine, Title } from '../src/ui';
+import { Body, Button, Card, Empty, QueryState, Screen, SourceLine, Title } from '../src/ui';
 
 const CRITERION = { met: '✓ Met', not_met: '✗ Not met', unknown: '? Not confirmed' };
 const VERDICT = {
@@ -47,8 +47,7 @@ export default function OpportunitiesScreen() {
   const query = signedIn ? mine : browse;
 
   return (
-    <Screen>
-      <Heading>Funding and work</Heading>
+    <Screen title="Funding and work">
       <Body muted>Each one shows its criteria and where they came from. We never say you will be accepted.</Body>
       {!signedIn && <Button label="Sign in to see what you may qualify for" onPress={() => router.push('/sign-in')} />}
       {[null, ...Object.keys(KIND_LABELS)].map((k) => (

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useGenerateDraft, useSaveDraft } from '../src/assist';
 import { useSession } from '../src/session';
 import { t } from '../src/i18n';
-import { Body, Button, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
+import { Body, Button, ErrorNote, Field, Screen, Title } from '../src/ui';
 
 type Kind = 'cv' | 'motivation_letter';
 
@@ -19,8 +19,7 @@ export default function DraftScreen() {
 
   if (status !== 'signed-in') {
     return (
-      <Screen>
-        <Heading>CV and letters</Heading>
+      <Screen title="CV and letters">
         <Body muted>Sign in to write a CV or motivation letter.</Body>
         <Button label="Sign in" onPress={() => router.push('/sign-in')} />
       </Screen>
@@ -28,8 +27,7 @@ export default function DraftScreen() {
   }
 
   return (
-    <Screen>
-      <Heading>CV and letters</Heading>
+    <Screen title="CV and letters">
       <Body muted>
         Type what you want included. We remove ID numbers, emails and phone numbers before anything is sent. We don’t
         keep the draft unless you save it.

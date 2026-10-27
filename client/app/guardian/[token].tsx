@@ -54,7 +54,7 @@ export default function GuardianApproval() {
 
   if (done) {
     return (
-      <Screen>
+      <Screen title="EduLift" back={false}>
         <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink }}>Matric Pathways</Text>
         <Heading>{done}</Heading>
         {withdrawToken && (
@@ -108,7 +108,7 @@ export default function GuardianApproval() {
   }
 
   return (
-    <Screen>
+    <Screen title="EduLift" back={false}>
       <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink }}>Matric Pathways</Text>
       <QueryState query={view}>
         {view.data && (
