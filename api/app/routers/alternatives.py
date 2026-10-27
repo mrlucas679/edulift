@@ -64,7 +64,9 @@ def alternatives(
     )
     facts = learner_facts(db, user, today)
     funding = route(near(matched(open_opportunities(db, ("bursary", "loan")), facts), target))
-    work = route(near(matched(open_opportunities(db, ("learnership", "work")), facts), target))
+    # Learnerships name a trade, so one with no field set isn't offered as a route.
+    work_pairs = matched(open_opportunities(db, ("learnership", "work")), facts)
+    work = route(near([(o, a) for o, a in work_pairs if o.field_id], target))
     return AlternativesOut(
         routes=[
             RouteOut(
