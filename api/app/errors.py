@@ -35,6 +35,18 @@ class InvalidCodeError(AppError):
     message = "That code isn't right. Check the email and try again."
 
 
+class InvalidCredentialsError(AppError):
+    code = "invalid_credentials"
+    status_code = 400
+    message = "That email and password don't match."
+
+
+class AccountExistsError(AppError):
+    code = "account_exists"
+    status_code = 409
+    message = "An account already uses that email. Sign in with your password."
+
+
 class CodeExpiredError(AppError):
     code = "code_expired"
     status_code = 400

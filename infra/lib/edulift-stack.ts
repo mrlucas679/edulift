@@ -127,6 +127,7 @@ export class EduLiftStack extends Stack {
       taskRole,
       'cognito-idp:AdminGetUser',
       'cognito-idp:AdminCreateUser',
+      'cognito-idp:AdminSetUserPassword',
       'cognito-idp:AdminDeleteUser',
     );
     taskRole.addToPolicy(

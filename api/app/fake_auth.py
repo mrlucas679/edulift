@@ -1,5 +1,7 @@
-"""Local stand-in for Cognito. Refused in demo."""
+"""Local stand-in for Cognito, including demo-account credentials."""
 
+import hashlib
+import hmac
 import secrets
 import threading
 import uuid
@@ -9,7 +11,13 @@ from datetime import UTC, datetime, timedelta
 import jwt
 
 from app.auth import Challenge, Identity, TokenSet
-from app.errors import CodeExpiredError, InvalidCodeError, UnauthenticatedError
+from app.errors import (
+    AccountExistsError,
+    CodeExpiredError,
+    InvalidCodeError,
+    InvalidCredentialsError,
+    UnauthenticatedError,
+)
 
 ISSUER = "edulift-local"
 TOKEN_SECONDS = 3600
@@ -25,6 +33,32 @@ class FakeAuth:
         self._tries: dict[str, int] = {}
         self._users: dict[str, str] = {}  # email -> subject
         self._refresh_tokens: dict[str, str] = {}  # token -> subject
+        self._demo_passwords: dict[str, tuple[str, bytes, bytes]] = {}
+
+    def create_demo_account(self, email: str, password: str) -> TokenSet:
+        with self._lock:
+            if email in self._demo_passwords or email in self._users:
+                raise AccountExistsError
+            subject = str(uuid.uuid4())
+            salt = secrets.token_bytes(16)
+            password_hash = _password_hash(password, salt)
+            self._demo_passwords[email] = (subject, salt, password_hash)
+        return self._demo_tokens(subject)
+
+    def sign_in_demo(self, email: str, password: str) -> TokenSet:
+        with self._lock:
+            account = self._demo_passwords.get(email)
+            if account is None or not hmac.compare_digest(
+                account[2], _password_hash(password, account[1])
+            ):
+                raise InvalidCredentialsError
+        return self._demo_tokens(account[0])
+
+    def _demo_tokens(self, subject: str) -> TokenSet:
+        with self._lock:
+            refresh_token = secrets.token_urlsafe(32)
+            self._refresh_tokens[refresh_token] = subject
+        return TokenSet(self._access_token(subject), TOKEN_SECONDS, refresh_token)
 
     def send_code(self, email: str) -> Challenge:
         session = secrets.token_urlsafe(32)
@@ -81,11 +115,22 @@ class FakeAuth:
 
     def email_of(self, subject: str) -> str:
         with self._lock:
-            return next(e for e, s in self._users.items() if s == subject)
+            for email, current in self._users.items():
+                if current == subject:
+                    return email
+            for email, (current, _, _) in self._demo_passwords.items():
+                if current == subject:
+                    return email
+        raise UnauthenticatedError
 
     def delete_user(self, subject: str) -> None:
         with self._lock:
             self._users = {e: s for e, s in self._users.items() if s != subject}
+            self._demo_passwords = {
+                email: account
+                for email, account in self._demo_passwords.items()
+                if account[0] != subject
+            }
 
     def expired_token(self, subject: str) -> str:
         # For tests.
@@ -95,3 +140,7 @@ class FakeAuth:
         expires = datetime.now(UTC) + (lifetime or timedelta(seconds=TOKEN_SECONDS))
         claims = {"sub": subject, "iss": ISSUER, "token_use": "access", "exp": expires}
         return jwt.encode(claims, self._key, algorithm="HS256")
+
+
+def _password_hash(password: str, salt: bytes) -> bytes:
+    return hashlib.pbkdf2_hmac("sha256", password.encode(), salt, 120_000)

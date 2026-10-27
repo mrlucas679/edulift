@@ -11,7 +11,8 @@ type Session = {
   pendingEmail: string | null;
   sendCode: (email: string) => Promise<void>;
   checkCode: (code: string) => Promise<void>;
-  tryDemo: () => Promise<void>;
+  createDemoAccount: (email: string, password: string) => Promise<void>;
+  signInDemo: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -88,12 +89,24 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     [pending],
   );
 
-  // The shared demo learner: no email. The server must have the demo switched on.
-  const tryDemo = useCallback(async () => {
-    const tokens = await request('/v1/auth/demo', tokenResponse, { method: 'POST' });
+  const authenticateDemo = useCallback(async (action: 'register' | 'login', email: string, password: string) => {
+    const tokens = await request(`/v1/auth/demo/${action}`, tokenResponse, {
+      method: 'POST',
+      body: { email, password },
+    });
+    if (tokens.refresh_token) await saveRefreshToken(tokens.refresh_token);
     setAccessToken(tokens.access_token);
     setStatus('signed-in');
   }, []);
+
+  const createDemoAccount = useCallback(
+    (email: string, password: string) => authenticateDemo('register', email, password),
+    [authenticateDemo],
+  );
+  const signInDemo = useCallback(
+    (email: string, password: string) => authenticateDemo('login', email, password),
+    [authenticateDemo],
+  );
 
   const signOut = useCallback(async () => {
     const refreshToken = await loadRefreshToken();
@@ -117,10 +130,11 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       pendingEmail: pending?.email ?? null,
       sendCode,
       checkCode,
-      tryDemo,
+      createDemoAccount,
+      signInDemo,
       signOut,
     }),
-    [status, accessToken, pending, sendCode, checkCode, tryDemo, signOut],
+    [status, accessToken, pending, sendCode, checkCode, createDemoAccount, signInDemo, signOut],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

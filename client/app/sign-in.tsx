@@ -4,21 +4,23 @@ import { Pressable, Text } from 'react-native';
 
 import { useSession } from '../src/session';
 import { font, text, touchTarget, useColors } from '../src/theme';
-import { Body, Button, ErrorNote, Heading, Screen } from '../src/ui';
+import { Body, Button, ErrorNote, Field, Heading, Screen } from '../src/ui';
 
-// Email sign-in is hidden for now. The demo is the only way in.
 export default function SignIn() {
-  const { tryDemo } = useSession();
+  const { createDemoAccount, signInDemo } = useSession();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [demoError, setDemoError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
   const colors = useColors();
 
-  async function startDemo() {
+  async function enterDemo(createAccount: boolean) {
     setBusy(true);
     setDemoError(null);
     try {
-      await tryDemo();
-      router.replace('/');
+      if (createAccount) await createDemoAccount(email.trim(), password);
+      else await signInDemo(email.trim(), password);
+      router.replace('/onboarding');
     } catch (e) {
       setDemoError(e);
     } finally {
@@ -28,10 +30,14 @@ export default function SignIn() {
 
   return (
     <Screen>
-      <Heading>Try EduLift</Heading>
-      <Body muted>Open a sample learner account with made-up marks. No email or password needed.</Body>
+      <Heading>Sign in to EduLift</Heading>
+      <Body muted>Create a demo account or sign in to continue your learner profile and saved marks.</Body>
+      <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" inputMode="email" autoComplete="email" maxLength={254} />
+      <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" autoComplete="current-password" maxLength={128} />
+      <Body muted>Demo accounts do not verify email. Choose a password with at least 16 characters.</Body>
       <ErrorNote error={demoError} />
-      <Button label="Try the demo" onPress={startDemo} busy={busy} />
+      <Button label="Create demo account" onPress={() => enterDemo(true)} busy={busy} disabled={!email.trim() || password.length < 16} />
+      <Button label="Sign in" onPress={() => enterDemo(false)} busy={busy} disabled={!email.trim() || !password} />
       <Pressable accessibilityRole="link" onPress={() => router.push('/how-we-use')} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.ink, textDecorationLine: 'underline' }}>How we use your data</Text>
       </Pressable>

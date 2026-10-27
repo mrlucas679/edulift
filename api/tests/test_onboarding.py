@@ -7,6 +7,7 @@ from sqlalchemy import Engine, func, select, update
 from sqlalchemy.orm import Session
 
 from app import models as m
+from app.errors import UnauthenticatedError
 from app.fake_auth import FakeAuth
 from app.mail import ConsoleMailer
 from tests.conftest import Session as Signed
@@ -93,7 +94,7 @@ def test_under_17_keeps_nothing(
     with Session(engine) as db:
         assert db.scalar(select(func.count()).select_from(m.User)) == 0
         assert db.scalar(select(func.count()).select_from(m.Profile)) == 0
-    with pytest.raises(StopIteration):
+    with pytest.raises(UnauthenticatedError):
         identity.email_of("anything")
 
 

@@ -13,6 +13,11 @@ class StartSignInRequest(Request):
     email: EmailStr = Field(max_length=254)
 
 
+class DemoCredentialsRequest(Request):
+    email: EmailStr = Field(max_length=254)
+    password: str = Field(min_length=16, max_length=128)
+
+
 class StartSignInResponse(BaseModel):
     session: str
     message: str = "If that address can receive email, a code is on its way."
