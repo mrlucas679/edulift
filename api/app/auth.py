@@ -1,4 +1,4 @@
-"""Sign-in interface. Cognito in the cloud, a fake locally."""
+"""Authentication interface used by Cognito in the cloud and a fake locally."""
 
 from dataclasses import dataclass
 from typing import Protocol
@@ -22,6 +22,10 @@ class Identity:
 
 
 class Auth(Protocol):
+    def create_demo_account(self, email: str, password: str) -> TokenSet: ...
+
+    def sign_in_demo(self, email: str, password: str) -> TokenSet: ...
+
     def send_code(self, email: str) -> Challenge: ...
 
     def check_code(self, email: str, code: str, session: str) -> TokenSet: ...

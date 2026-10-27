@@ -24,7 +24,7 @@ export default function WithdrawApproval() {
 
   if (done) {
     return (
-      <Screen>
+      <Screen title="EduLift" back={false}>
         <Heading>Approval withdrawn</Heading>
         <Body>{learner}’s saved account is deleted. They can still use the app as a guest.</Body>
       </Screen>
@@ -32,7 +32,7 @@ export default function WithdrawApproval() {
   }
 
   return (
-    <Screen>
+    <Screen title="EduLift" back={false}>
       <QueryState query={view}>
         {view.data && (
           <>

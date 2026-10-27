@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     # Where guardian links point, e.g. https://xyz.cloudfront.net
     app_url: str = ""
     sender_email: str = ""
-    # Set to turn on the "Try the demo" sign-in. Empty keeps it off.
+    # Set to enable email/password demo registration and sign-in. Empty keeps it off.
     demo_secret: str = ""
     ai_enabled: bool = False
     bedrock_model_id: str = ""

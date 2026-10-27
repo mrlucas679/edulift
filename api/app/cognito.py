@@ -1,4 +1,4 @@
-"""Passwordless sign-in through Cognito email codes."""
+"""Sign in through Cognito email codes and demo email/password accounts."""
 
 import logging
 from typing import TYPE_CHECKING, Any
@@ -8,8 +8,10 @@ from botocore.exceptions import BotoCoreError, ClientError
 
 from app.auth import Challenge, Identity, TokenSet
 from app.errors import (
+    AccountExistsError,
     CodeExpiredError,
     InvalidCodeError,
+    InvalidCredentialsError,
     UnauthenticatedError,
     UpstreamUnavailableError,
 )
@@ -41,6 +43,51 @@ class CognitoAuth:
         self._client_id = app_client_id
         self._issuer = f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}"
         self._jwks = jwt.PyJWKClient(f"{self._issuer}/.well-known/jwks.json")
+
+    def create_demo_account(self, email: str, password: str) -> TokenSet:
+        try:
+            self._client.admin_create_user(
+                UserPoolId=self._pool_id,
+                Username=email,
+                UserAttributes=[
+                    {"Name": "email", "Value": email},
+                    {"Name": "email_verified", "Value": "true"},
+                ],
+                MessageAction="SUPPRESS",
+            )
+            self._client.admin_set_user_password(
+                UserPoolId=self._pool_id, Username=email, Password=password, Permanent=True
+            )
+        except ClientError as exc:
+            if _aws_error(exc) in {"UsernameExistsException", "AliasExistsException"}:
+                raise AccountExistsError from exc
+            logger.warning("cognito could not create a demo account", exc_info=exc)
+            raise UpstreamUnavailableError from exc
+        except BotoCoreError as exc:
+            logger.warning("cognito could not create a demo account", exc_info=exc)
+            raise UpstreamUnavailableError from exc
+        return self.sign_in_demo(email, password)
+
+    def sign_in_demo(self, email: str, password: str) -> TokenSet:
+        try:
+            response = self._client.initiate_auth(
+                AuthFlow="USER_AUTH",
+                ClientId=self._client_id,
+                AuthParameters={
+                    "USERNAME": email,
+                    "PREFERRED_CHALLENGE": "PASSWORD",
+                    "PASSWORD": password,
+                },
+            )
+        except ClientError as exc:
+            if _aws_error(exc) in {"NotAuthorizedException", "UserNotFoundException"}:
+                raise InvalidCredentialsError from exc
+            logger.warning("cognito failed during demo sign-in", exc_info=exc)
+            raise UpstreamUnavailableError from exc
+        except BotoCoreError as exc:
+            logger.warning("cognito failed during demo sign-in", exc_info=exc)
+            raise UpstreamUnavailableError from exc
+        return _tokens(response.get("AuthenticationResult"), InvalidCredentialsError)
 
     def send_code(self, email: str) -> Challenge:
         try:

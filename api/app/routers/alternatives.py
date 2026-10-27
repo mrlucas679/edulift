@@ -13,6 +13,7 @@ from app.routers.marks import active_user, latest_marks
 from app.routers.opportunities import to_matched
 from app.schemas import AlternativesOut, CheckRequest, ProgrammeOut, RouteOut
 from app.verdicts import programme_verdict, subject_names
+from eligibility.opportunities import Assessment
 from eligibility.plan_b import QUALIFIES, Candidate, Target, plan_b
 
 router = APIRouter(prefix="/programmes", tags=["alternatives"])
@@ -34,13 +35,15 @@ def alternatives(
     today = date.today()
 
     nbt = learner_nbt(db, user.id)
-    if programme_verdict(db, target, marks, names, today, nbt=nbt).outcome in QUALIFIES:
-        return AlternativesOut(routes=[], funding=[], work=[])
+    # Qualifying needs no other study route, but funding and work still count.
+    qualifies = programme_verdict(db, target, marks, names, today, nbt=nbt).outcome in QUALIFIES
 
     profile = db.get(m.Profile, user.id)
     province = profile.province if profile and profile.province else ""
     candidates = []
-    for programme in db.scalars(select(m.Programme).where(m.Programme.id != programme_id)):
+    query = select(m.Programme).where(m.Programme.id != programme_id)
+    others: list[m.Programme] = [] if qualifies else list(db.scalars(query))
+    for programme in others:
         verdict = programme_verdict(db, programme, marks, names, today, nbt=nbt)
         institution = db.get_one(m.Institution, programme.institution_id)
         candidates.append(
@@ -56,18 +59,20 @@ def alternatives(
                 closes_on=programme.closes_on,
             )
         )
-    routes = plan_b(
-        Target(target.id, target.institution_id, target.field_id, target.qualification),
-        candidates,
-        province,
+    routes = (
+        []
+        if qualifies
+        else plan_b(
+            Target(target.id, target.institution_id, target.field_id, target.qualification),
+            candidates,
+            province,
+        )
     )
     facts = learner_facts(db, user, today)
-    funding = route(matched(open_opportunities(db, ("bursary", "loan")), facts))
-    work_kinds = ("learnership", "work")
-    same_field = [
-        o for o in open_opportunities(db, work_kinds) if o.field_id in (None, target.field_id)
-    ]
-    work = route(matched(same_field, facts))
+    funding = route(near(matched(open_opportunities(db, ("bursary", "loan")), facts), target))
+    # Learnerships name a trade, so one with no field set isn't offered as a route.
+    work_pairs = matched(open_opportunities(db, ("learnership", "work")), facts)
+    work = route(near([(o, a) for o, a in work_pairs if o.field_id], target))
     return AlternativesOut(
         routes=[
             RouteOut(
@@ -84,3 +89,18 @@ def alternatives(
         funding=[to_matched(o, a.verdict, a.results) for o, a in funding],
         work=[to_matched(o, a.verdict, a.results) for o, a in work],
     )
+
+
+def near(
+    pairs: list[tuple[m.Opportunity, Assessment]], target: m.Programme
+) -> list[tuple[m.Opportunity, Assessment]]:
+    """Same field first, then open-to-all; other fields are left out."""
+    top = target.field_id.split(".")[0]
+
+    def rank(field: str | None) -> int | None:
+        if field is None:
+            return 1
+        return 0 if field.split(".")[0] == top else None
+
+    kept = [(rank(o.field_id), o, a) for o, a in pairs]
+    return [(o, a) for r, o, a in sorted(kept, key=lambda x: x[0] or 0) if r is not None]

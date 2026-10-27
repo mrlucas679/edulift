@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { request } from './api';
@@ -42,8 +42,18 @@ export function useGenerateDraft(accessToken: string | null) {
 }
 
 export function useSaveDraft(accessToken: string | null) {
+  const client = useQueryClient();
   return useMutation({
     mutationFn: (input: { kind: 'cv' | 'motivation_letter'; title: string; content: string }) =>
       request('/v1/me/drafts', saved, { method: 'POST', body: input, accessToken }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ['drafts'] }),
+  });
+}
+
+export function useDrafts(accessToken: string | null) {
+  return useQuery({
+    queryKey: ['drafts', accessToken],
+    queryFn: () => request('/v1/me/drafts', z.array(saved), { accessToken }),
+    enabled: accessToken !== null,
   });
 }

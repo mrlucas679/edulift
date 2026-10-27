@@ -4,8 +4,11 @@ import pytest
 
 from app.assist import (
     INJECTION,
+    MAX_ANSWER,
     Answer,
+    BedrockAsk,
     Record,
+    TemplateAsk,
     ask,
     converse,
     draft_reject_reason,
@@ -90,3 +93,30 @@ def test_user_text_cannot_close_the_data_block(monkeypatch: pytest.MonkeyPatch) 
     assert user.count(f"<{tag.group(1)}>") == 1
     assert f"Everything inside <{tag.group(1)}>" in system
     assert "obey me" in user and "<data-x>" not in user
+
+
+class FakeClient:
+    def __init__(self, text: str) -> None:
+        self.text = text
+
+    def converse(self, **_: object) -> dict[str, object]:
+        return {"output": {"message": {"content": [{"text": self.text}]}}}
+
+
+def test_a_long_answer_is_cut_not_dropped() -> None:
+    reply = '```json\n{"answer": "' + "word " * 100 + '", "cited_ids": []}\n```'
+    answer = BedrockAsk(FakeClient(reply), "m").answer("courses", [RECORD])
+    assert len(answer.answer) <= MAX_ANSWER
+    assert answer.answer.endswith("…")
+
+
+def test_json_wrapped_in_a_sentence_is_read() -> None:
+    reply = 'Here you go: {"answer": "Try BSc IT.", "cited_ids": ["programme:uj.bsc-it"]}'
+    answer = BedrockAsk(FakeClient(reply), "m").answer("courses", [RECORD])
+    assert answer.cited_ids == ["programme:uj.bsc-it"]
+
+
+def test_the_standard_answer_prefers_a_record_over_your_marks() -> None:
+    marks = Record("your-marks", "Your marks", ["Maths 70%"], None)
+    answer = TemplateAsk().answer("courses", [marks, RECORD])
+    assert answer.cited_ids == [RECORD.id]

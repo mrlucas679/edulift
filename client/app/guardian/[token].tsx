@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, Switch, Text, View , Share } from 'react-native';
+import { Pressable, Switch, Text, View } from 'react-native';
 
 import {
   approveGuardianRequest,
@@ -12,8 +12,17 @@ import {
   withdrawGuardianApproval,
 } from '../../src/account';
 
+import { saveJson } from '../../src/download';
 import { font, space, text, touchTarget, useColors } from '../../src/theme';
 import { Body, Button, Card, ErrorNote, Heading, QueryState, Screen, Title } from '../../src/ui';
+
+const GUARDIAN_TITLES: Record<string, string> = {
+  ai_explanations: 'Explain their results with AI',
+  ai_writing: 'AI help with questions and a CV',
+  reminders: 'Deadline reminders by email',
+  nbt_results: 'Use their NBT results',
+  low_data: 'Use less data',
+};
 
 // For parents. No account; the emailed link is the key, and it works once.
 export default function GuardianApproval() {
@@ -54,8 +63,7 @@ export default function GuardianApproval() {
 
   if (done) {
     return (
-      <Screen>
-        <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink }}>Matric Pathways</Text>
+      <Screen title="EduLift" back={false}>
         <Heading>{done}</Heading>
         {withdrawToken && (
           <>
@@ -64,6 +72,7 @@ export default function GuardianApproval() {
               <Title>Changed your mind?</Title>
               <Body muted>Withdrawing deletes their saved account. They can still use the app as a guest.</Body>
               <Button
+                variant="secondary"
                 label="Withdraw approval and delete data"
                 busy={busy}
                 onPress={async () => {
@@ -91,7 +100,7 @@ export default function GuardianApproval() {
                   setError(null);
                   try {
                     const data = await guardianExport(withdrawToken);
-                    await Share.share({ message: JSON.stringify(data, null, 2), title: `${learner}’s EduLift data` });
+                    await saveJson(`${learner} EduLift data`, data);
                   } catch (e) {
                     setError(e);
                   } finally {
@@ -108,14 +117,13 @@ export default function GuardianApproval() {
   }
 
   return (
-    <Screen>
-      <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink }}>Matric Pathways</Text>
+    <Screen title="EduLift" back={false}>
       <QueryState query={view}>
         {view.data && (
           <>
             <Heading>{learner} asked you to approve their account</Heading>
             <Body muted>
-              Matric Pathways helps learners see which courses, funding and work they qualify for. They apply on the official sites themselves.
+              EduLift helps learners see which courses, funding and work they qualify for. They apply on the official sites themselves.
             </Body>
             <Card>
               <Title>If you approve, we will keep</Title>
@@ -133,9 +141,12 @@ export default function GuardianApproval() {
             <Body muted>Optional. You can allow these now, or they stay off until {learner} turns them on.</Body>
             {view.data.optional_purposes.map((p) => (
               <View key={p} style={{ flexDirection: 'row', alignItems: 'center', gap: space.md, minHeight: touchTarget }}>
-                <Text style={{ flex: 1, fontFamily: font.regular, fontSize: text.body, color: colors.ink }}>{GUARDIAN_PURPOSES[p] ?? p}</Text>
+                <View style={{ flex: 1 }}>
+                  <Title>{GUARDIAN_TITLES[p] ?? p}</Title>
+                  {GUARDIAN_PURPOSES[p] && <Body muted small>{GUARDIAN_PURPOSES[p]}</Body>}
+                </View>
                 <Switch
-                  accessibilityLabel={GUARDIAN_PURPOSES[p] ?? p}
+                  accessibilityLabel={GUARDIAN_TITLES[p] ?? p}
                   value={purposes.includes(p)}
                   onValueChange={(on) => setPurposes((ps) => (on ? [...ps, p] : ps.filter((x) => x !== p)))}
                 />
@@ -150,7 +161,7 @@ export default function GuardianApproval() {
             <ErrorNote error={error} />
             <View style={{ flexDirection: 'row', gap: space.sm }}>
               <View style={{ flex: 1 }}>
-                <Button label="Decline" onPress={() => decide('decline')} busy={busy} />
+                <Button label="Decline" variant="secondary" onPress={() => decide('decline')} busy={busy} />
               </View>
               <View style={{ flex: 1 }}>
                 <Button label="Approve" onPress={() => decide('approve')} busy={busy} disabled={!declared} />

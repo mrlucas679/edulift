@@ -89,6 +89,7 @@ IDs are stable; tests reference them (`test_US_ELIG_03_...`).
 | US-AUTH-01 | As a learner I sign in with an email code so I have no password to leak | Code sent via `/v1/auth/start`; response identical whether or not the address exists; 5/min per email and per IP |
 | US-AUTH-02 | As a learner I stay signed in on my phone | Tokens in secure storage; refresh used silently; expired/invalid → clean sign-out |
 | US-AUTH-03 | As a learner I can sign out | Refresh token revoked; secure storage and query cache cleared |
+| US-DEMO-01 | As a learner recording a demo I can create and revisit my account without email verification | Demo-only email/password registration; each email maps to its own learner; onboarding and marks remain after sign-out and sign-in |
 | US-AGE-01 | As the system I check age from date of birth | Age computed server-side on every profile write; under 17 → stop screen, Cognito user deleted |
 | US-GUARD-01 | As a 17-year-old I ask my guardian to approve | Guardian email sent with single-use 72 h link; only DOB + guardian email stored while pending |
 | US-GUARD-02 | As a guardian I approve or decline in plain words | Page states what is collected and why; per-purpose toggles; decline deletes pending data |

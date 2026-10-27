@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { z } from 'zod';
 
 import { ApiError, request, setAccessRefresher, startResponse, tokenResponse } from './api';
+import { forgetTypedMarks } from './marks';
 import { forgetRefreshToken, loadRefreshToken, saveRefreshToken } from './tokens';
 
 type Session = {
@@ -11,6 +12,8 @@ type Session = {
   pendingEmail: string | null;
   sendCode: (email: string) => Promise<void>;
   checkCode: (code: string) => Promise<void>;
+  createDemoAccount: (email: string, password: string) => Promise<void>;
+  signInDemo: (email: string, password: string) => Promise<void>;
   tryDemo: () => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -88,7 +91,26 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     [pending],
   );
 
-  // The shared demo learner: no email. The server must have the demo switched on.
+  const authenticateDemo = useCallback(async (action: 'register' | 'login', email: string, password: string) => {
+    const tokens = await request(`/v1/auth/demo/${action}`, tokenResponse, {
+      method: 'POST',
+      body: { email, password },
+    });
+    if (tokens.refresh_token) await saveRefreshToken(tokens.refresh_token);
+    setAccessToken(tokens.access_token);
+    setStatus('signed-in');
+  }, []);
+
+  const createDemoAccount = useCallback(
+    (email: string, password: string) => authenticateDemo('register', email, password),
+    [authenticateDemo],
+  );
+  const signInDemo = useCallback(
+    (email: string, password: string) => authenticateDemo('login', email, password),
+    [authenticateDemo],
+  );
+
+  // A fresh demo learner with no email. The server must have the demo switched on.
   const tryDemo = useCallback(async () => {
     const tokens = await request('/v1/auth/demo', tokenResponse, { method: 'POST' });
     setAccessToken(tokens.access_token);
@@ -106,6 +128,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       }).catch(() => undefined);
     }
     await forgetRefreshToken();
+    forgetTypedMarks();
     setAccessToken(null);
     setStatus('signed-out');
   }, [accessToken]);
@@ -117,10 +140,12 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       pendingEmail: pending?.email ?? null,
       sendCode,
       checkCode,
+      createDemoAccount,
+      signInDemo,
       tryDemo,
       signOut,
     }),
-    [status, accessToken, pending, sendCode, checkCode, tryDemo, signOut],
+    [status, accessToken, pending, sendCode, checkCode, createDemoAccount, signInDemo, tryDemo, signOut],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

@@ -1,20 +1,21 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-
-import { font, space, text, touchTarget, useColors } from '../../src/theme';
+import { View } from 'react-native';
 
 import { useMe } from '../../src/account';
-import { useBatchChecks, useInstitutions, useProgrammes } from '../../src/reference';
+import { scoreFor, useApsPreview } from '../../src/marks-editor';
+import { useBatchChecks, useFields, useInstitutions, useProgrammes } from '../../src/reference';
+import { useCurrentMarks } from '../../src/saved-marks';
 import { useSession } from '../../src/session';
-import { KindChips } from '../../src/opportunity-views';
-import { Body, Card, Empty, Field, Heading, QueryState, Screen, Title } from '../../src/ui';
+import { space } from '../../src/theme';
+import { Body, Button, Card, CardTop, Chips, Empty, Field, QueryState, Screen, Section, Title } from '../../src/ui';
+import { BANNER, isGood } from '../../src/verdicts';
 
 const LEVELS: Record<string, string> = {
   degree: 'Degree',
   diploma: 'Diploma',
-  higher_certificate: 'Higher certificate',
-  nc_v: 'NC(V)',
+  higher_certificate: 'Higher cert.',
+  nc_v: 'TVET',
 };
 
 function useDebounced(value: string, ms = 300) {
@@ -27,102 +28,71 @@ function useDebounced(value: string, ms = 300) {
 }
 
 export default function Study() {
-  const [search, setSearch] = useState('');
-  const [level, setLevel] = useState<string | null>(null);
-  const q = useDebounced(search.trim());
-  const colors = useColors();
   const { status, accessToken } = useSession();
   const me = useMe();
+  const fields = useFields();
+  const marks = useCurrentMarks();
+  const aps = scoreFor(useApsPreview(marks).data, 'standard_best6');
+  const [search, setSearch] = useState('');
+  const [level, setLevel] = useState<string | null>(null);
+  const [fieldOn, setFieldOn] = useState(true);
+  const q = useDebounced(search.trim());
+  // The learner's first interest is the default; typing a search looks across every field.
+  const field = me.data?.interests[0] ?? 'it';
+  const fieldName = fields.data?.find((f) => f.id === field)?.name ?? 'Courses';
   const lowData = me.data?.consents.includes('low_data') ?? false;
   const batch = useBatchChecks(status === 'signed-in' && !lowData ? accessToken : null);
   const outcomeOf = new Map((batch.data ?? []).map((r) => [r.programme_id, r.outcome]));
-  const BADGE: Record<string, string> = {
-    qualifies: 'You qualify',
-    qualifies_selection: 'You qualify',
-    qualifies_unconfirmed: 'Check',
-    aps_only: 'Subjects short',
-    subjects_only: 'Score short',
-    not_eligible: 'Not eligible',
-  };
   const institutions = useInstitutions();
-  // IT is the default. Typing a search looks across every field.
-  const programmes = useProgrammes({ q, field: q ? undefined : 'it', qualification: level ?? undefined });
+  const programmes = useProgrammes({ q, field: q || !fieldOn ? undefined : field, qualification: level ?? undefined });
+  const items = programmes.data?.items ?? [];
+  const sorted = [...items].sort((a, b) => Number(isGood(outcomeOf.get(b.id) ?? '')) - Number(isGood(outcomeOf.get(a.id) ?? '')));
 
   return (
-    <Screen>
-      <Heading>Study</Heading>
-      <Card>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: space.sm }}>
-          <View style={{ flexGrow: 1, flexShrink: 1, minWidth: 180 }}>
-            <Title>APS 32 at most universities</Title>
-            <Body muted>Wits and UCT count differently</Body>
+    <Screen title="Study" back={false}>
+      <Card muted onPress={() => router.push('/scores')} label="Open my scores">
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.sm }}>
+          <View style={{ flex: 1 }}>
+            <Title>{aps === null ? 'Add your marks to see your APS' : `APS ${aps} at most universities`}</Title>
+            <Body muted small>Wits and UCT count differently</Body>
           </View>
-          <Pressable accessibilityRole="link" onPress={() => router.push('/scores')} style={{ minHeight: touchTarget, justifyContent: 'center' }}>
-            <Body>My scores</Body>
-          </Pressable>
-          <Pressable accessibilityRole="link" onPress={() => router.push('/ask')} style={{ minHeight: touchTarget, justifyContent: 'center' }}>
-            <Body>Ask a question about your options</Body>
-          </Pressable>
+          <Body small>My scores ›</Body>
         </View>
       </Card>
-
-      <Field
-        label="Search courses"
-        value={search}
-        onChangeText={setSearch}
-        maxLength={80}
-        placeholder="Search courses, e.g. computer science"
+      <Field label="Search" value={search} onChangeText={setSearch} maxLength={80} placeholder="Search courses, e.g. computer science" />
+      {/* One row, as on the wireframe: your interest first, then the levels. */}
+      <Chips
+        options={[{ id: 'field', label: fieldName }, ...Object.entries(LEVELS).map(([id, label]) => ({ id, label }))]}
+        value={[...(fieldOn ? ['field'] : []), ...(level ? [level] : [])]}
+        onChange={(id) => (id === 'field' ? setFieldOn(!fieldOn) : setLevel(level === id ? null : id))}
       />
-      <KindChips kinds={Object.keys(LEVELS)} value={level} onChange={setLevel} labels={LEVELS} />
-      <Body muted>{q ? 'COURSES' : 'IT COURSES'} · {programmes.data?.items.length ?? 0}</Body>
+      <Section>{q || !fieldOn ? 'Courses' : fieldName} · {items.length}{lowData && items.length > 10 ? ' · showing 10 (low-data)' : ''}</Section>
 
-      <QueryState query={programmes} empty={programmes.data?.items.length === 0}>
-        {(lowData ? programmes.data?.items.slice(0, 10) : programmes.data?.items)?.map((p) => (
-          <Card key={p.id} label={p.name} onPress={() => router.push(`/programme/${p.id}`)}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space.sm }}>
-              <View style={{ flex: 1 }}>
-                <Title>{p.name}</Title>
-                <Body muted>
-                  {LEVELS[p.qualification] ?? p.qualification} · {p.institution_id.toUpperCase()}
-                </Body>
-              </View>
-              {outcomeOf.get(p.id) && BADGE[outcomeOf.get(p.id) ?? ''] && (
-                <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink, borderWidth: 1, borderColor: colors.border, borderRadius: 999, paddingHorizontal: space.sm, paddingVertical: 2 }}>
-                  {BADGE[outcomeOf.get(p.id) ?? '']}
-                </Text>
-              )}
-            </View>
-          </Card>
-        ))}
+      <QueryState query={programmes} empty={items.length === 0}>
+        {(lowData ? sorted.slice(0, 10) : sorted).map((p) => {
+          const outcome = outcomeOf.get(p.id);
+          return (
+            <Card key={p.id} label={p.name} onPress={() => router.push(`/programme/${p.id}`)}>
+              <CardTop title={p.name} pill={outcome ? BANNER[outcome] : undefined} filled={outcome ? isGood(outcome) : false} />
+              <Body muted small>
+                {p.institution_id.toUpperCase()} · {LEVELS[p.qualification] ?? p.qualification}
+              </Body>
+            </Card>
+          );
+        })}
       </QueryState>
-      {programmes.data?.items.length === 0 && (
-        <Empty message="No programmes match that yet. Try another word or level." />
-      )}
+      {items.length === 0 && <Empty message="No courses match that yet. Try another word or level." />}
 
-      <Body muted>INSTITUTIONS</Body>
+      <Section>Institutions</Section>
       <QueryState query={institutions}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space.sm }}>
-          {institutions.data?.map((i) => (
-            <Pressable
-              key={i.id}
-              accessibilityRole="button"
-              accessibilityLabel={i.name}
-              onPress={() => router.push(`/institution/${i.id}`)}
-              style={{
-                minHeight: touchTarget,
-                paddingHorizontal: space.lg,
-                justifyContent: 'center',
-                borderRadius: 999,
-                borderWidth: 1,
-                borderColor: colors.border,
-                backgroundColor: colors.surface,
-              }}
-            >
-              <Text style={{ fontFamily: font.bold, fontSize: text.small, color: colors.ink }}>{i.id.toUpperCase()}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
+        <Chips
+          options={(institutions.data ?? []).map((i) => ({ id: i.id, label: i.id.toUpperCase() }))}
+          value={null}
+          onChange={(id) => router.push(`/institution/${id}`)}
+          wrap
+        />
       </QueryState>
+      <Button label="Ask a question about your options" variant="link" onPress={() => router.push('/ask')} />
     </Screen>
   );
 }

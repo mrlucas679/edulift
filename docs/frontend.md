@@ -21,8 +21,8 @@ are the visual reference. Layout pattern: hero band, cards, deadline row, five b
 |---|---|---|
 | Welcome | `/welcome` | — |
 | Privacy notice | `/privacy` | static, versioned |
-| Email | `/sign-in` | POST `/auth/start` |
-| Code | `/sign-in/code` | POST `/auth/verify`; resend after 30 s |
+| Demo account | `/sign-in` | POST `/auth/demo/register` or `/auth/demo/login`; email + password, no email verification |
+| Email code (legacy flow) | `/sign-in/code` | POST `/auth/start` and `/auth/verify`; resend after 30 s |
 | Date of birth | `/onboarding/age` | PUT `/me/profile` |
 | Too young (<17) | `/onboarding/too-young` | GET `/handoffs` |
 | Guardian details (17) | `/onboarding/guardian` | POST `/me/guardian-request` |

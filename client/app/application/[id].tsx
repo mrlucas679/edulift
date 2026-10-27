@@ -1,11 +1,22 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { Linking, Pressable, Text, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
+import { Linking, Pressable, View } from 'react-native';
 
+import { shortDate } from '../../src/dates';
 import { useSession } from '../../src/session';
+import { space, touchTarget, useColors } from '../../src/theme';
 import { STATUSES, useApplication, useTickItem, useUpdateApplication } from '../../src/tracking';
-import { font, space, text, touchTarget, useColors } from '../../src/theme';
-import { Body, Button, Field, Heading, QueryState, Screen, Title } from '../../src/ui';
+import { Body, Button, Chips, ErrorNote, Field, Heading, QueryState, Screen, Section } from '../../src/ui';
+
+const LABELS: Record<string, string> = {
+  planning: 'Planning',
+  submitted: 'Submitted',
+  offer: 'Offer',
+  waitlist: 'Waitlist',
+  declined: 'Declined',
+  withdrawn: 'Withdrawn',
+};
 
 // Shows the domain before anything opens, and only opens https links.
 function safeHost(url: string): string | null {
@@ -27,97 +38,77 @@ export default function ApplicationScreen() {
   const colors = useColors();
   const [reference, setReference] = useState<string | null>(null);
   const [notes, setNotes] = useState<string | null>(null);
+  const a = application.data;
+  const domain = a ? safeHost(a.apply_url) : null;
 
   return (
-    <Screen>
+    <Screen
+      title="Application"
+      footer={a && domain && <Button label="Open the application site" sub={domain} onPress={() => Linking.openURL(a.apply_url)} />}
+    >
       <QueryState query={application}>
-        {application.data && (
+        {a && (
           <>
-            <Heading>{application.data.name}</Heading>
-            <Body muted>
-              {application.data.offer_deadline ? `Closes ${application.data.offer_deadline}` : 'Closing date not published'}
-            </Body>
+            <Heading>{a.name}</Heading>
+            {a.offer_deadline && <Body muted small>Reply to an offer by {shortDate(a.offer_deadline)}</Body>}
 
-            <Title>Status</Title>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm }}>
-              {STATUSES.map((s) => {
-                const selected = application.data.status === s;
-                return (
-                  <Pressable
-                    key={s}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected }}
-                    disabled={update.isPending}
-                    onPress={() => update.mutate({ status: s })}
-                    style={{
-                      minHeight: touchTarget,
-                      paddingHorizontal: space.md,
-                      justifyContent: 'center',
-                      borderRadius: 999,
-                      borderWidth: 1,
-                      borderColor: colors.border,
-                      backgroundColor: selected ? colors.ink : colors.surface,
-                    }}
-                  >
-                    <Text style={{ fontFamily: font.bold, fontSize: text.small, color: selected ? colors.paper : colors.ink }}>{s}</Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+            <Section>Status</Section>
+            <Chips
+              options={STATUSES.map((s) => ({ id: s, label: LABELS[s] }))}
+              value={a.status}
+              onChange={(s) => update.mutate({ status: s })}
+            />
+            {a.status === 'submitted' && a.submitted_on && <Body muted small>Submitted on {shortDate(a.submitted_on)}</Body>}
 
-            {application.data.status === 'submitted' && application.data.submitted_on && (
-              <Body muted>Submitted on {application.data.submitted_on}</Body>
-            )}
+            {/* Saves when you leave the box: no separate Save button. */}
             <Field
               label="Your reference number"
-              value={reference ?? application.data.external_reference ?? ''}
+              value={reference ?? a.external_reference ?? ''}
               onChangeText={setReference}
+              onBlur={() => reference !== null && update.mutate({ external_reference: reference })}
               maxLength={60}
             />
-            <Button
-              label="Save reference"
-              disabled={reference === null}
-              onPress={() => update.mutate({ external_reference: reference ?? '' })}
-            />
-            {application.data.needs_reference && <Body>Add your reference number.</Body>}
 
-            <Title>{`DOCUMENTS · ${application.data.checklist.filter((c) => c.done).length} OF ${application.data.checklist.length}`}</Title>
-            {application.data.checklist.map((item) => (
+            <Section>{`Documents · ${a.checklist.filter((c) => c.done).length} of ${a.checklist.length}`}</Section>
+            {a.checklist.map((item) => (
               <Pressable
                 key={item.id}
                 accessibilityRole="checkbox"
+                accessibilityLabel={item.label}
                 accessibilityState={{ checked: item.done }}
                 onPress={() => tick.mutate({ itemId: item.id, done: !item.done })}
                 style={{ minHeight: touchTarget, flexDirection: 'row', alignItems: 'center', gap: space.md }}
               >
-                <Text style={{ fontSize: text.h3, color: colors.ink }}>{item.done ? '☑' : '☐'}</Text>
+                <View
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: 4,
+                    borderWidth: 1.5,
+                    borderColor: item.done ? colors.accent : colors.ink,
+                    backgroundColor: item.done ? colors.accent : 'transparent',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {item.done && <Ionicons name="checkmark" size={16} color={colors.onAccent} />}
+                </View>
                 <Body>{item.label}</Body>
               </Pressable>
             ))}
 
-            <Field label="Notes" value={notes ?? application.data.notes} onChangeText={setNotes} multiline maxLength={1000} />
-            <Button
-              label="Save notes"
-              disabled={notes === null}
-              onPress={() => update.mutate({ notes: notes ?? '' })}
+            <Field
+              label="Notes"
+              value={notes ?? a.notes}
+              onChangeText={setNotes}
+              onBlur={() => notes !== null && update.mutate({ notes })}
+              multiline
+              maxLength={1000}
             />
-            {application.data.deadline_soon && <Body>Offer deadline within a week.</Body>}
-            <Button label="Documents I need to apply" onPress={() => router.push({ pathname: "/documents/[id]", params: { id: String(numericId) } })} />
-
-            {(() => {
-              const domain = safeHost(application.data.apply_url);
-              if (!domain) return <Body>We don’t have a safe link for this yet. Check with the institution.</Body>;
-              return (
-                <>
-                  <Body muted>EduLift never submits for you. You will go to {domain}.</Body>
-                  <Button
-                    label={`Open ${domain}`}
-                    onPress={() => Linking.openURL(application.data.apply_url)}
-                  />
-                </>
-              );
-            })()}
-            {update.error && <Body muted>Could not save. Try again.</Body>}
+            {a.deadline_soon && <Body>Offer deadline within a week.</Body>}
+            {!domain && <Body muted small>We don’t have a safe link for this yet. Check with the institution.</Body>}
+            {domain && <Body muted small>EduLift never submits for you. The button opens {domain}.</Body>}
+            <ErrorNote error={update.error ?? tick.error} />
           </>
         )}
       </QueryState>

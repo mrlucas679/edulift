@@ -1,29 +1,34 @@
-import { router } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { Redirect, router } from 'expo-router';
+import { View } from 'react-native';
 
-import { font, space, text, touchTarget, useColors } from '../src/theme';
+import { useSession } from '../src/session';
+import { space, useColors } from '../src/theme';
 import { Body, Button, Heading, Screen } from '../src/ui';
 
-// The logo screen: the first thing a learner sees. It waits for a tap, so a
-// direct link is never replaced by this screen.
+// The first screen. It waits for a tap, so a direct link is never replaced by it.
 export default function Splash() {
   const colors = useColors();
+  const { status } = useSession();
+  // Signed in already: Back never lands on the welcome screen.
+  if (status === 'signed-in') return <Redirect href="/(tabs)" />;
   return (
-    <Screen>
-      <View style={{ flex: 1, justifyContent: 'flex-end', gap: space.md }}>
-        <View style={{ width: 72, height: 72, borderRadius: 12, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.border, alignItems: 'center', justifyContent: 'center' }}>
-          <Body muted>Logo</Body>
+    <Screen
+      footer={
+        <>
+          <Button label="Check my options — no account needed" onPress={() => router.replace('/(tabs)')} />
+          <Button label="Sign in or create an account" variant="secondary" onPress={() => router.push('/sign-in')} />
+          <Button label="Just calculate my APS" variant="secondary" onPress={() => router.push('/aps')} />
+          <Button label="Free for every learner. How we use your data" variant="link" onPress={() => router.push('/how-we-use')} />
+        </>
+      }
+    >
+      <View style={{ minHeight: 360, justifyContent: 'flex-end', gap: space.md, backgroundColor: colors.muted, margin: -space.lg, padding: space.lg }}>
+        <View style={{ width: 64, height: 64, borderRadius: 10, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.inkMuted, alignItems: 'center', justifyContent: 'center' }}>
+          <Body muted small>EduLift</Body>
         </View>
         <Heading>Your marks. Your plan A and plan B.</Heading>
         <Body muted>See which courses, colleges, funding and work you qualify for, then apply on the official sites.</Body>
       </View>
-      <Button label="Check my options — no account needed" onPress={() => router.push('/aps')} />
-      <Button label="Sign in or create an account" onPress={() => router.push('/sign-in')} />
-      <Button label="Just calculate my APS" onPress={() => router.push('/aps')} />
-      <Pressable accessibilityRole="button" onPress={() => router.replace('/(tabs)')} style={{ minHeight: touchTarget, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>Continue to the app</Text>
-      </Pressable>
-      <Body muted>Free for every learner. How we use your data</Body>
     </Screen>
   );
 }

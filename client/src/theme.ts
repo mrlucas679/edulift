@@ -4,8 +4,9 @@ import { useColorScheme } from 'react-native';
 const light = {
   ink: '#16211F',
   inkMuted: '#4A5A57',
-  paper: '#FBF8F3',
+  paper: '#FFFFFF',
   surface: '#FFFFFF',
+  muted: '#EEF2F1',
   border: '#D5DDDB',
   accent: '#0B5F66',
   onAccent: '#FFFFFF',
@@ -17,6 +18,7 @@ const dark: typeof light = {
   inkMuted: '#B5C3C0',
   paper: '#0F1514',
   surface: '#18201F',
+  muted: '#222C2B',
   border: '#33403E',
   accent: '#5EC4CB',
   onAccent: '#0F1514',
@@ -34,7 +36,7 @@ export const font = {
   regular: 'AtkinsonHyperlegible_400Regular',
   bold: 'AtkinsonHyperlegible_700Bold',
 };
-export const text = { small: 14, body: 16, h3: 20, h2: 24, h1: 28 } as const;
+export const text = { tiny: 12, small: 14, body: 16, h3: 20, h2: 24, h1: 28 } as const;
 export const lineHeight = 1.4;
 
 export function useColors(): Colors {

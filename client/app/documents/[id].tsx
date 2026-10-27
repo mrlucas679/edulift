@@ -16,7 +16,7 @@ export default function DocumentsScreen() {
   const colors = useColors();
 
   return (
-    <Screen>
+    <Screen title="Documents">
       <QueryState query={application}>
         {application.data && (() => {
           const items = application.data.checklist;

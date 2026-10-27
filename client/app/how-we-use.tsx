@@ -5,7 +5,7 @@ import { Body, Button, Card, Heading, Screen, Title } from '../src/ui';
 // The plain-words summary. The full notice is on the Privacy page.
 export default function HowWeUseYourData() {
   return (
-    <Screen>
+    <Screen title="How we use your data" footer={<Button label="Got it" onPress={() => router.back()} />}>
       <Heading>In plain words</Heading>
       <Card>
         <Title>What we collect</Title>
@@ -26,8 +26,7 @@ export default function HowWeUseYourData() {
         <Title>Your rights</Title>
         <Body>See, download or delete your data any time in Profile › My data. Under 18? A parent or guardian approves your saved account.</Body>
       </Card>
-      <Body muted>Questions: privacy contact email · Policy version 1.0</Body>
-      <Button label="Got it" onPress={() => router.back()} />
+      <Body muted small>Questions: privacy contact email · Policy version 1.0</Body>
     </Screen>
   );
 }

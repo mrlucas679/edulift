@@ -14,13 +14,15 @@ Every command below needs `-c senderEmail=... -c budgetEmail=...` and an AWS pro
 
 1. `npx cdk bootstrap aws://<account>/af-south-1 aws://<account>/us-east-1`
 2. `npx cdk deploy EduLiftSender`, then click the link AWS emails to the sender address.
-   Cognito won't send from an address that isn't verified.
+   Cognito won't send from an address that isn't verified. Demo email/password accounts
+   suppress Cognito's invitation and verification email.
 3. `npx cdk deploy EduLift` (builds the API image with Docker, so Docker must be running).
 4. `npx cdk deploy EduLiftBudget`
 5. In Billing → Cost allocation tags, activate `project`. Until then the budget sees nothing.
    The tag only shows up there about a day after the first tagged resource exists.
 6. Ask AWS to move SES out of the sandbox (SES console → Account dashboard). Until then,
-   codes only reach verified addresses.
+   email-code sign-in codes only reach verified addresses. Demo email/password sign-in
+   does not send a verification email.
 
 Always `npx cdk diff` before `deploy`.
 

@@ -97,7 +97,7 @@ than 7 days and their pending learner data.
 | API container | ECR + ECS Express Mode (Fargate + load balancer), 1–2 tasks, health `/v1/health` |
 | Scheduled jobs | EventBridge Scheduler → ECS run-task (same image) |
 | Database | RDS PostgreSQL 16, smallest burstable, private subnets, encrypted, 7-day backups, deletion protection |
-| Sign-in | Cognito user pool, Essentials plan, passwordless email OTP |
+| Sign-in | Cognito user pool, Essentials plan; demo email/password without email verification; email OTP remains available through the API |
 | Email | SES (production access requested day 1), verified domain |
 | AI | Bedrock, model access enabled in region; cross-Region inference accepted (the bedrock explanations only decision) |
 | Web app | S3 (private) + CloudFront, SPA fallback |

@@ -1,29 +1,30 @@
-"""The "Try the demo" sign-in: one shared, fake learner, no email.
+"""The "Try the demo" sign-in: a fresh, fake learner on every tap, no email.
 
-It only works when DEMO_SECRET is set. Demo tokens are signed with that secret and
-accepted only for the demo learner's id. Turning the demo off is clearing DEMO_SECRET.
+It only works when DEMO_SECRET is set. Demo tokens are signed with that secret and only
+name demo learners. Each tap gets its own learner, so two judges never share marks.
+Turning the demo off is clearing DEMO_SECRET.
 """
 
+import uuid
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import jwt
-from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
 from app import models as m
 from app.auth import Identity
 
-DEMO_SUBJECT = "demo-learner"
+DEMO_PREFIX = "demo-"
 DEMO_ISSUER = "edulift-demo"
 DEMO_CLIENT = "demo"
 DEMO_SECONDS = 4 * 60 * 60
 
 
-def demo_token(secret: str, now: datetime | None = None) -> str:
+def demo_token(secret: str, subject: str, now: datetime | None = None) -> str:
     issued = now or datetime.now(UTC)
     claims: dict[str, Any] = {
-        "sub": DEMO_SUBJECT,
+        "sub": subject,
         "iss": DEMO_ISSUER,
         "client_id": DEMO_CLIENT,
         "token_use": "access",
@@ -45,18 +46,17 @@ def demo_identity(token: str, secret: str) -> Identity | None:
         )
     except jwt.PyJWTError:
         return None
-    if claims.get("sub") != DEMO_SUBJECT or claims.get("client_id") != DEMO_CLIENT:
+    subject = claims.get("sub")
+    if not isinstance(subject, str) or not subject.startswith(DEMO_PREFIX):
         return None
-    return Identity(subject=DEMO_SUBJECT)
+    if claims.get("client_id") != DEMO_CLIENT:
+        return None
+    return Identity(subject=subject)
 
 
-def reset_demo_learner(db: Session) -> None:
-    """Start the shared demo learner from scratch, as a brand-new account.
-
-    Everyone who signs in as the demo goes through the normal onboarding and enters
-    their own marks. Deleting the account removes its data (the foreign keys cascade).
-    """
-    db.execute(delete(m.User).where(m.User.id == DEMO_SUBJECT))
+def new_demo_learner(db: Session) -> str:
+    """A brand-new learner who goes through the normal onboarding."""
+    subject = f"{DEMO_PREFIX}{uuid.uuid4().hex}"
+    db.add(m.User(id=subject, status="onboarding"))
     db.flush()
-    db.add(m.User(id=DEMO_SUBJECT, status="onboarding"))
-    db.flush()
+    return subject

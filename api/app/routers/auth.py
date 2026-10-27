@@ -1,14 +1,16 @@
-"""Email-code sign-in."""
+"""Sign-in: email codes, demo email/password accounts, and the one-tap demo."""
 
 from fastapi import APIRouter, Request, Response
+from sqlalchemy import Engine
 
 from app import rate_limit
 from app.auth import TokenSet
 from app.config import Settings
-from app.demo import DEMO_SECONDS, demo_token, reset_demo_learner
+from app.demo import DEMO_SECONDS, demo_token, new_demo_learner
 from app.deps import ClientIp, DbEngine, Identities, SignedIn
 from app.errors import NotFoundError
 from app.schemas import (
+    DemoCredentialsRequest,
     RefreshRequest,
     SignOutRequest,
     StartSignInRequest,
@@ -63,15 +65,55 @@ def sign_out(body: SignOutRequest, _: SignedIn, identities: Identities) -> Respo
 
 
 @router.post("/demo")
-def try_demo(request: Request) -> TokenResponse:
-    """Sign in as the shared demo learner. Off unless DEMO_SECRET is set."""
+def try_demo(request: Request, ip: ClientIp, engine: DbEngine) -> TokenResponse:
+    """Sign in as a brand-new demo learner. Off unless DEMO_SECRET is set."""
     settings: Settings = request.app.state.settings
     if not settings.demo_secret:
         raise NotFoundError
+    # Each tap makes a learner: limit per IP.
+    rate_limit.check(engine, "demo:new", ip, limit=20, window_seconds=FIFTEEN_MINUTES)
     with request.app.state.sessions() as db, db.begin():
-        reset_demo_learner(db)
+        subject = new_demo_learner(db)
     return TokenResponse(
-        access_token=demo_token(settings.demo_secret),
+        access_token=demo_token(settings.demo_secret, subject),
         refresh_token=None,
         expires_in=DEMO_SECONDS,
     )
+
+
+@router.post("/demo/register")
+def register_demo(
+    body: DemoCredentialsRequest,
+    request: Request,
+    ip: ClientIp,
+    engine: DbEngine,
+    identities: Identities,
+) -> TokenResponse:
+    """Create a demo account without email verification."""
+    settings: Settings = request.app.state.settings
+    if not settings.demo_secret:
+        raise NotFoundError
+    _limit_demo_attempt(body.email.lower(), ip, engine)
+    return _as_response(identities.create_demo_account(body.email.lower(), body.password))
+
+
+@router.post("/demo/login")
+def sign_in_demo(
+    body: DemoCredentialsRequest,
+    request: Request,
+    ip: ClientIp,
+    engine: DbEngine,
+    identities: Identities,
+) -> TokenResponse:
+    """Sign in to an existing demo account with its email and password."""
+    settings: Settings = request.app.state.settings
+    if not settings.demo_secret:
+        raise NotFoundError
+    _limit_demo_attempt(body.email.lower(), ip, engine)
+    return _as_response(identities.sign_in_demo(body.email.lower(), body.password))
+
+
+def _limit_demo_attempt(email: str, ip: str, engine: Engine) -> None:
+    # Bound credential guessing by both account name and client address.
+    rate_limit.check(engine, "demo:email", email, limit=10, window_seconds=FIFTEEN_MINUTES)
+    rate_limit.check(engine, "demo:ip", ip, limit=30, window_seconds=FIFTEEN_MINUTES)

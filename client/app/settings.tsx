@@ -1,27 +1,35 @@
-import { router } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
-import { Pressable, Switch, Text, View } from 'react-native';
+import { router } from 'expo-router';
 import { useState } from 'react';
+import { Switch, View } from 'react-native';
 
-import { PURPOSES, setConsent, useMe } from '../src/account';
+import { setConsent, useMe } from '../src/account';
 import { useSession } from '../src/session';
-import { font, space, text, touchTarget, useColors } from '../src/theme';
-import { Body, Button, ErrorNote, Field, Heading, QueryState, Screen, Title } from '../src/ui';
+import { space } from '../src/theme';
+import { Body, Button, ErrorNote, Field, QueryState, Row, Screen, Section, Title } from '../src/ui';
+
+const CHOICES = [
+  { id: 'ai_explanations', title: 'AI explanations', note: 'Send results, never your name, to an AI service' },
+  { id: 'ai_writing', title: 'AI help with questions and CVs', note: 'What you type goes to an AI service' },
+  { id: 'reminders', title: 'Deadline reminders by email', note: 'Only for things you saved' },
+  { id: 'nbt_results', title: 'Use my NBT results', note: 'Checks admission rules that need them' },
+  { id: 'low_data', title: 'Low-data mode', note: 'No badges, shorter lists' },
+];
 
 export default function Settings() {
   const { accessToken, status, signOut } = useSession();
   const me = useMe();
   const queryClient = useQueryClient();
-  const colors = useColors();
   const [email, setEmail] = useState('');
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const on = (id: string) => me.data?.consents.includes(id) ?? false;
 
-  async function change(purpose: string, on: boolean) {
+  async function change(purpose: string, value: boolean) {
     setBusy(purpose);
     setError(null);
     try {
-      await setConsent(accessToken, purpose, on, purpose === 'reminders' && on ? email.trim() : undefined);
+      await setConsent(accessToken, purpose, value, purpose === 'reminders' && value ? email.trim() : undefined);
       await queryClient.invalidateQueries({ queryKey: ['me-details'] });
     } catch (e) {
       setError(e);
@@ -30,94 +38,45 @@ export default function Settings() {
     }
   }
 
-  const reminderOn = me.data?.consents.includes('reminders') ?? false;
-  const aiOn = me.data?.consents.includes('ai_explanations') ?? false;
-  const nbtOn = me.data?.consents.includes('nbt_results') ?? false;
-  const lowDataOn = me.data?.consents.includes('low_data') ?? false;
+  const guardian =
+    me.data?.status === 'pending_guardian' ? 'Waiting' : me.data?.status === 'restricted' ? 'Withdrawn' : 'Not needed (18+)';
 
   return (
-    <Screen>
-      <Heading>Settings</Heading>
+    <Screen
+      title="Settings"
+      footer={status === 'signed-in' && <Button label="Sign out" variant="secondary" onPress={signOut} />}
+    >
       <QueryState query={me}>
-        <Title>Your choices</Title>
-        <Body muted>You decide what we use. Change any of these any time.</Body>
-
-        <View style={{ minHeight: touchTarget, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ flex: 1, paddingRight: space.md }}>
-            <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>Explain my results with AI</Text>
-            <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>{PURPOSES.ai_explanations}</Text>
+        <Section>Your choices</Section>
+        {CHOICES.map((c) => (
+          <View key={c.id} style={{ gap: space.sm }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.md, minHeight: 52 }}>
+              <View style={{ flex: 1 }}>
+                <Title>{c.title}</Title>
+                <Body muted small>{c.note}</Body>
+              </View>
+              <Switch
+                accessibilityLabel={c.title}
+                value={on(c.id)}
+                disabled={busy !== null || (c.id === 'reminders' && !on(c.id) && email.trim() === '')}
+                onValueChange={(v) => change(c.id, v)}
+              />
+            </View>
+            {c.id === 'reminders' && !on('reminders') && (
+              <Field label="Email for reminders" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" inputMode="email" maxLength={254} />
+            )}
           </View>
-          <Switch
-            value={aiOn}
-            disabled={busy !== null}
-            onValueChange={(on) => change('ai_explanations', on)}
-            accessibilityLabel="Explain my results with AI"
-          />
-        </View>
-
-        <View style={{ minHeight: touchTarget, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ flex: 1, paddingRight: space.md }}>
-            <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>Deadline reminders by email</Text>
-            <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>{PURPOSES.reminders}</Text>
-          </View>
-          <Switch
-            value={reminderOn}
-            disabled={busy !== null || (!reminderOn && email.trim() === '')}
-            onValueChange={(on) => change('reminders', on)}
-            accessibilityLabel="Deadline reminders by email"
-          />
-        </View>
-        {!reminderOn && (
-          <Field
-            label="Email for reminders"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            maxLength={254}
-          />
-        )}
-
-        <View style={{ minHeight: touchTarget, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ flex: 1, paddingRight: space.md }}>
-            <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>Use my NBT results</Text>
-            <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>{PURPOSES.nbt_results}</Text>
-          </View>
-          <Switch
-            value={nbtOn}
-            disabled={busy !== null}
-            onValueChange={(on) => change('nbt_results', on)}
-            accessibilityLabel="Use my NBT results"
-          />
-        </View>
-
-        <View style={{ minHeight: touchTarget, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ flex: 1, paddingRight: space.md }}>
-            <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.ink }}>Low-data mode</Text>
-            <Text style={{ fontFamily: font.regular, fontSize: text.small, color: colors.inkMuted }}>{PURPOSES.low_data}</Text>
-          </View>
-          <Switch
-            value={lowDataOn}
-            disabled={busy !== null}
-            onValueChange={(on) => change('low_data', on)}
-            accessibilityLabel="Low-data mode"
-          />
-        </View>
-
-        <Title>Language</Title>
-        <Body>App language: English</Body>
-
-        <Title>Account</Title>
-        <Body>Email: you sign in with a code sent to your email</Body>
-        <Body>Parent approval: {me.data?.status === 'pending_guardian' ? 'waiting' : me.data?.status === 'restricted' ? 'withdrawn, browsing only' : 'not needed (18+)'}</Body>
-        <Button label="Privacy notice" onPress={() => router.push('/privacy')} />
-        <Button label="Download or delete my data" onPress={() => router.push('/my-data')} />
-        {status === 'signed-in' && <Button label="Sign out" onPress={() => signOut()} />}
+        ))}
         <ErrorNote error={error} />
+
+        <Section>Language</Section>
+        <Row label="App language" value="English" />
+
+        <Section>Account</Section>
+        <Row label="Parent approval" value={guardian} />
+        <Row label="Privacy notice" onPress={() => router.push('/privacy')} />
+        <Row label="Download or delete my data" onPress={() => router.push('/my-data')} />
       </QueryState>
-      <Pressable accessibilityRole="button" onPress={() => router.back()} style={{ minHeight: touchTarget, justifyContent: 'center' }}>
-        <Text style={{ fontFamily: font.bold, fontSize: text.body, color: colors.accent }}>Back</Text>
-      </Pressable>
     </Screen>
   );
 }

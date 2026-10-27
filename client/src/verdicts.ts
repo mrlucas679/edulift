@@ -9,3 +9,17 @@ export const OUTCOMES: Record<string, string> = {
   closed: 'Applications for this intake have closed.',
   incomplete: 'Add at least six subjects plus Life Orientation to get a result.',
 };
+
+// The short tag beside a course, as on the wireframes.
+export const BANNER: Record<string, string> = {
+  qualifies: 'You qualify',
+  qualifies_selection: 'You qualify',
+  qualifies_unconfirmed: 'Not confirmed',
+  aps_only: 'Subjects short',
+  subjects_only: 'Score short',
+  not_eligible: 'Not eligible',
+  closed: 'Closed',
+  incomplete: 'Add marks',
+};
+
+export const isGood = (outcome: string) => outcome === 'qualifies' || outcome === 'qualifies_selection';

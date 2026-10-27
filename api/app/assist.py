@@ -1,13 +1,15 @@
+import functools
 import html
 import json
 import logging
+import operator
 import re
 import secrets
 from dataclasses import asdict, dataclass
 from typing import Protocol
 
 from pydantic import BaseModel, Field, ValidationError
-from sqlalchemy import or_, select
+from sqlalchemy import case, or_, select
 from sqlalchemy.orm import Session
 
 from app import models as m
@@ -63,9 +65,11 @@ class TemplateAsk:
     name = "template"
 
     def answer(self, question: str, records: list[Record]) -> Answer:
-        if not records:
+        # The learner's own marks are context, not an answer: prefer a real record.
+        found = [r for r in records if r.id != "your-marks"] or records
+        if not found:
             return Answer(answer=REFUSAL, cited_ids=[])
-        first = records[0]
+        first = found[0]
         return Answer(answer=f"{first.title}: " + "; ".join(first.facts[:3]), cited_ids=[first.id])
 
 
@@ -78,54 +82,103 @@ KIND_WORDS = [
 ]
 
 
+# Words that say nothing about what is being asked for.
+STOP = set(
+    [
+        "which",
+        "what",
+        "where",
+        "when",
+        "tell",
+        "about",
+        "with",
+        "there",
+        "does",
+        "have",
+        "should",
+        "know",
+        "open",
+        "could",
+        "study",
+        "marks",
+        "into",
+        "that",
+        "this",
+        "from",
+    ]
+)
+
+
+def _best(pairs: list[tuple[int, Record]]) -> list[Record]:
+    return [r for _, r in sorted(pairs, key=lambda p: -p[0])]
+
+
+def _hits(text: str, words: list[str]) -> int:
+    lower = text.lower()
+    return sum(w in lower for w in words)
+
+
 def retrieve(db: Session, question: str, limit: int = 8) -> list[Record]:
-    words = [w for w in re.findall(r"[a-zA-Z]{4,}", question.lower())][:6]
+    words = [w for w in re.findall(r"[a-zA-Z]{4,}", question.lower()) if w not in STOP][:6]
+    kinds = sorted({k for w in words for pattern, k in KIND_WORDS if re.match(pattern, w)})
     if not words:
         return []
-    records: list[Record] = []
-    for programme in db.scalars(
-        select(m.Programme)
-        .where(or_(*[m.Programme.name.ilike(f"%{w}%") for w in words]))
-        .limit(limit)
-    ):
-        institution = db.get_one(m.Institution, programme.institution_id)
-        records.append(
-            Record(
+    # Kind words ("bursaries") pick the kind; the rest match names.
+    names = [w for w in words if not any(re.match(p, w) for p, _ in KIND_WORDS)]
+    programmes: list[tuple[int, Record]] = []
+    if names:
+        # Most matching words first, so the closest names make the cut.
+        score = functools.reduce(
+            operator.add, [case((m.Programme.name.ilike(f"%{w}%"), 1), else_=0) for w in names]
+        )
+        for programme in db.scalars(
+            select(m.Programme)
+            .where(or_(*[m.Programme.name.ilike(f"%{w}%") for w in names]))
+            .order_by(score.desc(), m.Programme.name)
+            .limit(limit * 2)
+        ):
+            institution = db.get_one(m.Institution, programme.institution_id)
+            record = Record(
                 id=f"programme:{programme.id}",
                 title=programme.name,
                 facts=[f"{institution.name}", f"qualification: {programme.qualification}"],
                 url=institution.apply_url,
             )
-        )
-    kinds = sorted({k for w in words for pattern, k in KIND_WORDS if re.match(pattern, w)})
+            programmes.append((_hits(programme.name, names), record))
+    others: list[tuple[int, Record]] = []
     if "loan" in kinds:
         # NSFAS is the loan route: there are no loan rows, so the handoff stands in for them.
         for handoff in db.scalars(select(m.Handoff).where(m.Handoff.id == "nsfas")):
-            records.append(
-                Record(
-                    id=f"handoff:{handoff.id}",
-                    title=handoff.name,
-                    facts=[handoff.purpose],
-                    url=handoff.url,
+            others.append(
+                (
+                    9,
+                    Record(
+                        id=f"handoff:{handoff.id}",
+                        title=handoff.name,
+                        facts=[handoff.purpose],
+                        url=handoff.url,
+                    ),
                 )
             )
     # Asking about bursaries (etc.) should bring up that kind, even when no name matches.
     kind_filter = [m.Opportunity.kind.in_(kinds)] if kinds else []
+    name_filter = [m.Opportunity.name.ilike(f"%{w}%") for w in names]
     for opportunity in db.scalars(
         select(m.Opportunity)
-        .where(or_(*[m.Opportunity.name.ilike(f"%{w}%") for w in words], *kind_filter))
+        .where(or_(*name_filter, *kind_filter))
         .order_by(m.Opportunity.closes_on.is_(None), m.Opportunity.closes_on)
-        .limit(limit)
+        .limit(limit * 5)
     ):
-        records.append(
-            Record(
-                id=f"opportunity:{opportunity.id}",
-                title=opportunity.name,
-                facts=[f"{opportunity.kind} from {opportunity.provider}"],
-                url=opportunity.url,
-            )
+        record = Record(
+            id=f"opportunity:{opportunity.id}",
+            title=opportunity.name,
+            facts=[f"{opportunity.kind} from {opportunity.provider}"],
+            url=opportunity.url,
         )
-    return records[:limit]
+        others.append((_hits(f"{opportunity.name} {opportunity.provider}", names), record))
+    # The kind asked for comes first; otherwise courses do.
+    ordered = _best(others) + _best(programmes) if kinds else _best(programmes) + _best(others)
+    return ordered[:limit]
 
 
 def reject_reason(answer: Answer, question: str, records: list[Record]) -> str | None:
@@ -261,11 +314,19 @@ class BedrockAsk:
         )
         text = converse(self._client, self._model_id, ASK_SYSTEM, payload)
         try:
-            return Answer.model_validate(
-                json.loads(text.strip().removeprefix("```json").removesuffix("```"))
-            )
+            # The model sometimes wraps the JSON in a code fence or a sentence.
+            data = json.loads(text[text.index("{") : text.rindex("}") + 1])
+            data["answer"] = shorten(str(data.get("answer", "")))
+            return Answer.model_validate(data)
         except (ValueError, ValidationError) as err:
             raise ValueError("reply was not the expected JSON") from err
+
+
+def shorten(text: str) -> str:
+    """Cut an over-long answer at a word, rather than throw the whole answer away."""
+    if len(text) <= MAX_ANSWER:
+        return text
+    return text[: MAX_ANSWER - 1].rsplit(" ", 1)[0].rstrip(",;:") + "…"
 
 
 class BedrockDraft:

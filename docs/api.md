@@ -7,7 +7,7 @@ the human summary and must change in the same pull request as the code.
 
 - **Error shape (every error):** `{"error": {"code": "...", "message": "<friendly text>", "request_id": "..."}}`
 - **Client IP:** taken from `X-Forwarded-For`, counting `TRUSTED_PROXY_HOPS` entries from the right (2 behind CloudFront + load balancer). Entries further left are written by the caller and ignored.
-- **Codes:** `invalid_code` (400), `code_expired` (400), `validation_failed` (422), `unauthenticated` (401), `not_allowed` (403), `not_found` (404), `conflict` (409), `rate_limited` (429), `guardian_consent_required` (403), `upstream_unavailable` (503), `internal_error` (500). No stack traces in responses.
+- **Codes:** `invalid_code` (400), `invalid_credentials` (400), `code_expired` (400), `validation_failed` (422), `unauthenticated` (401), `not_allowed` (403), `not_found` (404), `account_exists` (409), `conflict` (409), `rate_limited` (429), `guardian_consent_required` (403), `upstream_unavailable` (503), `internal_error` (500). No stack traces in responses.
 - **Auth:** "Auth" = valid Cognito access token. "Public" = reference data or rate-limited anonymous actions. "Link" = single-use guardian token.
 - **Ownership:** every `/v1/me/*` query filters by the token's `sub`. Another learner's resource answers `404`, never `403`, so ids can't be probed.
 - **Gates:** `/v1/me/*` (except `GET /me`, profile DOB write, guardian request, consents, export, delete) require `users.status = active` and the `account` consent; otherwise `guardian_consent_required` or `not_allowed`.
@@ -41,6 +41,12 @@ the human summary and must change in the same pull request as the code.
 | POST `/auth/verify` | Public | email + code + session → access and refresh tokens | 3 wrong codes → start again; 30 per 15 min per IP |
 | POST `/auth/refresh` | Public | refresh → new access token | |
 | POST `/auth/sign-out` | Auth | Revoke refresh token | |
+| POST `/auth/demo/register` | Public, demo only | Create a demo account with email and password; no email verification | Password minimum 16 characters; 10 per 15 min per email, 30 per IP |
+| POST `/auth/demo/login` | Public, demo only | Sign into that demo account with email and password | Same rate limits; invalid credentials return `invalid_credentials` |
+
+Each demo account has its own Cognito subject and keeps its learner row after sign-out.
+Demo registration creates a Cognito user without sending an email and sets a permanent
+password. The standard email-code routes remain separate.
 
 ## Learner
 

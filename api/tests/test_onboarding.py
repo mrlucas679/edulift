@@ -7,6 +7,7 @@ from sqlalchemy import Engine, func, select, update
 from sqlalchemy.orm import Session
 
 from app import models as m
+from app.errors import UnauthenticatedError
 from app.fake_auth import FakeAuth
 from app.mail import ConsoleMailer
 from tests.conftest import Session as Signed
@@ -93,7 +94,7 @@ def test_under_17_keeps_nothing(
     with Session(engine) as db:
         assert db.scalar(select(func.count()).select_from(m.User)) == 0
         assert db.scalar(select(func.count()).select_from(m.Profile)) == 0
-    with pytest.raises(StopIteration):
+    with pytest.raises(UnauthenticatedError):
         identity.email_of("anything")
 
 
@@ -201,3 +202,12 @@ def test_guardian_gets_the_withdraw_link_and_an_export(
     export = client.get(f"/v1/guardian/withdraw/{withdraw}/export")
     assert export.status_code == 200
     assert "profile" in export.json()
+
+
+def test_details_include_province_and_certificate(
+    client: TestClient, inbox: dict[str, str]
+) -> None:
+    s = sign_in(client, inbox, "where@example.org")
+    body = {"birth_date": born(18), "province": "Gauteng", "certificate": "nsc"}
+    me = client.put("/v1/me/profile", json=body, headers=s.headers).json()
+    assert (me["province"], me["certificate"]) == ("Gauteng", "nsc")

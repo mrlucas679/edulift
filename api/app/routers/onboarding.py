@@ -13,6 +13,7 @@ from app import models as m
 from app import rate_limit
 from app.accounts import ensure_account
 from app.age import ADULT, MIN_AGE, age_on
+from app.demo import DEMO_PREFIX
 from app.deps import AppSettings, ClientIp, Db, DbEngine, Identities, Mail, SignedIn
 from app.erasure import export_learner
 from app.errors import AppError, NotFoundError, UpstreamUnavailableError
@@ -121,6 +122,8 @@ def _me(db: Session, user: m.User) -> MeDetail:
         created_at=user.created_at,
         first_name=profile.first_name if profile else None,
         birth_date=profile.birth_date if profile else None,
+        province=profile.province if profile else None,
+        certificate=profile.certificate if profile else None,
         consents=sorted(_active_purposes(db, user.id)),
         interests=list(profile.interests) if profile else [],
         reconfirm=reconfirm_purposes(db, user, date.today()),
@@ -230,7 +233,11 @@ def ask_guardian(
     if user.status != "pending_guardian":
         raise NotAllowedError("A guardian's approval isn't needed for this account.")
     guardian_email = body.guardian_email.lower()
-    if guardian_email == identities.email_of(me.subject).lower():
+    # Demo learners have no email of their own to compare with.
+    if (
+        not me.subject.startswith(DEMO_PREFIX)
+        and guardian_email == identities.email_of(me.subject).lower()
+    ):
         raise NotAllowedError("Use your parent or guardian's own email address.")
 
     db.execute(
