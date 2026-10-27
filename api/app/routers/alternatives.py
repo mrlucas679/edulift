@@ -13,6 +13,7 @@ from app.routers.marks import active_user, latest_marks
 from app.routers.opportunities import to_matched
 from app.schemas import AlternativesOut, CheckRequest, ProgrammeOut, RouteOut
 from app.verdicts import programme_verdict, subject_names
+from eligibility.opportunities import Assessment
 from eligibility.plan_b import QUALIFIES, Candidate, Target, plan_b
 
 router = APIRouter(prefix="/programmes", tags=["alternatives"])
@@ -62,12 +63,8 @@ def alternatives(
         province,
     )
     facts = learner_facts(db, user, today)
-    funding = route(matched(open_opportunities(db, ("bursary", "loan")), facts))
-    work_kinds = ("learnership", "work")
-    same_field = [
-        o for o in open_opportunities(db, work_kinds) if o.field_id in (None, target.field_id)
-    ]
-    work = route(matched(same_field, facts))
+    funding = route(near(matched(open_opportunities(db, ("bursary", "loan")), facts), target))
+    work = route(near(matched(open_opportunities(db, ("learnership", "work")), facts), target))
     return AlternativesOut(
         routes=[
             RouteOut(
@@ -84,3 +81,18 @@ def alternatives(
         funding=[to_matched(o, a.verdict, a.results) for o, a in funding],
         work=[to_matched(o, a.verdict, a.results) for o, a in work],
     )
+
+
+def near(
+    pairs: list[tuple[m.Opportunity, Assessment]], target: m.Programme
+) -> list[tuple[m.Opportunity, Assessment]]:
+    """Same field first, then open-to-all; other fields are left out."""
+    top = target.field_id.split(".")[0]
+
+    def rank(field: str | None) -> int | None:
+        if field is None:
+            return 1
+        return 0 if field.split(".")[0] == top else None
+
+    kept = [(rank(o.field_id), o, a) for o, a in pairs]
+    return [(o, a) for r, o, a in sorted(kept, key=lambda x: x[0] or 0) if r is not None]

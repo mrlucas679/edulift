@@ -1,9 +1,11 @@
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine
 
+from app.routers.alternatives import near
 from app.seed import read, write
 from tests.test_marks import active
 from tests.test_seed import REPO_DATA, dataset
@@ -81,3 +83,16 @@ def test_alternatives_need_marks(client: TestClient, inbox: dict[str, str], seed
 def test_alternatives_need_sign_in(client: TestClient, seeded: None) -> None:
     r = client.post("/v1/programmes/uj.bsc-it/alternatives", json={"marks": WITHOUT_MATHS})
     assert r.status_code == 401
+
+
+def test_plan_b_keeps_funding_and_work_in_the_same_field() -> None:
+    def opp(name: str, field: str | None) -> SimpleNamespace:
+        return SimpleNamespace(name=name, field_id=field)
+
+    pairs = [
+        (opp("cars", "engineering"), "a"),
+        (opp("any", None), "b"),
+        (opp("code", "it.web"), "c"),
+    ]
+    kept = near(pairs, SimpleNamespace(field_id="it.software"))  # type: ignore[arg-type]
+    assert [o.name for o, _ in kept] == ["code", "any"]
