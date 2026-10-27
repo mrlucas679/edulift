@@ -1,9 +1,13 @@
-"""Email and password sign-in for persistent demo learner accounts."""
+"""Demo sign-in: email/password accounts that keep their data, and the one-tap demo."""
 
+from datetime import UTC, datetime, timedelta
+
+import jwt
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine
 
+from app.demo import DEMO_ISSUER, demo_token
 from app.fake_auth import FakeAuth
 from app.mail import ConsoleMailer
 from app.seed import read, write
@@ -86,3 +90,53 @@ def test_duplicate_demo_email_is_reported(demo: TestClient) -> None:
 def test_demo_password_must_meet_minimum_length(demo: TestClient) -> None:
     short = demo.post("/v1/auth/demo/register", json={"email": BODY["email"], "password": "short"})
     assert short.status_code == 422
+
+
+# One tap
+
+
+def tap(demo: TestClient) -> dict[str, str]:
+    r = demo.post("/v1/auth/demo")
+    assert r.status_code == 200
+    return {"authorization": f"Bearer {r.json()['access_token']}"}
+
+
+def test_one_tap_demo_is_off_without_a_secret(client: TestClient) -> None:
+    assert client.post("/v1/auth/demo").status_code == 404
+
+
+def test_one_tap_starts_a_fresh_learner(demo: TestClient, repo_data: None) -> None:
+    me = demo.get("/v1/me/details", headers=tap(demo)).json()
+    assert me["status"] == "onboarding" and me["id"].startswith("demo-")
+
+
+def test_two_taps_never_share_a_learner(demo: TestClient, repo_data: None) -> None:
+    first, second = tap(demo), tap(demo)
+    demo.put("/v1/me/profile", json={"birth_date": "2005-03-01"}, headers=first)
+    assert demo.get("/v1/me/details", headers=second).json()["birth_date"] is None
+    assert demo.get("/v1/me/details", headers=first).json()["birth_date"] == "2005-03-01"
+
+
+def test_a_demo_learner_can_finish_setup_and_save_marks(demo: TestClient, repo_data: None) -> None:
+    h = tap(demo)
+    demo.put("/v1/me/profile", json={"birth_date": "2005-03-01"}, headers=h)
+    demo.post("/v1/me/consents", json={"purpose": "account", "granted": True}, headers=h)
+    marks = {"english_hl": 72, "mathematics": 68}
+    assert demo.put("/v1/me/marks/gr12_june", json={"marks": marks}, headers=h).status_code == 200
+
+
+def test_forged_or_foreign_demo_tokens_are_refused(demo: TestClient) -> None:
+    forged = demo_token("y" * 40, "demo-abc")
+    assert demo.get("/v1/me", headers={"authorization": f"Bearer {forged}"}).status_code == 401
+    # Signed with the real secret but naming a real learner's id: still refused.
+    other = demo_token(SECRET, "some-cognito-user")
+    assert demo.get("/v1/me", headers={"authorization": f"Bearer {other}"}).status_code == 401
+
+
+def test_expired_demo_token_is_refused(demo: TestClient) -> None:
+    old = jwt.encode(
+        {"sub": "demo-abc", "iss": DEMO_ISSUER, "client_id": "demo", "token_use": "access",
+         "exp": datetime.now(UTC) - timedelta(minutes=1)},
+        SECRET, algorithm="HS256",
+    )  # fmt: skip
+    assert demo.get("/v1/me", headers={"authorization": f"Bearer {old}"}).status_code == 401

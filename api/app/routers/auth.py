@@ -1,4 +1,4 @@
-"""Email-code and demo email/password sign-in routes."""
+"""Sign-in: email codes, demo email/password accounts, and the one-tap demo."""
 
 from fastapi import APIRouter, Request, Response
 from sqlalchemy import Engine
@@ -6,6 +6,7 @@ from sqlalchemy import Engine
 from app import rate_limit
 from app.auth import TokenSet
 from app.config import Settings
+from app.demo import DEMO_SECONDS, demo_token, new_demo_learner
 from app.deps import ClientIp, DbEngine, Identities, SignedIn
 from app.errors import NotFoundError
 from app.schemas import (
@@ -61,6 +62,23 @@ def refresh(body: RefreshRequest, identities: Identities) -> TokenResponse:
 def sign_out(body: SignOutRequest, _: SignedIn, identities: Identities) -> Response:
     identities.sign_out(body.refresh_token)
     return Response(status_code=204)
+
+
+@router.post("/demo")
+def try_demo(request: Request, ip: ClientIp, engine: DbEngine) -> TokenResponse:
+    """Sign in as a brand-new demo learner. Off unless DEMO_SECRET is set."""
+    settings: Settings = request.app.state.settings
+    if not settings.demo_secret:
+        raise NotFoundError
+    # Each tap makes a learner: limit per IP.
+    rate_limit.check(engine, "demo:new", ip, limit=20, window_seconds=FIFTEEN_MINUTES)
+    with request.app.state.sessions() as db, db.begin():
+        subject = new_demo_learner(db)
+    return TokenResponse(
+        access_token=demo_token(settings.demo_secret, subject),
+        refresh_token=None,
+        expires_in=DEMO_SECONDS,
+    )
 
 
 @router.post("/demo/register")
