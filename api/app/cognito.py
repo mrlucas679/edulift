@@ -73,32 +73,12 @@ class CognitoAuth:
             response = self._client.initiate_auth(
                 AuthFlow="USER_AUTH",
                 ClientId=self._client_id,
-                AuthParameters={"USERNAME": email, "PREFERRED_CHALLENGE": "PASSWORD"},
+                AuthParameters={
+                    "USERNAME": email,
+                    "PREFERRED_CHALLENGE": "PASSWORD",
+                    "PASSWORD": password,
+                },
             )
-            if response.get("ChallengeName") == "SELECT_CHALLENGE":
-                session = response.get("Session")
-                if not session:
-                    raise UpstreamUnavailableError
-                response = self._client.respond_to_auth_challenge(
-                    ClientId=self._client_id,
-                    ChallengeName="SELECT_CHALLENGE",
-                    Session=session,
-                    ChallengeResponses={
-                        "USERNAME": email,
-                        "ANSWER": "PASSWORD",
-                        "PASSWORD": password,
-                    },
-                )
-            elif response.get("ChallengeName") == "PASSWORD":
-                session = response.get("Session")
-                if not session:
-                    raise UpstreamUnavailableError
-                response = self._client.respond_to_auth_challenge(
-                    ClientId=self._client_id,
-                    ChallengeName="PASSWORD",
-                    Session=session,
-                    ChallengeResponses={"USERNAME": email, "PASSWORD": password},
-                )
         except ClientError as exc:
             if _aws_error(exc) in {"NotAuthorizedException", "UserNotFoundException"}:
                 raise InvalidCredentialsError from exc
