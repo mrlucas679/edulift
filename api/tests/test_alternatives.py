@@ -96,3 +96,29 @@ def test_plan_b_keeps_funding_and_work_in_the_same_field() -> None:
     ]
     kept = near(pairs, SimpleNamespace(field_id="it.software"))  # type: ignore[arg-type]
     assert [o.name for o, _ in kept] == ["code", "any"]
+
+
+def test_a_closed_course_you_would_get_into_still_counts_as_a_route() -> None:
+    from app.routers.alternatives import _met_if_open  # noqa: PLC0415
+    from app.schemas import CheckOut, VerdictOut  # noqa: PLC0415
+
+    def verdict(result: str) -> VerdictOut:
+        check = CheckOut(
+            name="score",
+            required="26",
+            yours="28",
+            result=result,
+            source_url="https://x",
+            checked_on=None,
+        )
+        return VerdictOut(
+            programme_id="p",
+            outcome="closed",
+            score=28,
+            scheme=None,
+            window="closed",
+            checks=[check],
+        )
+
+    assert _met_if_open(verdict("pass")) == "qualifies"
+    assert _met_if_open(verdict("fail")) == "closed"

@@ -293,10 +293,15 @@ class PlanOut(BaseModel):
 # Plan B
 
 
+class RouteItemOut(ProgrammeOut):
+    # "closed" means applications for this intake have closed.
+    window: str
+
+
 class RouteOut(BaseModel):
     key: str
     title: str
-    items: list[ProgrammeOut]
+    items: list[RouteItemOut]
     empty_reason: str
 
 
