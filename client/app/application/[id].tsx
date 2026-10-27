@@ -50,7 +50,7 @@ export default function ApplicationScreen() {
         {a && (
           <>
             <Heading>{a.name}</Heading>
-            <Body muted small>{a.offer_deadline ? `Closes ${shortDate(a.offer_deadline)}` : 'Closing date not published'}</Body>
+            {a.offer_deadline && <Body muted small>Reply to an offer by {shortDate(a.offer_deadline)}</Body>}
 
             <Section>Status</Section>
             <Chips
@@ -74,6 +74,7 @@ export default function ApplicationScreen() {
               <Pressable
                 key={item.id}
                 accessibilityRole="checkbox"
+                accessibilityLabel={item.label}
                 accessibilityState={{ checked: item.done }}
                 onPress={() => tick.mutate({ itemId: item.id, done: !item.done })}
                 style={{ minHeight: touchTarget, flexDirection: 'row', alignItems: 'center', gap: space.md }}

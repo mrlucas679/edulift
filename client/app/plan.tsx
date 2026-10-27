@@ -111,7 +111,8 @@ function Suggestions({ accessToken }: { accessToken: string | null }) {
             </View>
           </Card>
         ))}
-        {picks.length === 0 && <Body muted small>None of the courses we hold is a sure match for these marks yet. Browse every course to see how close you are.</Body>}
+        {picks.length === 0 && anyField.some((q) => q.isPending) && <Body muted small>Finding courses you qualify for…</Body>}
+        {picks.length === 0 && !anyField.some((q) => q.isPending) && <Body muted small>None of the courses we hold is a sure match for these marks yet. Browse every course to see how close you are.</Body>}
       </QueryState>
       <Button label="Browse all courses" variant="secondary" onPress={() => router.push('/study')} />
       <ErrorNote error={save.error} />

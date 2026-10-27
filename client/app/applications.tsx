@@ -34,7 +34,7 @@ function Row({ app }: { app: Application }) {
     <Card onPress={() => router.push(`/application/${app.id}`)} label={`Open ${app.name}`}>
       <CardTop
         title={app.name}
-        pill={submitted ? 'Submitted' : app.offer_deadline ? `Closes ${shortDate(app.offer_deadline)}` : undefined}
+        pill={submitted ? 'Submitted' : app.offer_deadline ? `Reply by ${shortDate(app.offer_deadline)}` : undefined}
         filled={submitted}
       />
       <Body muted small>
