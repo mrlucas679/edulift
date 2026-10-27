@@ -58,9 +58,8 @@ class TemplateProvider:
         if data.outcome == "incomplete":
             summary = "Add at least six subjects plus Life Orientation to get a result."
         elif unmet:
-            summary = (
-                f"{data.programme} needs more than your marks show. See the short checks below."
-            )
+            needs = "; ".join(f"{c.required} (yours: {c.yours})" for c in unmet[:3])
+            summary = f"{data.programme} needs {needs}."[:300]
         elif unknown:
             summary = (
                 f"You meet what we could confirm for {data.programme}. "
@@ -74,7 +73,7 @@ class TemplateProvider:
             else "Check the closing date on the official site before you apply."
         )
         plan_b = (
-            "Look at the other options listed below."
+            "Your Plan B shows other routes into the same field."
             if data.outcome != "qualifies"
             else "No other option is needed for this programme."
         )

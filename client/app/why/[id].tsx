@@ -50,7 +50,9 @@ export default function WhyThisResult() {
             <Body muted small>
               {e.provider === 'bedrock'
                 ? 'Written by AI from the checks on the course page. It can’t change the result — only the institution decides who gets a place.'
-                : 'Turn on AI explanations in Settings for a plain-language version.'}
+                : e.fallback_reason === 'no_consent'
+                  ? 'Turn on AI explanations in Settings for a plain-language version.'
+                  : 'AI wording isn’t available right now, so this is the standard explanation.'}
             </Body>
           </Card>
         </>
