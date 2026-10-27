@@ -202,3 +202,12 @@ def test_guardian_gets_the_withdraw_link_and_an_export(
     export = client.get(f"/v1/guardian/withdraw/{withdraw}/export")
     assert export.status_code == 200
     assert "profile" in export.json()
+
+
+def test_details_include_province_and_certificate(
+    client: TestClient, inbox: dict[str, str]
+) -> None:
+    s = sign_in(client, inbox, "where@example.org")
+    body = {"birth_date": born(18), "province": "Gauteng", "certificate": "nsc"}
+    me = client.put("/v1/me/profile", json=body, headers=s.headers).json()
+    assert (me["province"], me["certificate"]) == ("Gauteng", "nsc")

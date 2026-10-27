@@ -121,6 +121,8 @@ def _me(db: Session, user: m.User) -> MeDetail:
         created_at=user.created_at,
         first_name=profile.first_name if profile else None,
         birth_date=profile.birth_date if profile else None,
+        province=profile.province if profile else None,
+        certificate=profile.certificate if profile else None,
         consents=sorted(_active_purposes(db, user.id)),
         interests=list(profile.interests) if profile else [],
         reconfirm=reconfirm_purposes(db, user, date.today()),

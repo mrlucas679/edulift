@@ -9,6 +9,8 @@ const me = z.object({
   status: z.enum(['onboarding', 'pending_guardian', 'active', 'restricted']),
   first_name: z.string().nullable(),
   birth_date: z.string().nullable(),
+  province: z.string().nullable(),
+  certificate: z.string().nullable(),
   consents: z.array(z.string()),
   reconfirm: z.array(z.string()),
   interests: z.array(z.string()),
