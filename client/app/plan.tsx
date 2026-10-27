@@ -5,7 +5,7 @@ import { Pressable, View } from 'react-native';
 import { useMe } from '../src/account';
 import { useAlternatives } from '../src/alternatives';
 import { usePlan, useSavePlan, type Plan } from '../src/plan';
-import { useBatchChecks, useProgrammes } from '../src/reference';
+import { useBatchChecks, useProgrammes, useProgrammesById } from '../src/reference';
 import { useSession } from '../src/session';
 import { space } from '../src/theme';
 import { BANNER, OUTCOMES } from '../src/verdicts';
@@ -83,8 +83,14 @@ function Suggestions({ accessToken }: { accessToken: string | null }) {
   const programmes = useProgrammes({ field });
   const outcomes = useBatchChecks(accessToken);
   const save = useSavePlan(accessToken);
-  const good = new Set((outcomes.data ?? []).filter((r) => GOOD.has(r.outcome)).map((r) => r.programme_id));
-  const picks = (programmes.data?.items ?? []).filter((p) => good.has(p.id)).slice(0, 6);
+  const goodIds = (outcomes.data ?? []).filter((r) => GOOD.has(r.outcome)).map((r) => r.programme_id);
+  const good = new Set(goodIds);
+  const inField = (programmes.data?.items ?? []).filter((p) => good.has(p.id));
+  // Nothing in their interests: show any course their marks meet.
+  const anyField = useProgrammesById(inField.length ? [] : goodIds.slice(0, 6));
+  const picks = inField.length
+    ? inField.slice(0, 6)
+    : anyField.flatMap((q) => (q.data ? [q.data] : []));
 
   return (
     <>
@@ -105,7 +111,7 @@ function Suggestions({ accessToken }: { accessToken: string | null }) {
             </View>
           </Card>
         ))}
-        {picks.length === 0 && <Body muted small>Nothing in your interests is a sure match yet. Browse every course instead.</Body>}
+        {picks.length === 0 && <Body muted small>None of the courses we hold is a sure match for these marks yet. Browse every course to see how close you are.</Body>}
       </QueryState>
       <Button label="Browse all courses" variant="secondary" onPress={() => router.push('/study')} />
       <ErrorNote error={save.error} />

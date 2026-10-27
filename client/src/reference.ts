@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { request } from './api';
@@ -187,3 +187,12 @@ export function useBatchChecks(accessToken: string | null) {
     retry: false,
   });
 }
+
+// Several courses by id, for short lists like plan suggestions.
+export const useProgrammesById = (ids: string[]) =>
+  useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ['programme', id],
+      queryFn: () => request(`/v1/programmes/${encodeURIComponent(id)}`, programmeDetail),
+    })),
+  });
