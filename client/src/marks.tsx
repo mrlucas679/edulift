@@ -1,13 +1,20 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 // Marks typed into the calculator. Memory only: gone when the app closes.
 export type Row = { subject: string; percent: string };
 
 const MarksContext = createContext<[Row[], React.Dispatch<React.SetStateAction<Row[]>>] | null>(null);
 
+// Set by MarksProvider; sign-out calls it so the next person on this phone starts clean.
+let forget: () => void = () => undefined;
+export const forgetTypedMarks = () => forget();
+
 export function MarksProvider({ children }: { children: React.ReactNode }) {
-  const state = useState<Row[]>([]);
-  return <MarksContext.Provider value={state}>{children}</MarksContext.Provider>;
+  const [rows, setRows] = useState<Row[]>([]);
+  useEffect(() => {
+    forget = () => setRows([]);
+  }, []);
+  return <MarksContext.Provider value={[rows, setRows]}>{children}</MarksContext.Provider>;
 }
 
 export function useMarks() {

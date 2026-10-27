@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { z } from 'zod';
 
 import { ApiError, request, setAccessRefresher, startResponse, tokenResponse } from './api';
+import { forgetTypedMarks } from './marks';
 import { forgetRefreshToken, loadRefreshToken, saveRefreshToken } from './tokens';
 
 type Session = {
@@ -127,6 +128,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       }).catch(() => undefined);
     }
     await forgetRefreshToken();
+    forgetTypedMarks();
     setAccessToken(null);
     setStatus('signed-out');
   }, [accessToken]);

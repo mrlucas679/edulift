@@ -6,7 +6,7 @@ import { resolveSubjects, toMarks, type Row } from './marks';
 import { previewAps, useSubjectNames, useSubjects, type PreviewRow } from './reference';
 import { SubjectSuggestions } from './subject-suggest';
 import { font, radius, space, text, touchTarget, useColors } from './theme';
-import { Body, Button, Card, Title } from './ui';
+import { Body, Button, Card, ErrorNote, Title } from './ui';
 
 export const MIN_SUBJECTS = 7; // six plus Life Orientation
 
@@ -100,6 +100,7 @@ export function ApsSummary({ marks, full }: { marks: Record<string, number>; ful
       </Card>
     );
   }
+  if (preview.error) return <ErrorNote error={preview.error} />;
   const aps = scoreFor(preview.data, 'standard_best6');
   if (!full) {
     return (
