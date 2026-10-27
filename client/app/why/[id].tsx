@@ -1,43 +1,58 @@
-import { checkLabel } from '../../src/check-labels';
-import { useMutation } from '@tanstack/react-query';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
+import { Linking } from 'react-native';
 
-import { useMarks, toMarks } from '../../src/marks';
-import { checkProgramme, type Verdict } from '../../src/reference';
+import { useExplain } from '../../src/explain';
+import { useProgramme } from '../../src/reference';
+import { useCurrentMarks } from '../../src/saved-marks';
 import { useSession } from '../../src/session';
-import { Body, Card, ErrorNote, Heading, Screen, Title } from '../../src/ui';
+import { Body, Button, Card, ErrorNote, Loading, Screen, Section, Title } from '../../src/ui';
 
-const RESULT = { pass: 'Met', fail: 'Short', unknown: 'Not confirmed' };
+const KHETHA = 'tel:0869990123';
 
 export default function WhyThisResult() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { accessToken } = useSession();
-  const [rows] = useMarks();
-  const check = useMutation<Verdict, unknown, void>({
-    mutationFn: () => checkProgramme(id, toMarks(rows), accessToken),
-  });
+  const { status, accessToken } = useSession();
+  const programme = useProgramme(id);
+  const marks = useCurrentMarks();
+  const explain = useExplain(id, accessToken);
+  const ready = status === 'signed-in' && Object.keys(marks).length > 0;
 
   useEffect(() => {
-    check.mutate();
-    // Run once when the screen opens; the marks are read at that moment.
+    if (ready) explain.mutate(marks);
+    // Explain once, when the screen opens with marks to explain.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, ready]);
 
+  const e = explain.data;
   return (
-    <Screen>
-      <Heading>Why this result</Heading>
-      <ErrorNote error={check.error} />
-      {check.data && (
+    <Screen
+      title="Why this result"
+      footer={
         <>
-          <Title>Your score: {check.data.score ?? 'not available'}</Title>
-          {check.data.checks.map((c) => (
-            <Card key={c.name}>
-              <Body>{RESULT[c.result]}</Body>
-              <Body muted>{checkLabel(c.name, check.data.scheme)} needs: {c.required}</Body>
-              <Body muted>Yours: {c.yours}</Body>
-            </Card>
-          ))}
+          <Button label="See my Plan B" onPress={() => router.push('/plan')} />
+          <Button label="Talk to a person — Khetha 086 999 0123" variant="secondary" onPress={() => Linking.openURL(KHETHA)} />
+        </>
+      }
+    >
+      {programme.data && <Body muted small>{programme.data.name}</Body>}
+      {!ready && <Body>Sign in and save your marks to get an explanation of your result.</Body>}
+      {explain.isPending && <Loading />}
+      <ErrorNote error={explain.error} />
+      {e && (
+        <>
+          <Body>{e.summary}</Body>
+          <Section>What you can do next</Section>
+          <Body>{e.next_step}</Body>
+          <Body muted>{e.plan_b_hint}</Body>
+          <Card muted>
+            <Title>{e.provider === 'bedrock' ? 'Explained by AI' : 'Standard explanation'}</Title>
+            <Body muted small>
+              {e.provider === 'bedrock'
+                ? 'Written by AI from the checks on the course page. It can’t change the result — only the institution decides who gets a place.'
+                : 'Turn on AI explanations in Settings for a plain-language version.'}
+            </Body>
+          </Card>
         </>
       )}
     </Screen>

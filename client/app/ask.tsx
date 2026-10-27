@@ -1,11 +1,11 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Linking } from 'react-native';
-import { useState } from 'react';
 
 import { useAsk } from '../src/assist';
-import { useSession } from '../src/session';
 import { t } from '../src/i18n';
-import { Body, Button, Card, ErrorNote, Field, Heading, Screen, Title } from '../src/ui';
+import { useSession } from '../src/session';
+import { Body, Button, Card, ErrorNote, Field, Screen, Section, Title } from '../src/ui';
 
 function safeHost(url: string | null): string | null {
   if (!url) return null;
@@ -19,23 +19,29 @@ function safeHost(url: string | null): string | null {
 
 export default function AskScreen() {
   const { status, accessToken } = useSession();
+  const { about } = useLocalSearchParams<{ about?: string }>();
   const ask = useAsk(accessToken);
-  const [question, setQuestion] = useState('');
+  // Opened from a course: the question is written and asked already.
+  const [question, setQuestion] = useState(about ? `What should I know about ${about.slice(0, 200)}?` : '');
+  const signedIn = status === 'signed-in';
 
-  if (status !== 'signed-in') {
+  useEffect(() => {
+    if (about && signedIn) ask.mutate(question.trim());
+    // Ask once, when the screen opens from a course.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [about, signedIn]);
+
+  if (!signedIn) {
     return (
-      <Screen>
-        <Heading>Ask about programmes</Heading>
-        <Body muted>Sign in to ask questions.</Body>
-        <Button label="Sign in" onPress={() => router.push('/sign-in')} />
+      <Screen title="Ask a question" footer={<Button label="Sign in or create an account" onPress={() => router.push('/sign-in')} />}>
+        <Body muted>Sign in to ask questions about courses, funding and work.</Body>
       </Screen>
     );
   }
 
   return (
-    <Screen>
-      <Heading>Ask about programmes</Heading>
-      <Body muted>{t('askDisclaimer')}</Body>
+    <Screen title="Ask a question">
+      <Body muted small>{t('askDisclaimer')}</Body>
       <Field label="Your question" value={question} onChangeText={setQuestion} maxLength={300} multiline />
       <Button
         label="Ask"
@@ -45,26 +51,28 @@ export default function AskScreen() {
       />
       <ErrorNote error={ask.error} />
       {ask.data && (
-        <Card>
-          <Body>{ask.data.answer}</Body>
-          {ask.data.provider === 'template' && <Body muted>Standard answer from our records.</Body>}
+        <>
+          <Card muted>
+            <Body>{ask.data.answer}</Body>
+            <Body muted small>
+              {ask.data.provider === 'bedrock' ? 'Written by AI from our records. Check with the institution.' : 'Standard answer from our records.'}
+            </Body>
+          </Card>
+          {ask.data.cited.length > 0 && <Section>From these records</Section>}
           {ask.data.cited.map((c) => {
             const host = safeHost(c.url);
             return (
               <Card key={c.id}>
                 <Title>{c.title}</Title>
                 {host && c.url ? (
-                  <>
-                    <Body muted>You are going to {host}.</Body>
-                    <Button label={`Open ${host}`} onPress={() => Linking.openURL(c.url as string)} />
-                  </>
+                  <Button label={`Open ${host}`} variant="secondary" onPress={() => Linking.openURL(c.url as string)} />
                 ) : (
-                  <Body muted>No safe link for this yet.</Body>
+                  <Body muted small>No safe link for this yet.</Body>
                 )}
               </Card>
             );
           })}
-        </Card>
+        </>
       )}
     </Screen>
   );
