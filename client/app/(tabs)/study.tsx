@@ -66,7 +66,7 @@ export default function Study() {
         value={[...(fieldOn ? ['field'] : []), ...(level ? [level] : [])]}
         onChange={(id) => (id === 'field' ? setFieldOn(!fieldOn) : setLevel(level === id ? null : id))}
       />
-      <Section>{q || !fieldOn ? 'Courses' : fieldName} · {items.length}</Section>
+      <Section>{q || !fieldOn ? 'Courses' : fieldName} · {items.length}{lowData && items.length > 10 ? ' · showing 10 (low-data)' : ''}</Section>
 
       <QueryState query={programmes} empty={items.length === 0}>
         {(lowData ? sorted.slice(0, 10) : sorted).map((p) => {

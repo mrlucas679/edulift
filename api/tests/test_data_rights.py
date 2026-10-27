@@ -116,3 +116,13 @@ def test_recent_guardian_requests_are_kept(
     with DbSession(engine) as db, db.begin():
         assert erase_unanswered(db, identity, now) == 0
     assert count(engine, m.User) == 1
+
+
+def test_export_includes_saved_drafts(
+    client: TestClient, inbox: dict[str, str], seeded: None
+) -> None:
+    a = active(client, inbox, "a@example.org")
+    draft = {"kind": "cv", "title": "CV", "content": "Grade 12 learner."}
+    assert client.post("/v1/me/drafts", json=draft, headers=a.headers).status_code == 201
+    body = client.get("/v1/me/export", headers=a.headers).json()
+    assert body["drafts"] == [draft]

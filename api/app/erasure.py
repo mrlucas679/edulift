@@ -28,6 +28,7 @@ def export_learner(db: Session, user_id: str) -> dict[str, Any]:
             select(m.NbtRecord.component, m.NbtRecord.level).where(m.NbtRecord.user_id == user_id)
         )
     }
+    drafts = db.scalars(select(m.DocumentDraft).where(m.DocumentDraft.user_id == user_id))
     plan = db.scalars(
         select(m.PlanTarget.programme_id)
         .where(m.PlanTarget.user_id == user_id)
@@ -59,6 +60,7 @@ def export_learner(db: Session, user_id: str) -> dict[str, Any]:
         "saved": [{"target_kind": s.target_kind, "target_id": s.target_id} for s in saved],
         "plan": list(plan),
         "applications": [_application(db, a) for a in applications],
+        "drafts": [{"kind": d.kind, "title": d.title, "content": d.content} for d in drafts],
     }
 
 

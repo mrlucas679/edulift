@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 
 import { useMe } from '../src/account';
+import { useDrafts } from '../src/assist';
 import { deleteAccount, exportData } from '../src/data-rights';
 import { saveJson } from '../src/download';
 import { usePlan } from '../src/plan';
@@ -18,6 +19,7 @@ export default function MyData() {
   const saved = useSaved(accessToken);
   const applications = useApplications(accessToken);
   const savedMarks = useSavedMarks();
+  const drafts = useDrafts(accessToken);
   const sets = Object.keys(savedMarks.data ?? {}).length;
   const [busy, setBusy] = useState<'download' | 'delete' | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -67,7 +69,8 @@ export default function MyData() {
         <Row label="Account" value="email, first name" />
         <Row label="Profile" value={me.data?.birth_date ? 'date of birth, province' : 'not yet'} />
         <Row label="Marks" value={`${sets} result set${sets === 1 ? '' : 's'}`} />
-        <Row label="Plan" value={plan.data ? `${plan.data.targets.length} courses` : '…'} />
+        <Row label="Plan" value={plan.data ? `${plan.data.targets.length} course${plan.data.targets.length === 1 ? '' : 's'}` : '…'} />
+        <Row label="CV and letters" value={drafts.data ? `${drafts.data.length} saved` : '…'} />
         <Row label="Saved" value={saved.data ? `${saved.data.length} items` : '…'} />
         <Row label="Applications" value={applications.data ? `${applications.data.length} tracked` : '…'} />
         <Row label="Choices" value="settings, with dates" />
