@@ -140,3 +140,13 @@ def test_expired_demo_token_is_refused(demo: TestClient) -> None:
         SECRET, algorithm="HS256",
     )  # fmt: skip
     assert demo.get("/v1/me", headers={"authorization": f"Bearer {old}"}).status_code == 401
+
+
+def test_a_demo_learner_under_18_can_ask_a_guardian(demo: TestClient, repo_data: None) -> None:
+    h = tap(demo)
+    today = datetime.now(UTC).date()
+    demo.put(
+        "/v1/me/profile", json={"birth_date": str(today.replace(year=today.year - 17))}, headers=h
+    )
+    body = {"guardian_name": "Mrs Test", "guardian_email": "parent@example.org"}
+    assert demo.post("/v1/me/guardian", json=body, headers=h).status_code == 204
