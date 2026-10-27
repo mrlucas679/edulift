@@ -185,7 +185,7 @@ const PURPOSE_TITLES: Record<string, string> = {
   nbt_results: 'Use my NBT results',
 };
 
-function Consents({ me }: { me: MeDetail }) {
+function Consents({ me, onAgreed }: { me: MeDetail; onAgreed?: () => void }) {
   const { accessToken } = useSession();
   const colors = useColors();
   const queryClient = useQueryClient();
@@ -194,6 +194,7 @@ function Consents({ me }: { me: MeDetail }) {
   const [reminderEmail, setReminderEmail] = useState('');
 
   async function toggle(purpose: string, on: boolean) {
+    if (purpose === 'account' && on) onAgreed?.();
     setPending(purpose);
     setError(null);
     try {
@@ -322,6 +323,8 @@ export default function Onboarding() {
   const me = useMe();
   const [tooYoung, setTooYoung] = useState(false);
   const [interestsDone, setInterestsDone] = useState(false);
+  // Set when the learner agrees here, so they see the AI choices and the marks step.
+  const [agreedHere, setAgreedHere] = useState(false);
 
   if (tooYoung) {
     return (
@@ -338,7 +341,7 @@ export default function Onboarding() {
   if (status !== 'signed-in') return <Redirect href="/sign-in" />;
   if (me.isPending) return <Loading />;
   // A learner who already finished setup comes back to Home, not the consent screen.
-  if (me.data?.status === 'active' && me.data.birth_date && me.data.interests.length > 0) {
+  if (!agreedHere && me.data?.status === 'active' && me.data.birth_date) {
     return <Redirect href="/(tabs)" />;
   }
   if (!me.data) {
@@ -360,7 +363,7 @@ export default function Onboarding() {
         <Interests onDone={() => setInterestsDone(true)} />
       ) : (
         <>
-          <Consents me={me.data} />
+          <Consents me={me.data} onAgreed={() => setAgreedHere(true)} />
           {me.data.status === 'active' && (
             <>
               <StepBar step={3} />

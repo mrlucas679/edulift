@@ -33,6 +33,7 @@ export default function MyMarks() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState(false);
+  const me = useMe();
 
   function update(index: number, patch: Partial<Row>) {
     setRows(rows.map((r, i) => (i === index ? { ...r, ...patch } : r)));
@@ -51,6 +52,16 @@ export default function MyMarks() {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (me.data && me.data.status !== 'active') {
+    return (
+      <Screen>
+        <Heading>My marks</Heading>
+        <Body>Finish setting up your account to save marks.</Body>
+        <Button label="Finish setting up" onPress={() => router.replace('/onboarding')} />
+      </Screen>
+    );
   }
 
   return (
