@@ -52,7 +52,12 @@ function PlanB({ id, accessToken }: { id: string; accessToken: string | null }) 
           <Title>{route.title}</Title>
           {route.items.length === 0 && <Body muted small>{route.empty_reason}</Body>}
           {route.items.map((item) => (
-            <Button key={item.id} label={item.name} variant="link" onPress={() => router.push(`/programme/${item.id}`)} />
+            <Button
+              key={item.id}
+              label={item.window === 'closed' ? `${item.name} (closed this year)` : item.name}
+              variant="link"
+              onPress={() => router.push(`/programme/${item.id}`)}
+            />
           ))}
         </Card>
       ))}

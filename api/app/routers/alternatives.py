@@ -11,7 +11,14 @@ from app.nbt_levels import learner_nbt
 from app.opportunities import learner_facts, matched, open_opportunities, route
 from app.routers.marks import active_user, latest_marks
 from app.routers.opportunities import to_matched
-from app.schemas import AlternativesOut, CheckRequest, ProgrammeOut, RouteOut
+from app.schemas import (
+    AlternativesOut,
+    CheckRequest,
+    ProgrammeOut,
+    RouteItemOut,
+    RouteOut,
+    VerdictOut,
+)
 from app.verdicts import programme_verdict, subject_names
 from eligibility.opportunities import Assessment
 from eligibility.plan_b import QUALIFIES, Candidate, Target, plan_b
@@ -54,7 +61,7 @@ def alternatives(
                 institution_province=institution.province,
                 field_id=programme.field_id,
                 qualification=programme.qualification,
-                outcome=verdict.outcome,
+                outcome=_met_if_open(verdict),
                 window=verdict.window,
                 closes_on=programme.closes_on,
             )
@@ -80,7 +87,12 @@ def alternatives(
                 title=r.title,
                 empty_reason=r.empty_reason,
                 items=[
-                    ProgrammeOut.model_validate(db.get_one(m.Programme, c.programme_id))
+                    RouteItemOut(
+                        **ProgrammeOut.model_validate(
+                            db.get_one(m.Programme, c.programme_id)
+                        ).model_dump(),
+                        window=c.window,
+                    )
                     for c in r.items
                 ],
             )
@@ -104,3 +116,13 @@ def near(
 
     kept = [(rank(o.field_id), o, a) for o, a in pairs]
     return [(o, a) for r, o, a in sorted(kept, key=lambda x: x[0] or 0) if r is not None]
+
+
+def _met_if_open(verdict: VerdictOut) -> str:
+    """A closed course the learner would otherwise get into still counts as a route.
+
+    Plan B ranks it after open ones, and the page says it is closed for this intake.
+    """
+    if verdict.outcome == "closed" and all(c.result == "pass" for c in verdict.checks):
+        return "qualifies"
+    return verdict.outcome

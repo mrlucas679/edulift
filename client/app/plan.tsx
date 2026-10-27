@@ -46,7 +46,10 @@ function Routes({ planA, accessToken }: { planA: Plan['targets'][number]; access
       key: r.key,
       title: r.title,
       empty: r.empty_reason,
-      lines: r.items.map((p) => ({ id: p.id, name: p.name, tag: 'Qualify', filled: true, href: `/programme/${p.id}` })),
+      lines: r.items.map((p) => {
+        const closed = p.window === 'closed';
+        return { id: p.id, name: p.name, tag: closed ? 'Closed this year' : 'Qualify', filled: !closed, href: `/programme/${p.id}` };
+      }),
     })),
     {
       key: 'funding',

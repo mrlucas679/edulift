@@ -21,6 +21,7 @@ from app.assist import (
     TemplateDraft,
 )
 from app.auth import Auth
+from app.bedrock import FallbackClient
 from app.config import Settings
 from app.db import new_engine
 from app.errors import add_handlers, error_response
@@ -77,25 +78,21 @@ def _auth(settings: Settings) -> Auth:
 
 
 def _explainer(settings: Settings) -> ExplanationProvider:
-    if settings.ai_enabled and settings.bedrock_model_id:
-        client = boto3.client(
-            "bedrock-runtime",
-            region_name=settings.aws_region,
-            config=Config(read_timeout=settings.ai_timeout_seconds, retries={"max_attempts": 1}),
-        )
-        return BedrockProvider(client, settings.bedrock_model_id)
-    return TemplateProvider()
+    client = _ai_client(settings)
+    if client is None:
+        return TemplateProvider()
+    return BedrockProvider(client, settings.bedrock_model_id)
 
 
 def _ai_client(settings: Settings) -> object | None:
     if not (settings.ai_enabled and settings.bedrock_model_id):
         return None
-    client: object = boto3.client(
+    client = boto3.client(
         "bedrock-runtime",
         region_name=settings.aws_region,
         config=Config(read_timeout=settings.ai_timeout_seconds, retries={"max_attempts": 1}),
     )
-    return client
+    return FallbackClient(client, settings.bedrock_fallback_model_id)
 
 
 def _asker(settings: Settings) -> AskProvider:

@@ -12,6 +12,8 @@ const programme = z.object({
   field_id: z.string(),
   min_aps: z.number().nullable(),
   selection: z.boolean(),
+  // "closed": you'd get in, but this intake's applications have closed.
+  window: z.string().optional(),
 });
 
 const alternatives = z.object({

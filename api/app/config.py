@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     demo_secret: str = ""
     ai_enabled: bool = False
     bedrock_model_id: str = ""
+    # Used only when the first model is busy or unavailable.
+    bedrock_fallback_model_id: str = ""
     ai_timeout_seconds: float = 8
 
     @model_validator(mode="after")

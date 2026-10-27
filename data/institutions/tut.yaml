@@ -4,5 +4,302 @@ type: uot
 province: Gauteng
 apply_url: https://www.tut.ac.za/
 route: direct
+aps_scheme: standard_best6
 source: tut-site
-# cycles and programmes: add once checked against the 2027 prospectus
+programmes:
+- id: tut.dcs-m
+  name: Dip (Computer Science), with Mathematics
+  qualification: diploma
+  field: it.software
+  min_aps: 26
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+    - subject: technical_maths
+      min: 60
+- id: tut.dcs-ml
+  name: Dip (Computer Science), with Mathematical Literacy
+  qualification: diploma
+  field: it.software
+  min_aps: 28
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: maths_literacy
+      min: 80
+- id: tut.dcsx-m
+  name: Dip (Computer Science) (Extended), with Mathematics
+  qualification: diploma
+  field: it.software
+  min_aps: 23
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: mathematics
+      min: 50
+    - subject: technical_maths
+      min: 50
+- id: tut.dcsx-ml
+  name: Dip (Computer Science) (Extended), with Mathematical Literacy
+  qualification: diploma
+  field: it.software
+  min_aps: 25
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: maths_literacy
+      min: 70
+- id: tut.dcse
+  name: Dip (Computer Systems Engineering)
+  qualification: diploma
+  field: it
+  min_aps: 26
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+    - subject: technical_maths
+      min: 60
+  - - subject: physical_sciences
+      min: 50
+    - subject: technical_sciences
+      min: 50
+- id: tut.dcsex
+  name: Dip (Computer Systems Engineering) (Extended)
+  qualification: diploma
+  field: it
+  min_aps: 23
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: mathematics
+      min: 50
+    - subject: technical_maths
+      min: 50
+  - - subject: physical_sciences
+      min: 40
+    - subject: technical_sciences
+      min: 40
+- id: tut.dinf-m
+  name: Dip (Informatics), with Mathematics
+  qualification: diploma
+  field: it
+  min_aps: 26
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+    - subject: technical_maths
+      min: 60
+- id: tut.dinf-ml
+  name: Dip (Informatics), with Mathematical Literacy
+  qualification: diploma
+  field: it
+  min_aps: 28
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: maths_literacy
+      min: 80
+- id: tut.dinfx-m
+  name: Dip (Informatics) (Extended), with Mathematics
+  qualification: diploma
+  field: it
+  min_aps: 23
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: mathematics
+      min: 50
+    - subject: technical_maths
+      min: 50
+- id: tut.dinfx-ml
+  name: Dip (Informatics) (Extended), with Mathematical Literacy
+  qualification: diploma
+  field: it
+  min_aps: 25
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: maths_literacy
+      min: 70
+- id: tut.dit-m
+  name: Dip (Information Technology), with Mathematics
+  qualification: diploma
+  field: it
+  min_aps: 26
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+    - subject: technical_maths
+      min: 60
+  - - subject: physical_sciences
+      min: 40
+    - subject: technical_sciences
+      min: 40
+- id: tut.dit-ml
+  name: Dip (Information Technology), with Mathematical Literacy
+  qualification: diploma
+  field: it
+  min_aps: 28
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: maths_literacy
+      min: 80
+  - - subject: physical_sciences
+      min: 40
+    - subject: technical_sciences
+      min: 40
+- id: tut.ditx-m
+  name: Dip (Information Technology) (Extended), with Mathematics
+  qualification: diploma
+  field: it
+  min_aps: 23
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: mathematics
+      min: 50
+    - subject: technical_maths
+      min: 50
+  - - subject: physical_sciences
+      min: 40
+    - subject: technical_sciences
+      min: 40
+- id: tut.ditx-ml
+  name: Dip (Information Technology) (Extended), with Mathematical Literacy
+  qualification: diploma
+  field: it
+  min_aps: 25
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: maths_literacy
+      min: 70
+  - - subject: physical_sciences
+      min: 40
+    - subject: technical_sciences
+      min: 40
+- id: tut.dmc-m
+  name: Dip (Multimedia Computing), with Mathematics
+  qualification: diploma
+  field: it
+  min_aps: 26
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: mathematics
+      min: 60
+    - subject: technical_maths
+      min: 60
+- id: tut.dmc-ml
+  name: Dip (Multimedia Computing), with Mathematical Literacy
+  qualification: diploma
+  field: it
+  min_aps: 28
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 50
+    - subject: english_fal
+      min: 50
+  - - subject: maths_literacy
+      min: 80
+- id: tut.dmcx-m
+  name: Dip (Multimedia Computing) (Extended), with Mathematics
+  qualification: diploma
+  field: it
+  min_aps: 23
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: mathematics
+      min: 50
+    - subject: technical_maths
+      min: 50
+- id: tut.dmcx-ml
+  name: Dip (Multimedia Computing) (Extended), with Mathematical Literacy
+  qualification: diploma
+  field: it
+  min_aps: 25
+  closes_on: '2026-09-30'
+  source: tut-first-year-2027
+  requirements:
+  - - subject: english_hl
+      min: 40
+    - subject: english_fal
+      min: 40
+  - - subject: maths_literacy
+      min: 70
