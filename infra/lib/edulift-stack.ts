@@ -27,6 +27,8 @@ type Props = StackProps & {
 const API_PORT = 8000;
 // Claude 5 models aren't enabled on this AWS account yet; Haiku 4.5 is the closest match.
 const MODEL = 'anthropic.claude-haiku-4-5-20251001-v1:0';
+// Tried only when the first model is busy or unavailable.
+const FALLBACK_MODEL = 'anthropic.claude-sonnet-4-6';
 
 export class EduLiftStack extends Stack {
   // Fixed so synth needs no AWS lookup.
@@ -142,20 +144,22 @@ export class EduLiftStack extends Stack {
       }),
     );
 
-    const profile = `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/global.${MODEL}`;
-    taskRole.addToPolicy(
-      new iam.PolicyStatement({ actions: ['bedrock:InvokeModel'], resources: [profile] }),
-    );
-    taskRole.addToPolicy(
-      new iam.PolicyStatement({
-        actions: ['bedrock:InvokeModel'],
-        resources: [
-          `arn:aws:bedrock:${this.region}::foundation-model/${MODEL}`,
-          `arn:aws:bedrock:::foundation-model/${MODEL}`,
-        ],
-        conditions: { StringEquals: { 'bedrock:InferenceProfileArn': profile } },
-      }),
-    );
+    for (const model of [MODEL, FALLBACK_MODEL]) {
+      const profile = `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/global.${model}`;
+      taskRole.addToPolicy(
+        new iam.PolicyStatement({ actions: ['bedrock:InvokeModel'], resources: [profile] }),
+      );
+      taskRole.addToPolicy(
+        new iam.PolicyStatement({
+          actions: ['bedrock:InvokeModel'],
+          resources: [
+            `arn:aws:bedrock:${this.region}::foundation-model/${model}`,
+            `arn:aws:bedrock:::foundation-model/${model}`,
+          ],
+          conditions: { StringEquals: { 'bedrock:InferenceProfileArn': profile } },
+        }),
+      );
+    }
 
     const infrastructureRole = new iam.Role(this, 'ApiInfrastructureRole', {
       assumedBy: new iam.ServicePrincipal('ecs.amazonaws.com'),
@@ -184,6 +188,7 @@ export class EduLiftStack extends Stack {
       APP_URL: props.appUrl ?? '',
       AI_ENABLED: 'true',
       BEDROCK_MODEL_ID: `global.${MODEL}`,
+      BEDROCK_FALLBACK_MODEL_ID: `global.${FALLBACK_MODEL}`,
     };
     const secretRefs: [string, secrets.ISecret, string?][] = [
       ['DB_USER', dbSecret, 'username'],
