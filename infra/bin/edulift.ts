@@ -30,7 +30,7 @@ new EduLiftStack(app, 'EduLift', {
   env: { account, region },
   senderEmail,
   appUrl: app.node.tryGetContext('appUrl'),
-  githubRepo: 'mrlucas679/edulift',
+  githubSubject: 'repo:mrlucas679@210417506/edulift@1430997521:environment:production',
   webAclArn: edge.webAclArn,
   crossRegionReferences: true,
   terminationProtection: true,

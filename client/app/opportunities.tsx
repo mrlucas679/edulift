@@ -9,6 +9,7 @@ const CRITERION = { met: '✓ Met', not_met: '✗ Not met', unknown: '? Not conf
 const VERDICT = {
   qualifies: 'Meets the criteria we could check.',
   may_qualify: 'You may qualify — confirm with the provider.',
+  not_checked: 'Finish setting up your account to see if you may qualify.',
 };
 
 function MatchedCard({ item }: { item: Matched }) {

@@ -4,10 +4,10 @@ from typing import Literal
 from fastapi import APIRouter
 
 from app import models as m
+from app.accounts import ensure_account
 from app.deps import Db, SignedIn
 from app.errors import NotFoundError
 from app.opportunities import learner_facts, matched, open_opportunities
-from app.routers.marks import active_user
 from app.schemas import CriterionOut, MatchedOpportunityOut, OpportunityOut
 from eligibility.opportunities import Status, Verdict
 
@@ -33,7 +33,11 @@ def one(opportunity_id: str, db: Db) -> OpportunityOut:
 
 @router.get("/me/opportunities")
 def for_me(me: SignedIn, db: Db, kind: Kind | None = None) -> list[MatchedOpportunityOut]:
-    user = active_user(db, me.subject)
+    user = ensure_account(db, me.subject)
+    if user.status != "active":
+        # Not set up yet: show the open listings, unchecked, rather than guessing a match.
+        open_now = open_opportunities(db, (kind,) if kind else KINDS)
+        return [unchecked_out(o) for o in open_now]
     facts = learner_facts(db, user, date.today())
     pairs = matched(open_opportunities(db, (kind,) if kind else KINDS), facts)
     return [to_matched(o, a.verdict, a.results) for o, a in pairs]
@@ -48,4 +52,12 @@ def to_matched(
         **OpportunityOut.model_validate(opportunity).model_dump(),
         verdict=verdict,
         checks=[CriterionOut(check=c, status=s) for c, s in results],
+    )
+
+
+def unchecked_out(opportunity: m.Opportunity) -> MatchedOpportunityOut:
+    return MatchedOpportunityOut(
+        **OpportunityOut.model_validate(opportunity).model_dump(),
+        verdict="not_checked",
+        checks=[],
     )

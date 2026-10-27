@@ -354,10 +354,16 @@ export function QueryState({ query, empty, children }: {
   // A disabled query (for example, saved marks for a guest) is pending but never fetches: do not spin for it.
   if (query.isPending && query.fetchStatus !== 'idle') return <ActivityIndicator accessibilityLabel="Loading" />;
   if (query.error) {
+    // Not set up yet: send the learner back to onboarding, where they finish.
+    const unfinished = query.error instanceof ApiError && query.error.code === 'consent_required';
     return (
       <>
         <ErrorNote error={query.error} />
-        <Button label="Try again" onPress={() => query.refetch()} />
+        {unfinished ? (
+          <Button label="Finish setting up" onPress={() => router.push('/onboarding')} />
+        ) : (
+          <Button label="Try again" onPress={() => query.refetch()} />
+        )}
       </>
     );
   }

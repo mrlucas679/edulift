@@ -17,7 +17,12 @@ import * as secrets from 'aws-cdk-lib/aws-secretsmanager';
 import type { Construct } from 'constructs';
 
 // appUrl is the CloudFront URL, known after the first deploy.
-type Props = StackProps & { senderEmail: string; githubRepo: string; appUrl?: string; webAclArn: string };
+type Props = StackProps & {
+  senderEmail: string;
+  githubSubject: string;
+  appUrl?: string;
+  webAclArn: string;
+};
 
 const API_PORT = 8000;
 // Claude 5 models aren't enabled on this AWS account yet; Haiku 4.5 is the closest match.
@@ -301,7 +306,7 @@ export class EduLiftStack extends Stack {
       },
     });
 
-    // GitHub Actions, main branch only.
+    // GitHub Actions can assume this role only through the production environment.
     const github = new iam.OidcProviderNative(this, 'GitHub', {
       url: 'https://token.actions.githubusercontent.com',
       clientIds: ['sts.amazonaws.com'],
@@ -310,15 +315,27 @@ export class EduLiftStack extends Stack {
       assumedBy: new iam.WebIdentityPrincipal(github.oidcProviderArn, {
         StringEquals: {
           'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
-          'token.actions.githubusercontent.com:sub': `repo:${props.githubRepo}:ref:refs/heads/main`,
+          'token.actions.githubusercontent.com:sub': props.githubSubject,
         },
       }),
       maxSessionDuration: Duration.hours(1),
     });
     deployRole.addToPolicy(
       new iam.PolicyStatement({
-        actions: ['sts:AssumeRole'],
-        resources: [`arn:aws:iam::${this.account}:role/cdk-hnb659fds-*-${this.account}-${this.region}`],
+        actions: ['sts:AssumeRole', 'sts:TagSession'],
+        resources: [
+          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-*-${this.account}-af-south-1`,
+          `arn:aws:iam::${this.account}:role/cdk-hnb659fds-*-${this.account}-us-east-1`,
+        ],
+      }),
+    );
+    deployRole.addToPolicy(
+      new iam.PolicyStatement({
+        actions: ['ssm:GetParameter'],
+        resources: [
+          `arn:aws:ssm:us-east-1:${this.account}:parameter/cdk-bootstrap/hnb659fds/version`,
+          `arn:aws:ssm:af-south-1:${this.account}:parameter/cdk-bootstrap/hnb659fds/version`,
+        ],
       }),
     );
     deployRole.addToPolicy(

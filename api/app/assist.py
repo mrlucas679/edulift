@@ -69,6 +69,15 @@ class TemplateAsk:
         return Answer(answer=f"{first.title}: " + "; ".join(first.facts[:3]), cited_ids=[first.id])
 
 
+# Words a learner uses for each kind of funding or work.
+KIND_WORDS = [
+    (r"bursar", "bursary"),
+    (r"learnership", "learnership"),
+    (r"loan|nsfas", "loan"),
+    (r"job|work|vacanc|employ", "work"),
+]
+
+
 def retrieve(db: Session, question: str, limit: int = 8) -> list[Record]:
     words = [w for w in re.findall(r"[a-zA-Z]{4,}", question.lower())][:6]
     if not words:
@@ -88,9 +97,24 @@ def retrieve(db: Session, question: str, limit: int = 8) -> list[Record]:
                 url=institution.apply_url,
             )
         )
+    kinds = sorted({k for w in words for pattern, k in KIND_WORDS if re.match(pattern, w)})
+    if "loan" in kinds:
+        # NSFAS is the loan route: there are no loan rows, so the handoff stands in for them.
+        for handoff in db.scalars(select(m.Handoff).where(m.Handoff.id == "nsfas")):
+            records.append(
+                Record(
+                    id=f"handoff:{handoff.id}",
+                    title=handoff.name,
+                    facts=[handoff.purpose],
+                    url=handoff.url,
+                )
+            )
+    # Asking about bursaries (etc.) should bring up that kind, even when no name matches.
+    kind_filter = [m.Opportunity.kind.in_(kinds)] if kinds else []
     for opportunity in db.scalars(
         select(m.Opportunity)
-        .where(or_(*[m.Opportunity.name.ilike(f"%{w}%") for w in words]))
+        .where(or_(*[m.Opportunity.name.ilike(f"%{w}%") for w in words], *kind_filter))
+        .order_by(m.Opportunity.closes_on.is_(None), m.Opportunity.closes_on)
         .limit(limit)
     ):
         records.append(
