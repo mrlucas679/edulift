@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
-import { Share } from 'react-native';
 import { useState } from 'react';
 
 import { useMe } from '../src/account';
 import { deleteAccount, exportData } from '../src/data-rights';
+import { saveJson } from '../src/download';
 import { usePlan } from '../src/plan';
 import { useSession } from '../src/session';
 import { useApplications, useSaved } from '../src/tracking';
@@ -28,7 +28,7 @@ export default function MyData() {
     setError(null);
     try {
       const data = await exportData(accessToken);
-      await Share.share({ message: JSON.stringify(data, null, 2), title: 'My EduLift data' });
+      await saveJson('My EduLift data', data);
     } catch (e) {
       setError(e);
     } finally {

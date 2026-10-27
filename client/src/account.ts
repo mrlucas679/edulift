@@ -38,6 +38,7 @@ export const GUARDIAN_PURPOSES: Record<string, string> = {
   ai_writing: 'Answer their questions and help draft a CV or letter. What they type goes to an AI service that may be outside South Africa.',
   reminders: 'Email them before deadlines they saved. Nothing else.',
   nbt_results: 'Use their NBT levels to check admission rules that need them. Optional: without them, those rules show as unconfirmed. Removing them deletes them.',
+  low_data: 'Use less data: no course badges, shorter lists. They can turn it off any time.',
 };
 
 export function useMe() {
