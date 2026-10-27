@@ -82,7 +82,8 @@ export default function ProgrammeScreen() {
   const check = useQuery({
     queryKey: ['check', id, marks],
     queryFn: () => checkProgramme(id, marks, signedIn ? accessToken : null),
-    enabled: hasMarks,
+    // Course results are for signed-in learners; guests see the requirements.
+    enabled: hasMarks && signedIn,
   });
   const saved = useSaved(signedIn ? accessToken : null);
   const toggleSaved = useToggleSaved(accessToken);
@@ -109,14 +110,21 @@ export default function ProgrammeScreen() {
               {institution?.name ?? p.institution_id.toUpperCase()} · {LEVELS[p.qualification] ?? p.qualification}
             </Body>
 
-            {!hasMarks && (
+            {!signedIn && (
+              <Card muted>
+                <Title>See if you qualify</Title>
+                <Body muted small>Sign in, or tap Try the demo, to check your marks against every requirement.</Body>
+                <Button label="Sign in or try the demo" onPress={() => router.push('/sign-in')} />
+              </Card>
+            )}
+            {signedIn && !hasMarks && (
               <Card muted>
                 <Title>See if you qualify</Title>
                 <Body muted small>Add your marks once and every course shows your result straight away.</Body>
-                <Button label="Add my marks" onPress={() => router.push(signedIn ? '/my-marks' : '/aps')} />
+                <Button label="Add my marks" onPress={() => router.push('/my-marks')} />
               </Card>
             )}
-            {hasMarks && <QueryState query={check}>{null}</QueryState>}
+            {signedIn && hasMarks && <QueryState query={check}>{null}</QueryState>}
 
             {verdict && (
               <>
@@ -201,9 +209,7 @@ export default function ProgrammeScreen() {
                 </View>
                 <ErrorNote error={savePlan.error ?? toggleSaved.error ?? startApplication.error} />
               </>
-            ) : (
-              <Button label="Sign in to save this" variant="link" onPress={() => router.push('/sign-in')} />
-            )}
+            ) : null}
             <SourceLine source={p.source} />
           </>
         )}
