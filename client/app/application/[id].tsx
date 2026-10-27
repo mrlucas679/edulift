@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 
@@ -96,11 +96,6 @@ export default function ApplicationScreen() {
                 <Body>{item.label}</Body>
               </Pressable>
             ))}
-            <Button
-              label="What each document means"
-              variant="link"
-              onPress={() => router.push({ pathname: '/documents/[id]', params: { id: String(numericId) } })}
-            />
 
             <Field
               label="Notes"

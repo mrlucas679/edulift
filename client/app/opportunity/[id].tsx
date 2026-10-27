@@ -78,7 +78,7 @@ export default function OpportunityScreen() {
 
             <ScamNotice />
             {host ? (
-              <Body muted small>EduLift never applies for you. The button opens {host}. Some bursaries are applied for through a university or training provider: check the page first.</Body>
+              <Body muted small>EduLift never applies for you. The button opens {host}. Some are applied for through a university or training provider: check the page first.</Body>
             ) : (
               <Body muted small>We don’t have a safe link for this yet. Check with the provider.</Body>
             )}

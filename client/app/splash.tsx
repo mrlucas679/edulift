@@ -1,12 +1,16 @@
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { View } from 'react-native';
 
+import { useSession } from '../src/session';
 import { space, useColors } from '../src/theme';
 import { Body, Button, Heading, Screen } from '../src/ui';
 
 // The first screen. It waits for a tap, so a direct link is never replaced by it.
 export default function Splash() {
   const colors = useColors();
+  const { status } = useSession();
+  // Signed in already: Back never lands on the welcome screen.
+  if (status === 'signed-in') return <Redirect href="/(tabs)" />;
   return (
     <Screen
       footer={

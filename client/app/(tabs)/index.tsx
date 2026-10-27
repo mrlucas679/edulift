@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 
 import { useMe } from '../../src/account';
+import { shortDate } from '../../src/dates';
 import { usePlan } from '../../src/plan';
 import { useDeadlines } from '../../src/reference';
 import { latestMarks, useSavedMarks } from '../../src/saved-marks';
@@ -67,7 +68,7 @@ export default function Home() {
 
       {signedIn && marks && short.length > 0 && (
         <Card onPress={() => router.push('/plan')} label="Open your Plan B">
-          <CardTop title="Your Plan B is ready" pill={`${short.length} route${short.length === 1 ? '' : 's'}`} filled />
+          <CardTop title="Your Plan B is ready" pill="5 routes" filled />
           <Body muted small>
             {short[0].name} at {short[0].institution} isn’t a sure thing yet. Here are routes that still get you there.
           </Body>
@@ -96,7 +97,7 @@ export default function Home() {
             <View key={`${d.institution_id}-${d.intake_year}`} style={{ width: 180 }}>
               <Card label={`${d.institution}, ${daysLabel(d.days_left)}`} onPress={() => router.push(`/institution/${d.institution_id}`)}>
                 <Title>{d.institution}</Title>
-                <Body muted small>Closes {d.closes_on}</Body>
+                <Body muted small>Closes {shortDate(d.closes_on)}</Body>
                 <Pill label={daysLabel(d.days_left)} filled />
               </Card>
             </View>
