@@ -8,6 +8,7 @@ from app.assist import (
     Answer,
     BedrockAsk,
     Record,
+    TemplateAsk,
     ask,
     converse,
     draft_reject_reason,
@@ -113,3 +114,9 @@ def test_json_wrapped_in_a_sentence_is_read() -> None:
     reply = 'Here you go: {"answer": "Try BSc IT.", "cited_ids": ["programme:uj.bsc-it"]}'
     answer = BedrockAsk(FakeClient(reply), "m").answer("courses", [RECORD])
     assert answer.cited_ids == ["programme:uj.bsc-it"]
+
+
+def test_the_standard_answer_prefers_a_record_over_your_marks() -> None:
+    marks = Record("your-marks", "Your marks", ["Maths 70%"], None)
+    answer = TemplateAsk().answer("courses", [marks, RECORD])
+    assert answer.cited_ids == [RECORD.id]

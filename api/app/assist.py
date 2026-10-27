@@ -63,9 +63,11 @@ class TemplateAsk:
     name = "template"
 
     def answer(self, question: str, records: list[Record]) -> Answer:
-        if not records:
+        # The learner's own marks are context, not an answer: prefer a real record.
+        found = [r for r in records if r.id != "your-marks"] or records
+        if not found:
             return Answer(answer=REFUSAL, cited_ids=[])
-        first = records[0]
+        first = found[0]
         return Answer(answer=f"{first.title}: " + "; ".join(first.facts[:3]), cited_ids=[first.id])
 
 

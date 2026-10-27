@@ -22,7 +22,7 @@ export default function AskScreen() {
   const { about } = useLocalSearchParams<{ about?: string }>();
   const ask = useAsk(accessToken);
   // Opened from a course: the question is written and asked already.
-  const [question, setQuestion] = useState(about ? `What should I know about ${about.slice(0, 200)}?` : '');
+  const [question, setQuestion] = useState(about ? `Tell me about ${about.slice(0, 200)}` : '');
   const signedIn = status === 'signed-in';
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function AskScreen() {
                 <Title>{c.title}</Title>
                 {host && c.url ? (
                   <Button label={`Open ${host}`} variant="secondary" onPress={() => Linking.openURL(c.url as string)} />
-                ) : (
+                ) : c.id === 'your-marks' ? null : (
                   <Body muted small>No safe link for this yet.</Body>
                 )}
               </Card>
