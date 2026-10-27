@@ -32,3 +32,15 @@ def test_a_learnership_question_brings_up_learnerships(engine: Engine, repo_data
         found = retrieve(db, "any learnerships available")
     assert found
     assert all(r.id.startswith("opportunity:") for r in found)
+
+
+def test_bursaries_for_a_field_come_before_courses(engine: Engine, repo_data: None) -> None:
+    with DbSession(engine) as db:
+        found = retrieve(db, "Which bursaries are open for computer science?")
+    assert found[0].id.startswith("opportunity:")
+
+
+def test_a_course_question_ranks_the_closest_name_first(engine: Engine, repo_data: None) -> None:
+    with DbSession(engine) as db:
+        found = retrieve(db, "Tell me about computer science informatics")
+    assert "INFORMATICS" in found[0].title.upper()
