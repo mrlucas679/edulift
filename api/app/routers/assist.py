@@ -160,6 +160,9 @@ def generate(
     marks = latest_marks(db, user.id)
     if marks is None:
         raise NotFoundError("Save your marks first.")
+    # Subjects by name, so the draft reads "Mathematics", not "mathematics".
+    names = subject_names(db, marks)
+    marks = {names.get(s, s): p for s, p in marks.items()}
     if body.target_kind and body.target_id:
         target_summary(db, body.target_kind, body.target_id)
     template = TemplateDraft()
