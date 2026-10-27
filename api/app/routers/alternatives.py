@@ -35,13 +35,15 @@ def alternatives(
     today = date.today()
 
     nbt = learner_nbt(db, user.id)
-    if programme_verdict(db, target, marks, names, today, nbt=nbt).outcome in QUALIFIES:
-        return AlternativesOut(routes=[], funding=[], work=[])
+    # Qualifying needs no other study route, but funding and work still count.
+    qualifies = programme_verdict(db, target, marks, names, today, nbt=nbt).outcome in QUALIFIES
 
     profile = db.get(m.Profile, user.id)
     province = profile.province if profile and profile.province else ""
     candidates = []
-    for programme in db.scalars(select(m.Programme).where(m.Programme.id != programme_id)):
+    query = select(m.Programme).where(m.Programme.id != programme_id)
+    others: list[m.Programme] = [] if qualifies else list(db.scalars(query))
+    for programme in others:
         verdict = programme_verdict(db, programme, marks, names, today, nbt=nbt)
         institution = db.get_one(m.Institution, programme.institution_id)
         candidates.append(
@@ -57,10 +59,14 @@ def alternatives(
                 closes_on=programme.closes_on,
             )
         )
-    routes = plan_b(
-        Target(target.id, target.institution_id, target.field_id, target.qualification),
-        candidates,
-        province,
+    routes = (
+        []
+        if qualifies
+        else plan_b(
+            Target(target.id, target.institution_id, target.field_id, target.qualification),
+            candidates,
+            province,
+        )
     )
     facts = learner_facts(db, user, today)
     funding = route(near(matched(open_opportunities(db, ("bursary", "loan")), facts), target))

@@ -31,6 +31,7 @@ function Line({ name, tag, filled, onPress }: { name: string; tag: string; fille
 }
 
 function Routes({ planA, accessToken }: { planA: Plan['targets'][number]; accessToken: string | null }) {
+  const sure = planA.verdict ? GOOD.has(planA.verdict.outcome) : false;
   const alternatives = useAlternatives(planA.programme_id, accessToken);
   useEffect(() => {
     alternatives.mutate();
@@ -62,7 +63,7 @@ function Routes({ planA, accessToken }: { planA: Plan['targets'][number]; access
   ];
   return (
     <>
-      <Section>Plan B · {groups.length} routes into it</Section>
+      <Section>{sure ? 'Funding and work for it' : `Plan B · ${groups.length} routes into it`}</Section>
       {groups.map((g, i) => (
         <Card key={g.key}>
           <Section>{`${i + 1} · ${g.title}`}</Section>
