@@ -21,7 +21,7 @@ type Props = StackProps & { senderEmail: string; githubRepo: string; appUrl?: st
 
 const API_PORT = 8000;
 // Claude 5 models aren't enabled on this AWS account yet; Haiku 4.5 is the closest match.
-const MODEL = 'anthropic.claude-opus-4-6-v1';
+const MODEL = 'anthropic.claude-haiku-4-5-20251001-v1:0';
 
 export class EduLiftStack extends Stack {
   // Fixed so synth needs no AWS lookup.
