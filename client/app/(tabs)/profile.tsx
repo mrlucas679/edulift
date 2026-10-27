@@ -87,6 +87,7 @@ export default function Profile() {
       <Row label="My plan A and B" value={count(plan.data?.targets.length, 'course', 'courses')} onPress={() => router.push('/plan')} />
       <Row label="My applications" value={applications.data && `${applications.data.length} tracked`} onPress={() => router.push('/applications')} />
       <Row label="Saved" value={count(saved.data?.length, 'item', 'items')} onPress={() => router.push('/saved')} />
+      <Row label="CV and letters" onPress={() => router.push('/draft')} />
 
       <Section>Account</Section>
       <Row label="Settings and choices" onPress={() => router.push('/settings')} />

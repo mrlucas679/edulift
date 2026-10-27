@@ -76,6 +76,13 @@ export default function OpportunityScreen() {
               !signedIn && <Button label="Sign in to see if you qualify" variant="link" onPress={() => router.push('/sign-in')} />
             )}
 
+            {signedIn && (
+              <Button
+                label="Write a motivation letter for this"
+                variant="link"
+                onPress={() => router.push({ pathname: '/draft', params: { target: `${o.name} (${o.provider})` } })}
+              />
+            )}
             <ScamNotice />
             {host ? (
               <Body muted small>EduLift never applies for you. The button opens {host}. Some are applied for through a university or training provider: check the page first.</Body>
