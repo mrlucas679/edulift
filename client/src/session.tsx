@@ -13,6 +13,7 @@ type Session = {
   checkCode: (code: string) => Promise<void>;
   createDemoAccount: (email: string, password: string) => Promise<void>;
   signInDemo: (email: string, password: string) => Promise<void>;
+  tryDemo: () => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -108,6 +109,13 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     [authenticateDemo],
   );
 
+  // A fresh demo learner with no email. The server must have the demo switched on.
+  const tryDemo = useCallback(async () => {
+    const tokens = await request('/v1/auth/demo', tokenResponse, { method: 'POST' });
+    setAccessToken(tokens.access_token);
+    setStatus('signed-in');
+  }, []);
+
   const signOut = useCallback(async () => {
     const refreshToken = await loadRefreshToken();
     if (refreshToken && accessToken) {
@@ -132,9 +140,10 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       checkCode,
       createDemoAccount,
       signInDemo,
+      tryDemo,
       signOut,
     }),
-    [status, accessToken, pending, sendCode, checkCode, createDemoAccount, signInDemo, signOut],
+    [status, accessToken, pending, sendCode, checkCode, createDemoAccount, signInDemo, tryDemo, signOut],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

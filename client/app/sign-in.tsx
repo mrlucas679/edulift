@@ -9,11 +9,24 @@ const MIN_PASSWORD = 16;
 
 // One button: signs in, or opens a new account when the email is new.
 export default function SignIn() {
-  const { createDemoAccount, signInDemo } = useSession();
+  const { createDemoAccount, signInDemo, tryDemo } = useSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
+
+  async function demo() {
+    setBusy(true);
+    setError(null);
+    try {
+      await tryDemo();
+      router.replace('/onboarding');
+    } catch (e) {
+      setError(e);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function go() {
     setBusy(true);
@@ -50,6 +63,11 @@ export default function SignIn() {
       <Field label="Password" value={password} onChangeText={setPassword} secureTextEntry autoCapitalize="none" autoComplete="current-password" maxLength={128} onSubmitEditing={go} />
       <ErrorNote error={error} />
       <Button label="Continue" onPress={go} busy={busy} disabled={!email.trim() || password.length < MIN_PASSWORD} />
+      <Card muted>
+        <Title>Just looking?</Title>
+        <Body muted small>Try the demo: a new sample learner, no email or password. It lasts 4 hours, and you can’t come back to it after you sign out.</Body>
+        <Button label="Try the demo" variant="secondary" onPress={demo} busy={busy} />
+      </Card>
       <Card>
         <Title>No account?</Title>
         <Body muted small>You can use every feature as a guest. Your marks stay on this phone.</Body>
