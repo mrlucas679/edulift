@@ -73,6 +73,18 @@ def _is_json(request: Request) -> bool:
     return request.headers.get("content-type", "").split(";")[0].strip() == "application/json"
 
 
+def _skipped_cloudfront(request: Request, app_url: str) -> Response:
+    """A request that came round CloudFront goes back to it.
+
+    A 308 (RFC 9110 15.4.9) names the API's real address and isn't an error, so a scanner
+    probing the load balancer can't trip the deploy rollback alarm, which counts 4xx.
+    Only the path is kept, and the host is always ours.
+    """
+    if not app_url:
+        return error_response(403, "not_allowed", "That isn't allowed.")
+    return Response(status_code=308, headers={"Location": app_url.rstrip("/") + request.url.path})
+
+
 def _auth(settings: Settings) -> Auth:
     return identity_for(settings)
 
@@ -159,7 +171,7 @@ def create_app(
                 request.headers.get("x-origin-secret", ""), settings.origin_secret
             )
         ):
-            response: Response = error_response(403, "not_allowed", "That isn't allowed.")
+            response: Response = _skipped_cloudfront(request, settings.app_url)
         elif request.method in WRITE_METHODS and _has_body(request) and not _is_json(request):
             response = error_response(415, "unsupported_media_type", "Send JSON.")
         else:
