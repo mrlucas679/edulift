@@ -8,15 +8,19 @@ from tests.conftest import make_client
 SECRET = "s" * 40
 
 
-def test_requests_that_skip_cloudfront_are_refused(engine: Engine, identity: FakeAuth) -> None:
+def test_requests_that_skip_cloudfront_are_sent_back_to_it(
+    engine: Engine, identity: FakeAuth
+) -> None:
     client = make_client(engine, identity, origin_secret=SECRET)
     body = {"email": "a@example.org"}
 
-    assert client.post("/v1/auth/start", json=body).status_code == 403
-    assert (
-        client.post("/v1/auth/start", json=body, headers={"X-Origin-Secret": "x"}).status_code
-        == 403
-    )
+    for headers in ({}, {"X-Origin-Secret": "x"}):
+        r = client.post("/v1/auth/start", json=body, headers=headers, follow_redirects=False)
+        assert r.status_code == 308
+        assert r.headers["location"] == "http://localhost:8081/v1/auth/start"
+    # A path that looks like another host still stays on ours.
+    r = client.get("//evil.example/x", follow_redirects=False)
+    assert r.headers["location"].startswith("http://localhost:8081/")
     allowed = client.post("/v1/auth/start", json=body, headers={"X-Origin-Secret": SECRET})
     assert allowed.status_code == 200
 
@@ -72,3 +76,8 @@ def test_demo_needs_a_sender_and_https_link() -> None:
             origin_secret="s" * 40,
             _env_file=None,
         )
+
+
+def test_without_an_app_url_direct_requests_are_refused(engine: Engine, identity: FakeAuth) -> None:
+    client = make_client(engine, identity, origin_secret=SECRET, app_url="")
+    assert client.get("/v1/institutions", follow_redirects=False).status_code == 403

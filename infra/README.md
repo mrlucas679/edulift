@@ -29,8 +29,10 @@ Always `npx cdk diff` before `deploy`.
 ## Things worth knowing
 
 - Everything sits behind one CloudFront URL: the web app at `/`, the API at `/v1/*`.
-  CloudFront adds a secret header; the API refuses requests without it, so nobody can
-  skip CloudFront and fake their IP to get round the rate limits.
+  CloudFront adds a secret header. A request without it never reaches the API's logic:
+  it gets a 308 back to the CloudFront address, so nobody can skip CloudFront to get round
+  the rate limits. It's a redirect, not a 403, because ECS Express rolls a deploy back when
+  4xx responses pass 1% during the canary, and scanners hitting the load balancer did that.
 - The database is in isolated subnets with no route to the internet. Only the API's
   security group can reach it.
 - No NAT gateway. API tasks get public IPs so they can reach Cognito and ECR, but their
