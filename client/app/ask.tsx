@@ -33,14 +33,14 @@ export default function AskScreen() {
 
   if (!signedIn) {
     return (
-      <Screen title="Ask a question" footer={<Button label="Sign in or create an account" onPress={() => router.push('/sign-in')} />}>
+      <Screen title="Ask AI" footer={<Button label="Sign in or create an account" onPress={() => router.push('/sign-in')} />}>
         <Body muted>Sign in to ask questions about courses, funding and work.</Body>
       </Screen>
     );
   }
 
   return (
-    <Screen title="Ask a question">
+    <Screen title="Ask AI">
       <Body muted small>{t('askDisclaimer')}</Body>
       <Field label="Your question" value={question} onChangeText={setQuestion} maxLength={300} multiline />
       <Button
