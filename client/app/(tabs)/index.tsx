@@ -9,7 +9,7 @@ import { latestMarks, useSavedMarks } from '../../src/saved-marks';
 import { useSession } from '../../src/session';
 import { space, useColors } from '../../src/theme';
 import { useApplications } from '../../src/tracking';
-import { Body, Button, Card, CardTop, Empty, Heading, Pill, QueryState, Screen, Section, Title } from '../../src/ui';
+import { Body, Button, Card, CardTop, Empty, Heading, Logo, Pill, QueryState, Screen, Section, Title } from '../../src/ui';
 
 function greeting() {
   const hour = new Date().getHours();
@@ -51,6 +51,7 @@ export default function Home() {
   return (
     <Screen>
       <Band>
+        <Logo size={32} />
         <Heading>{signedIn && firstName ? `${greeting()}, ${firstName}` : 'Your marks. Your plan A and plan B.'}</Heading>
         {nextDeadline && <Body>Your next deadline closes in {nextDeadline.days_left} days.</Body>}
         {signedIn ? (

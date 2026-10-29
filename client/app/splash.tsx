@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { useSession } from '../src/session';
 import { space, useColors } from '../src/theme';
-import { Body, Button, Heading, Screen } from '../src/ui';
+import { Body, Button, Heading, Logo, Screen } from '../src/ui';
 
 // The first screen. It waits for a tap, so a direct link is never replaced by it.
 export default function Splash() {
@@ -23,9 +23,7 @@ export default function Splash() {
       }
     >
       <View style={{ minHeight: 360, justifyContent: 'flex-end', gap: space.md, backgroundColor: colors.muted, margin: -space.lg, padding: space.lg }}>
-        <View style={{ width: 64, height: 64, borderRadius: 10, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.inkMuted, alignItems: 'center', justifyContent: 'center' }}>
-          <Body muted small>EduLift</Body>
-        </View>
+        <Logo size={56} />
         <Heading>Your marks. Your plan A and plan B.</Heading>
         <Body muted>See which courses, colleges, funding and work you qualify for, then apply on the official sites.</Body>
       </View>
