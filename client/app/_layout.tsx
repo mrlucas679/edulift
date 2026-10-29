@@ -6,6 +6,7 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 
 import { MarksProvider } from '../src/marks';
 import { SessionProvider } from '../src/session';
@@ -26,8 +27,14 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const colors = useColors();
-  const [fontsLoaded] = useFonts({ AtkinsonHyperlegible_400Regular, AtkinsonHyperlegible_700Bold });
-  if (!fontsLoaded) return <Loading />;
+  const [fontsLoaded, fontError] = useFonts({ AtkinsonHyperlegible_400Regular, AtkinsonHyperlegible_700Bold });
+  // On a slow phone the fonts can take long or fail; open with system fonts instead of spinning.
+  const [gaveUp, setGaveUp] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setGaveUp(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+  if (!fontsLoaded && !fontError && !gaveUp) return <Loading />;
 
   return (
     <QueryClientProvider client={queryClient}>
