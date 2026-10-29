@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass
 from typing import Protocol
 
 from pydantic import BaseModel, Field, ValidationError
-from sqlalchemy import case, or_, select
+from sqlalchemy import case, literal, or_, select
 from sqlalchemy.orm import Session
 
 from app import models as m
@@ -118,6 +118,18 @@ def _hits(text: str, words: list[str]) -> int:
     return sum(w in lower for w in words)
 
 
+def _opportunity_facts(db: Session, opportunity: m.Opportunity) -> list[str]:
+    # Say when no field is recorded, so "none for IT" isn't read into a blank.
+    field = db.get(m.Field, opportunity.field_id) if opportunity.field_id else None
+    facts = [
+        f"{opportunity.kind} from {opportunity.provider}",
+        f"field of study: {field.name}" if field else "field of study: not limited in our records",
+    ]
+    if opportunity.closes_on:
+        facts.append(f"closes on {opportunity.closes_on.isoformat()}")
+    return facts
+
+
 def retrieve(db: Session, question: str, limit: int = 8) -> list[Record]:
     words = [w for w in re.findall(r"[a-zA-Z]{4,}", question.lower()) if w not in STOP][:6]
     kinds = sorted({k for w in words for pattern, k in KIND_WORDS if re.match(pattern, w)})
@@ -163,16 +175,20 @@ def retrieve(db: Session, question: str, limit: int = 8) -> list[Record]:
     # Asking about bursaries (etc.) should bring up that kind, even when no name matches.
     kind_filter = [m.Opportunity.kind.in_(kinds)] if kinds else []
     name_filter = [m.Opportunity.name.ilike(f"%{w}%") for w in names]
+    # Names that match come first, so a "computer science" bursary isn't cut by the limit.
+    name_score = functools.reduce(
+        operator.add, [case((f, 1), else_=0) for f in name_filter], literal(0)
+    )
     for opportunity in db.scalars(
         select(m.Opportunity)
         .where(or_(*name_filter, *kind_filter))
-        .order_by(m.Opportunity.closes_on.is_(None), m.Opportunity.closes_on)
+        .order_by(name_score.desc(), m.Opportunity.closes_on.is_(None), m.Opportunity.closes_on)
         .limit(limit * 5)
     ):
         record = Record(
             id=f"opportunity:{opportunity.id}",
             title=opportunity.name,
-            facts=[f"{opportunity.kind} from {opportunity.provider}"],
+            facts=_opportunity_facts(db, opportunity),
             url=opportunity.url,
         )
         others.append((_hits(f"{opportunity.name} {opportunity.provider}", names), record))

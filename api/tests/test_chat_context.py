@@ -44,3 +44,16 @@ def test_a_course_question_ranks_the_closest_name_first(engine: Engine, repo_dat
     with DbSession(engine) as db:
         found = retrieve(db, "Tell me about computer science informatics")
     assert "INFORMATICS" in found[0].title.upper()
+
+
+def test_an_it_bursary_question_finds_one_tagged_for_it(engine: Engine, repo_data: None) -> None:
+    with DbSession(engine) as db:
+        found = retrieve(db, "Which bursaries are open for computer science?")
+    assert any("field of study: Information technology" in r.facts for r in found)
+
+
+def test_nsfas_comes_with_how_to_apply(engine: Engine, repo_data: None) -> None:
+    with DbSession(engine) as db:
+        found = retrieve(db, "What is NSFAS and how do I apply?")
+    nsfas = next(r for r in found if r.id == "handoff:nsfas")
+    assert "myNSFAS" in nsfas.facts[0]

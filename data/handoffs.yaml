@@ -1,8 +1,16 @@
 - id: nsfas
   name: NSFAS
-  purpose: Government funding for study at public universities and TVET colleges.
-  url: https://www.nsfas.org.za/
-  source: nsfas-site
+  purpose: >-
+    Government funding for study at public universities and TVET colleges. Applying is free.
+    Applications for 2027 open on 18 September 2026 and close on 31 October 2026.
+    To apply: create a myNSFAS account with your South African ID number, cellphone number and email address;
+    fill in your personal and household details; upload the signed NSFAS consent form (and the declaration
+    form if you are 34 or younger); then keep your reference number and track your application on myNSFAS.
+    A combined household income of up to R350 000 a year falls within the funding threshold, as do
+    households that receive a SASSA grant. For students with a disability the threshold is R600 000,
+    with the NSFAS disability annexure.
+  url: https://www.nsfas.org.za/content/how-to-apply.html
+  source: nsfas-2027-apply
 - id: dpsa
   name: DPSA vacancies
   purpose: Public service jobs and internships, published in the DPSA circular.

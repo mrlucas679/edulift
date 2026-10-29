@@ -179,6 +179,9 @@
   kind: bursary
   provider: Gauteng Department of e-Government
   url: https://www.zabursaries.co.za/government-bursaries-south-africa/gauteng-department-of-e-government-bursary/
+  field: it
+  criteria:
+    - {check: province, values: [Gauteng]}
   source: zabursaries-listings
 - id: zab-gauteng-department-of-health-bursary-to-study-medicine-in-cu
   name: "Gauteng Department of Health Bursary to Study Medicine in Cuba"
@@ -1056,3 +1059,32 @@
   provider: Manati
   url: https://www.mbse.ac.za/qualifications/qualification-fees/student-loan-providers/
   source: loan-providers-demo
+- id: nsfas-2027
+  name: "NSFAS bursary (2027 academic year)"
+  kind: bursary
+  provider: NSFAS
+  url: https://www.nsfas.org.za/content/how-to-apply.html
+  closes_on: 2026-10-31
+  source: nsfas-2027-apply
+# IT bursaries that run every year. The listings show past cycles, so no closing date is kept.
+- id: zab-bbd-bursary
+  name: "BBD Bursary (software development)"
+  kind: bursary
+  provider: BBD
+  url: https://www.zabursaries.co.za/computer-science-it-bursaries-south-africa/bbd-bursary/
+  field: it
+  source: zabursaries-it-listings
+- id: zab-iitpsa-bursary
+  name: "IITPSA Bursary (computer science, informatics, information systems)"
+  kind: bursary
+  provider: IITPSA, through StudyTrust
+  url: https://www.zabursaries.co.za/computer-science-it-bursaries-south-africa/iitpsa-bursary/
+  field: it
+  source: zabursaries-it-listings
+- id: zab-sanlam-it-bursary
+  name: "Sanlam IT Bursary"
+  kind: bursary
+  provider: Sanlam
+  url: https://www.zabursaries.co.za/computer-science-it-bursaries-south-africa/sanlam-it-bursary/
+  field: it
+  source: zabursaries-it-listings
