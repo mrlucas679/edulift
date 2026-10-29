@@ -53,17 +53,23 @@ export async function request<T>(path: string, schema: z.ZodType<T>, options: Op
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (options.accessToken) headers.Authorization = `Bearer ${options.accessToken}`;
 
+  // A stalled mobile connection shows the offline message instead of spinning forever.
+  const abort = new AbortController();
+  const timer = setTimeout(() => abort.abort(), 60_000);
   let response: Response;
   try {
     response = await fetch(`${BASE_URL}${path}`, {
       method: options.method ?? 'GET',
       headers,
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      signal: abort.signal,
     });
   } catch {
+    clearTimeout(timer);
     setOffline(true);
     throw new ApiError('offline', "We can't reach EduLift. Check your connection.", null, 0);
   }
+  clearTimeout(timer);
   setOffline(false);
 
   if (response.status === 204) return schema.parse(undefined);
