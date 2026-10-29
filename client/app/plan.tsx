@@ -80,14 +80,18 @@ function Routes({ planA, accessToken }: { planA: Plan['targets'][number]; access
   );
 }
 
-// No Plan A yet: courses in the learner's interests that their marks already meet, one tap to add.
-function Suggestions({ accessToken }: { accessToken: string | null }) {
+// Courses in the learner's interests that their marks already meet, added one at a time.
+// Stays on the page until the plan is full, so a learner can add a second and third choice.
+function Suggestions({ accessToken, planIds, limit }: { accessToken: string | null; planIds: string[]; limit: number }) {
   const me = useMe();
   const field = me.data?.interests[0] ?? 'it';
   const programmes = useProgrammes({ field });
   const outcomes = useBatchChecks(accessToken);
   const save = useSavePlan(accessToken);
-  const goodIds = (outcomes.data ?? []).filter((r) => GOOD.has(r.outcome)).map((r) => r.programme_id);
+  const onPlan = new Set(planIds);
+  const goodIds = (outcomes.data ?? [])
+    .filter((r) => GOOD.has(r.outcome) && !onPlan.has(r.programme_id))
+    .map((r) => r.programme_id);
   const good = new Set(goodIds);
   const inField = (programmes.data?.items ?? []).filter((p) => good.has(p.id));
   // Nothing in their interests: show any course their marks meet.
@@ -95,11 +99,18 @@ function Suggestions({ accessToken }: { accessToken: string | null }) {
   const picks = inField.length
     ? inField.slice(0, 6)
     : anyField.flatMap((q) => (q.data ? [q.data] : []));
+  const first = planIds.length === 0;
+  // Only the tapped course shows as busy.
+  const adding = save.isPending ? save.variables?.at(-1) : undefined;
 
   return (
     <>
-      <Title>Choose your Plan A</Title>
-      <Body muted>Courses your marks already meet. Add your first choice and we’ll build your Plan B around it.</Body>
+      {first ? <Title>Choose your Plan A</Title> : <Section>{`Add another course · ${planIds.length} of ${limit}`}</Section>}
+      <Body muted>
+        {first
+          ? 'Courses your marks already meet. Add your first choice and we’ll build your Plan B around it.'
+          : 'More courses your marks meet. You can keep up to three.'}
+      </Body>
       <QueryState query={outcomes}>
         {picks.map((p) => (
           <Card key={p.id}>
@@ -107,7 +118,12 @@ function Suggestions({ accessToken }: { accessToken: string | null }) {
             <Body muted small>{p.institution_id.toUpperCase()} · {p.qualification.replace('_', ' ')}</Body>
             <View style={{ flexDirection: 'row', gap: space.sm }}>
               <View style={{ flex: 1 }}>
-                <Button label="Add to my plan" busy={save.isPending} onPress={() => save.mutate([p.id])} />
+                <Button
+                  label="Add to my plan"
+                  busy={adding === p.id}
+                  disabled={save.isPending}
+                  onPress={() => save.mutate([...planIds, p.id])}
+                />
               </View>
               <View style={{ flex: 1 }}>
                 <Button label="View" variant="secondary" onPress={() => router.push(`/programme/${p.id}`)} />
@@ -138,13 +154,14 @@ export default function PlanScreen() {
   }
 
   const targets = plan.data?.targets ?? [];
+  const limit = plan.data?.limit ?? 3;
   const [planA, ...others] = targets;
   const remove = (id: string) => save.mutate(targets.map((t) => t.programme_id).filter((x) => x !== id));
 
   return (
     <Screen title="My plan">
       <QueryState query={plan}>
-        {!planA && <Suggestions accessToken={accessToken} />}
+        {!planA && <Suggestions accessToken={accessToken} planIds={[]} limit={limit} />}
         {planA && (
           <>
             <Body muted small>From your latest marks · sorted by what closes soonest</Body>
@@ -173,6 +190,9 @@ export default function PlanScreen() {
                 <Button label="Remove" variant="link" onPress={() => remove(t.programme_id)} />
               </Card>
             ))}
+            {targets.length < limit && (
+              <Suggestions accessToken={accessToken} planIds={targets.map((t) => t.programme_id)} limit={limit} />
+            )}
             <Routes planA={planA} accessToken={accessToken} />
           </>
         )}
