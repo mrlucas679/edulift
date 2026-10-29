@@ -12,6 +12,7 @@ import {
   type TextInputProps,
   View,
 } from 'react-native';
+import { useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ApiError } from './api';
@@ -19,13 +20,16 @@ import type { Source } from './reference';
 import { font, lineHeight, radius, space, text, touchTarget, useColors } from './theme';
 
 // A page: header bar, scrolling body, and an optional action pinned to the bottom.
-export function Screen({ children, title, back = true, footer }: {
+export function Screen({ children, title, back = true, footer, stickToBottom }: {
   children: React.ReactNode;
   title?: string;
   back?: boolean;
   footer?: React.ReactNode;
+  // Chat-style: keep the newest content in view as it grows.
+  stickToBottom?: boolean;
 }) {
   const colors = useColors();
+  const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
   return (
     <SafeAreaView edges={['top']} style={[styles.fill, { backgroundColor: colors.paper }]}>
       {title !== undefined && (
@@ -45,7 +49,12 @@ export function Screen({ children, title, back = true, footer }: {
           </Text>
         </View>
       )}
-      <ScrollView contentContainerStyle={styles.screen} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        ref={scroll}
+        contentContainerStyle={styles.screen}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={stickToBottom ? () => scroll.current?.scrollToEnd({ animated: true }) : undefined}
+      >
         {children}
       </ScrollView>
       {footer && <View style={[styles.footer, { borderTopColor: colors.border }]}>{footer}</View>}

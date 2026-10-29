@@ -92,7 +92,7 @@ export default function Study() {
           wrap
         />
       </QueryState>
-      <Button label="Ask a question about your options" variant="link" onPress={() => router.push('/ask')} />
+      <Button label="Ask a question about your options" variant="link" onPress={() => router.push('/ask-ai')} />
     </Screen>
   );
 }

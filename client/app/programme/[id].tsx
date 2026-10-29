@@ -171,7 +171,7 @@ export default function ProgrammeScreen() {
                 <Button
                   label="Ask about this"
                   variant="secondary"
-                  onPress={() => router.push({ pathname: '/ask', params: { about: `${p.name} at ${institution?.name ?? p.institution_id.toUpperCase()}` } })}
+                  onPress={() => router.push({ pathname: '/ask-ai', params: { about: `${p.name} at ${institution?.name ?? p.institution_id.toUpperCase()}` } })}
                 />
               </View>
               {verdict && (
