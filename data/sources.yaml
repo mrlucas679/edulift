@@ -188,3 +188,13 @@
   url: https://www.tut.ac.za/
   publisher: Tshwane University of Technology
   checked_on: 2026-10-27
+- id: nsfas-2027-apply
+  title: NSFAS 2027 applications - how to apply, documents and eligibility
+  url: https://www.nsfas.org.za/content/how-to-apply.html
+  publisher: NSFAS
+  checked_on: 2026-10-29
+- id: zabursaries-it-listings
+  title: Zabursaries computer science and IT bursary listings (aggregator; check each listing before applying)
+  url: https://www.zabursaries.co.za/computer-science-it-bursaries-south-africa/
+  publisher: Zabursaries
+  checked_on: 2026-10-29
