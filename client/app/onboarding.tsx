@@ -73,6 +73,8 @@ function Basics({ onTooYoung }: { onTooYoung: () => void }) {
   const [province, setProvince] = useState<string | null>(null);
   const [certificate, setCertificate] = useState<Certificate | null>(null);
   const birth = toDate(day, month, year);
+  // Continue always answers: a greyed-out button gave no reason on a phone.
+  const [hint, setHint] = useState<string | null>(null);
   const digits = (v: string, n: number) => v.replace(/\D/g, '').slice(0, n);
   const save = useAction(async () => {
     try {
@@ -88,7 +90,19 @@ function Basics({ onTooYoung }: { onTooYoung: () => void }) {
     <Screen
       title="About you · step 1 of 3"
       back={false}
-      footer={<Button label="Continue" onPress={save.run} busy={save.busy} disabled={!birth} />}
+      footer={
+        <>
+          <ErrorNote error={hint ?? save.error} />
+          <Button
+            label="Continue"
+            busy={save.busy}
+            onPress={() => {
+              setHint(birth ? null : 'Add your birthday as day, month and a 4-digit year, like 14 / 3 / 2008.');
+              if (birth) save.run();
+            }}
+          />
+        </>
+      }
     >
       <StepBar step={1} />
       <Heading>A few basics</Heading>
@@ -115,7 +129,6 @@ function Basics({ onTooYoung }: { onTooYoung: () => void }) {
       <Title>Which certificate are you writing?</Title>
       <Chips options={[...CERTIFICATES]} value={certificate} onChange={setCertificate} wrap />
       <Body muted small>We don’t ask for your ID number, income or race.</Body>
-      <ErrorNote error={save.error} />
     </Screen>
   );
 }
