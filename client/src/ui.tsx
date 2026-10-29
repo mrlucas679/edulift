@@ -204,8 +204,9 @@ export function Chips<T extends string>({ options, value, onChange, wrap }: {
 export function ErrorNote({ error }: { error: unknown }) {
   const colors = useColors();
   if (!error) return null;
+  // A plain string is a message we wrote, e.g. a form hint.
   const known = error instanceof ApiError;
-  const message = known ? error.message : 'Something went wrong. Please try again.';
+  const message = typeof error === 'string' ? error : known ? error.message : 'Something went wrong. Please try again.';
   const reference = known && error.requestId ? ` (Reference: ${error.requestId.slice(0, 8)})` : '';
   return (
     <Text accessibilityRole="alert" style={[styles.body, { color: colors.danger }]}>
