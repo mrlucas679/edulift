@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import {
   ActivityIndicator,
+  Image,
   Linking,
   Pressable,
   ScrollView,
@@ -369,6 +370,17 @@ export function QueryState({ query, empty, children }: {
   }
   if (empty) return null;
   return <>{children}</>;
+}
+
+// The EduLift mark and name, tinted to the theme so it reads in dark mode too.
+export function Logo({ size = 40 }: { size?: number }) {
+  const colors = useColors();
+  return (
+    <View accessibilityRole="image" accessibilityLabel="EduLift" style={{ flexDirection: 'row', alignItems: 'center', gap: size * 0.3 }}>
+      <Image source={require('../assets/logo-mark.png')} style={{ width: size, height: size, tintColor: colors.accent }} />
+      <Text style={{ fontFamily: font.bold, fontSize: size * 0.6, color: colors.accent }}>EduLift</Text>
+    </View>
+  );
 }
 
 export function Loading() {
