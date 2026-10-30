@@ -6,14 +6,18 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel, Field, ValidationError
 
+from app.bedrock import converse
+
 log = logging.getLogger(__name__)
 
 MAX_CHARS = 300
+URL = re.compile(r"https?://|www\.", re.I)
 OVERSTATED = ("will be accepted", "will get in", "guaranteed", "definitely", "certain to")
 SYSTEM_PROMPT = (
     "You explain a university or college eligibility result to a South African learner. "
-    "The data is in <data> tags. Use only that data. Do not invent requirements, dates, "
-    "fees or numbers. Never say the learner will be accepted. Reply with JSON only: "
+    "Use only the data. Do not invent requirements, dates, "
+    "fees or numbers. Never say the learner will be accepted. Never include links. "
+    "Reply with JSON only: "
     '{"summary": "...", "next_step": "...", "plan_b_hint": "..."}, each under 300 characters.'
 )
 
@@ -88,20 +92,22 @@ class BedrockProvider:
         self._model_id = model_id
 
     def explain(self, data: ExplanationInput) -> Draft:
-        payload = json.dumps(asdict(data), ensure_ascii=False)
-        response = self._client.converse(
-            modelId=self._model_id,
-            system=[{"text": SYSTEM_PROMPT}],
-            messages=[{"role": "user", "content": [{"text": f"<data>{payload}</data>"}]}],
-            inferenceConfig={"maxTokens": 400, "temperature": 0},
-        )
-        return parse_draft(response["output"]["message"]["content"][0]["text"])
+        payload = json.dumps(for_model(data), ensure_ascii=False)
+        return parse_draft(converse(self._client, self._model_id, SYSTEM_PROMPT, payload, 400))
+
+
+def for_model(data: ExplanationInput) -> dict[str, Any]:
+    """What the model sees: the result without source links, which the page shows itself."""
+    facts = asdict(data)
+    for check in facts["checks"]:
+        del check["source_url"]
+    return facts
 
 
 def parse_draft(text: str) -> Draft:
-    cleaned = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```")
     try:
-        return Draft.model_validate(json.loads(cleaned))
+        # The model sometimes wraps the JSON in a code fence or a sentence.
+        return Draft.model_validate(json.loads(text[text.index("{") : text.rindex("}") + 1]))
     except (ValueError, ValidationError) as err:
         raise ValueError("reply was not the expected JSON") from err
 
@@ -111,7 +117,9 @@ def reject_reason(draft: Draft, data: ExplanationInput) -> str | None:
     text = " ".join([draft.summary, draft.next_step, draft.plan_b_hint])
     if any(phrase in text.lower() for phrase in OVERSTATED):
         return "overstated"
-    allowed = set(re.findall(r"\d+", json.dumps(asdict(data), ensure_ascii=False)))
+    if URL.search(text):
+        return "link"
+    allowed = set(re.findall(r"\d+", json.dumps(for_model(data), ensure_ascii=False)))
     if set(re.findall(r"\d+", text)) - allowed:
         return "invented_number"
     return None
