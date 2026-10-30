@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import type { ColorValue } from 'react-native';
 
 import { font, useColors } from '../../src/theme';
@@ -27,16 +27,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="index" options={tab('Home', 'home-outline')} />
       <Tabs.Screen name="funding" options={tab('Funding', 'cash-outline')} />
-      <Tabs.Screen
-        name="ask-ai"
-        options={tab('Ask AI', 'chatbubbles-outline')}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault();
-            router.push('/ask');
-          },
-        }}
-      />
+      <Tabs.Screen name="ask-ai" options={tab('Ask AI', 'chatbubbles-outline')} />
       <Tabs.Screen name="study" options={tab('Study', 'school-outline')} />
       <Tabs.Screen name="work" options={tab('Work', 'briefcase-outline')} />
       <Tabs.Screen name="profile" options={tab('Profile', 'person-outline')} />
