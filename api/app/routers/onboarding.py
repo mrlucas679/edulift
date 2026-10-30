@@ -136,13 +136,14 @@ def details(me: SignedIn, db: Db) -> MeDetail:
 
 
 @router.put("/me/profile")
-def save_profile(body: ProfileIn, me: SignedIn, db: Db) -> MeDetail:
+def save_profile(body: ProfileIn, me: SignedIn, db: Db, engine: DbEngine) -> MeDetail:
     user = ensure_account(db, me.subject)
     if age_on(body.birth_date, date.today()) < MIN_AGE:
         # Keep nothing: the user row takes the username, password and sign-ins with it.
-        db.delete(user)
-        db.merge(m.DeletedLearner(user_id=user.id))
-        db.flush()
+        # Its own transaction, because the error below rolls this request's one back.
+        with Session(engine) as erase, erase.begin():
+            erase.execute(delete(m.User).where(m.User.id == user.id))
+            erase.merge(m.DeletedLearner(user_id=user.id))
         raise TooYoungError
     profile = db.get(m.Profile, user.id) or m.Profile(user_id=user.id)
     for field, value in body.model_dump(exclude_unset=True, exclude={"interests"}).items():

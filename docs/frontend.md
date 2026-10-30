@@ -21,8 +21,10 @@ are the visual reference. Layout pattern: hero band, cards, deadline row, five b
 |---|---|---|
 | Welcome | `/welcome` | — |
 | Privacy notice | `/privacy` | static, versioned |
-| Demo account | `/sign-in` | POST `/auth/demo/register` or `/auth/demo/login`; email + password, no email verification |
-| Email code (legacy flow) | `/sign-in/code` | POST `/auth/start` and `/auth/verify`; resend after 30 s |
+| Sign in | `/sign-in` | POST `/auth/login`; username + password |
+| Create an account | `/create-account` | POST `/auth/register`; shows the 10 recovery codes once |
+| Forgot password | `/recover` | POST `/auth/recover` with a recovery code |
+| Password and codes | `/password` | POST `/auth/password`, `/auth/recovery-codes` |
 | Date of birth | `/onboarding/age` | PUT `/me/profile` |
 | Too young (<17) | `/onboarding/too-young` | GET `/handoffs` |
 | Guardian details (17) | `/onboarding/guardian` | POST `/me/guardian-request` |

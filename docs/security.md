@@ -11,14 +11,15 @@ general; POPIA and AWS specifics are not in it — sources are the Act and AWS d
 
 | Threat | Where | Control |
 |---|---|---|
-| Spoofing a learner | Token on `/v1/me/*` | Verify JWT signature (JWKS), expiry, issuer, client id, `token_use`; user id only from token |
+| Spoofing a learner | Token on `/v1/me/*` | HS256 pinned in code; issuer, audience and expiry required; user id only from token; Argon2id passwords; login limited per username and IP; one error for any wrong detail |
+| Elevation to admin | `/v1/admin/*` | Role read from the database on every request; granted only by `app.jobs.admins` with AWS access; `role` can't be sent to the API; a route inventory test fails if a route becomes public |
 | Spoofing a guardian | Guardian link | 32-byte random token, SHA-256 stored, single use, 72 h; declaration recorded; same 404 for invalid/used/expired |
-| Learner approving for themselves | Guardian email = learner email | Refuse a guardian email equal to the learner's sign-in email; record IP/user agent hash of decision |
+| Learner approving for themselves | Guardian link | **Accepted risk, for POPIA review:** the learner sends the link, so nothing technical stops them opening it. The page requires the guardian declaration and records the decision |
 | Tampering | Request bodies | Pydantic with ranges and lengths, unknown fields rejected; marks 0–100 |
 | Repudiation | Consent and guardian decisions | `consents`, `guardian_consents`, `audit_events` with policy/declaration version |
 | Information disclosure | Cross-learner reads | Owner filter on every query; 404 on others' ids; test per endpoint |
 | Information disclosure | Logs, AI | No PII in logs (scrub test); AI gets verdict data only |
-| Denial of service / cost | Sign-in, preview, explain, guardian links | Rate limits (api.md); Cognito limits; AI daily cap; budget alarm |
+| Denial of service / cost | Sign-in, preview, explain, guardian links | Rate limits (api.md), counted in Postgres; Argon2id sized to the task (19 MiB); AI daily cap; budget alarm |
 | Elevation | Database | API role without DDL; RDS private; SG allows only the API |
 | Phishing / scams | External links | Allow-listed https domains; domain shown before leaving; scam notice |
 
@@ -26,13 +27,13 @@ general; POPIA and AWS specifics are not in it — sources are the Act and AWS d
 
 | Area | Control |
 |---|---|
-| Secrets | Env vars / Secrets Manager only; `.env` git-ignored; `.env.example` names only; IAM task role scoped to Cognito, Bedrock, SES, Secrets Manager actions used |
+| Secrets | Env vars / Secrets Manager only; `.env` git-ignored; `.env.example` names only; IAM task role scoped to the Bedrock model used; `AUTH_SECRET` (token signing) in Secrets Manager |
 | Transport | HTTPS only; HSTS, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY` |
 | CORS | Web app origin and local dev origins only |
 | Dependencies | Pinned (`uv.lock`, `package-lock.json`); `pip-audit` and `npm audit` in CI; gitleaks on every push |
 | Known, accepted (2026-10-23) | npm reports two high advisories with no fixed release: `braces` (via Metro, the bundler: a crafted glob can exhaust the stack; only our own build config feeds it) and `node-forge` (via Expo update code signing, which we don't use). Neither is in the app bundle. CI fails on any other high or any critical. Recheck on every Expo upgrade |
-| Session on device | Android: refresh token in the OS keystore via `expo-secure-store`; never AsyncStorage. Web: tokens in memory only, so a reload means signing in again; no browser storage is readable-safe from page scripts |
-| Email flooding | `/auth/start` sends a real email per call: 5 per address and 30 per IP per 15 minutes, counted in Postgres |
+| Session on device | Android: refresh token in the OS keystore via `expo-secure-store`; never AsyncStorage. Web: access token in memory; refresh token in a `__Host-` HttpOnly, Secure, SameSite=Strict cookie that page scripts can't read |
+| Email | Off: no route sends email. With no SES sender set, the mailer refuses rather than log an address |
 
 ## POPIA checklist
 
@@ -43,7 +44,7 @@ general; POPIA and AWS specifics are not in it — sources are the Act and AWS d
 | s18 Notification | Privacy notice screen: what, why, who receives it (AWS, Bedrock), rights, contact |
 | s19 Safeguards | Encryption in transit and at rest; least privilege; no PII in logs |
 | s23–25 Access/correction | Export JSON; edit profile and marks |
-| s24 Deletion | Delete account end to end, including Cognito |
+| s24 Deletion | Delete account end to end, including username, password hash, recovery codes and sign-ins |
 | s26 Special information | Never asked; criteria targeting race/disability show "check with provider" |
 | s35 Children | 17-year-olds only with guardian consent (the age 17 guardian consent decision); under-17s cannot create an account |
 | s69 Direct marketing | None. Reminders only with consent and only about the learner's own saved items |

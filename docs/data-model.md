@@ -26,7 +26,7 @@ timestamps `timestamptz` in UTC; money in integer cents (`*_zar_cents`).
 
 | Table | Columns | Invariants |
 |---|---|---|
-| `users` | id (= Cognito sub), created_at, deleted_at, status (`onboarding`, `pending_guardian`, `active`, `restricted`) | new accounts start in `onboarding` until date of birth and consent are done; `restricted` = guardian withdrew, browse only |
+| `users` | id (uuid; `demo-…` for demo learners), created_at, deleted_at, status (`onboarding`, `pending_guardian`, `active`, `restricted`), role (`student`, `admin`) | new accounts start in `onboarding` until date of birth and consent are done; `restricted` = guardian withdrew, browse only |
 | `rate_limit_hits` | key (sha256 of bucket + email or IP), window_start, hits | no email or IP stored in clear; old windows deleted on the next hit |
 | `profiles` | user_id (PK), first_name, date_of_birth, province, certificate_type (`nsc`, `ieb`, `sacai`), interests (uuid[], ≤ 3), language (`en`, `zu`, `st`), low_data_mode, updated_at | no ID number, income, race, disability |
 | `mark_records` | id, user_id, period (`gr11_final`, `gr12_june`, `gr12_prelim`, `gr12_final`), subject_id, percent (0–100), entered_at | unique (user_id, period, subject_id) |
@@ -55,6 +55,6 @@ timestamps `timestamptz` in UTC; money in integer cents (`*_zar_cents`).
 
 `DELETE /v1/me` deletes, in one transaction: profiles, mark_records, saved_items,
 applications (+ checklist_items), document_drafts, reminders_sent, consents, guardian_requests,
-guardian_consents, then the users row; `audit_events.user_id` set to null and a `delete`
-event written. Then the Cognito user is deleted. If Cognito deletion fails, the job
-retries; the database deletion is not rolled back.
+guardian_consents, then the users row, which takes credentials, recovery_codes and
+refresh_tokens with it; `audit_events.user_id` set to null and a `delete` event written. A
+`deleted_learners` tombstone stops a still-valid access token recreating the account.
