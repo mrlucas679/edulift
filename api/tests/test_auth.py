@@ -1,9 +1,9 @@
 from datetime import UTC, datetime, timedelta
+from typing import Any, cast
 
 import jwt
 import pytest
 from fastapi.testclient import TestClient
-from httpx import Response
 from sqlalchemy import Engine, text
 
 from app import tokens
@@ -25,7 +25,7 @@ def bearer(token: object) -> dict[str, str]:
     return {"Authorization": f"Bearer {token}"}
 
 
-def login(client: TestClient, username: str = "thabo", password: str = PASSWORD) -> Response:
+def login(client: TestClient, username: str = "thabo", password: str = PASSWORD) -> Any:
     return client.post("/v1/auth/login", json={"username": username, "password": password})
 
 
@@ -43,7 +43,7 @@ def test_only_hashes_are_stored(client: TestClient, engine: Engine) -> None:
         code_hashes = set(db.execute(text("SELECT code_hash FROM recovery_codes")).scalars())
         refresh_hashes = set(db.execute(text("SELECT token_hash FROM refresh_tokens")).scalars())
     assert stored.startswith("$argon2id$") and PASSWORD not in stored
-    assert not code_hashes & set(body["recovery_codes"])  # type: ignore[arg-type]
+    assert not code_hashes & set(cast(list[str], body["recovery_codes"]))
     assert body["refresh_token"] not in refresh_hashes
 
 
@@ -249,7 +249,7 @@ def _token(**changes: object) -> str:
             "wrong-secret-of-at-least-32-chars!",
         ),
         jwt.encode(
-            {"sub": "someone", "iss": tokens.ISSUER, "aud": tokens.AUDIENCE}, None, algorithm="none"
+            {"sub": "someone", "iss": tokens.ISSUER, "aud": tokens.AUDIENCE}, "", algorithm="none"
         ),
         "not-a-token",
     ],
