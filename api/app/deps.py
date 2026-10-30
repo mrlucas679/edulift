@@ -6,14 +6,15 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 
+from app import models as m
+from app import tokens
 from app.assist import AskProvider, DraftProvider
-from app.auth import Auth, Identity
+from app.auth import Identity
 from app.config import Settings
 from app.db import transaction
 from app.demo import demo_identity
-from app.errors import UnauthenticatedError
+from app.errors import NotAllowedError, UnauthenticatedError
 from app.explain import ExplanationProvider
-from app.mail import Mailer
 
 _bearer = HTTPBearer(auto_error=False)
 
@@ -28,23 +29,12 @@ def _engine(request: Request) -> Engine:
     return engine
 
 
-def _auth(request: Request) -> Auth:
-    provider: Auth = request.app.state.identity
-    return provider
-
-
-def _mailer(request: Request) -> Mailer:
-    mailer: Mailer = request.app.state.mailer
-    return mailer
-
-
 def _db(request: Request) -> Iterator[Session]:
     yield from transaction(request.app.state.sessions)
 
 
 def _signed_in(
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)],
-    provider: Annotated[Auth, Depends(_auth)],
     settings: Annotated[Settings, Depends(_settings)],
 ) -> Identity:
     # Identity comes from the token only.
@@ -54,7 +44,17 @@ def _signed_in(
         demo = demo_identity(credentials.credentials, settings.demo_secret)
         if demo is not None:
             return demo
-    return provider.check_token(credentials.credentials)
+    return tokens.check_access(settings.auth_secret, credentials.credentials)
+
+
+def _admin(
+    me: Annotated[Identity, Depends(_signed_in)], db: Annotated[Session, Depends(_db)]
+) -> Identity:
+    # Read from the database on every call, so removing an admin takes effect at once.
+    user = db.get(m.User, me.subject)
+    if user is None or user.role != "admin" or user.deleted_at is not None:
+        raise NotAllowedError
+    return me
 
 
 def client_ip(request: Request, settings: Annotated[Settings, Depends(_settings)]) -> str:
@@ -68,10 +68,9 @@ def client_ip(request: Request, settings: Annotated[Settings, Depends(_settings)
 
 Db = Annotated[Session, Depends(_db)]
 DbEngine = Annotated[Engine, Depends(_engine)]
-Identities = Annotated[Auth, Depends(_auth)]
 SignedIn = Annotated[Identity, Depends(_signed_in)]
+Admin = Annotated[Identity, Depends(_admin)]
 ClientIp = Annotated[str, Depends(client_ip)]
-Mail = Annotated[Mailer, Depends(_mailer)]
 
 
 def _explainer(request: Request) -> ExplanationProvider:

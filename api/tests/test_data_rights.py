@@ -7,7 +7,6 @@ from sqlalchemy import Engine, func, select
 from sqlalchemy.orm import Session as DbSession
 
 from app import models as m
-from app.fake_auth import FakeAuth
 from app.jobs.retention import erase_unanswered
 from app.seed import read, write
 from tests.test_marks import THANDI, active
@@ -72,9 +71,7 @@ def test_delete_needs_sign_in(client: TestClient, seeded: None) -> None:
     assert client.delete("/v1/me").status_code == 401
 
 
-def test_retention_erases_unanswered_guardian_requests(
-    seeded: None, engine: Engine, identity: FakeAuth
-) -> None:
+def test_retention_erases_unanswered_guardian_requests(seeded: None, engine: Engine) -> None:
     old = datetime.now(UTC) - timedelta(days=8)
     with DbSession(engine) as db, db.begin():
         db.add(m.User(id="kid-1", status="pending_guardian"))
@@ -91,13 +88,11 @@ def test_retention_erases_unanswered_guardian_requests(
             )
         )
     with DbSession(engine) as db, db.begin():
-        assert erase_unanswered(db, identity, datetime.now(UTC)) == 1
+        assert erase_unanswered(db, datetime.now(UTC)) == 1
     assert count(engine, m.User) == 0
 
 
-def test_recent_guardian_requests_are_kept(
-    seeded: None, engine: Engine, identity: FakeAuth
-) -> None:
+def test_recent_guardian_requests_are_kept(seeded: None, engine: Engine) -> None:
     now = datetime.now(UTC)
     with DbSession(engine) as db, db.begin():
         db.add(m.User(id="kid-2", status="pending_guardian"))
@@ -114,7 +109,7 @@ def test_recent_guardian_requests_are_kept(
             )
         )
     with DbSession(engine) as db, db.begin():
-        assert erase_unanswered(db, identity, now) == 0
+        assert erase_unanswered(db, now) == 0
     assert count(engine, m.User) == 1
 
 

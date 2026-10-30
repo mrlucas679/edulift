@@ -20,17 +20,15 @@ from app.assist import (
     TemplateAsk,
     TemplateDraft,
 )
-from app.auth import Auth
 from app.bedrock import FallbackClient
 from app.config import Settings
 from app.db import new_engine
 from app.errors import add_handlers, error_response
 from app.explain import BedrockProvider, ExplanationProvider, TemplateProvider
-from app.identity import identity_for
 from app.logs import setup_logging
-from app.mail import Mailer, mailer_for
 from app.request_id import new_id
 from app.routers import (
+    admin,
     alternatives,
     applications,
     aps,
@@ -85,10 +83,6 @@ def _skipped_cloudfront(request: Request, app_url: str) -> Response:
     return Response(status_code=308, headers={"Location": app_url.rstrip("/") + request.url.path})
 
 
-def _auth(settings: Settings) -> Auth:
-    return identity_for(settings)
-
-
 def _explainer(settings: Settings) -> ExplanationProvider:
     client = _ai_client(settings)
     if client is None:
@@ -121,15 +115,9 @@ def _drafter(settings: Settings) -> DraftProvider:
     return BedrockDraft(client, settings.bedrock_model_id) if client else TemplateDraft()
 
 
-def _mailer(settings: Settings) -> Mailer:
-    return mailer_for(settings)
-
-
 def create_app(
     settings: Settings | None = None,
-    identity: Auth | None = None,
     engine: Engine | None = None,
-    mailer: Mailer | None = None,
     explainer: ExplanationProvider | None = None,
 ) -> FastAPI:
     if settings is None:
@@ -146,8 +134,6 @@ def create_app(
     app.state.settings = settings
     app.state.engine = engine or new_engine(settings.sqlalchemy_url)
     app.state.sessions = sessionmaker(bind=app.state.engine, expire_on_commit=False)
-    app.state.identity = identity or _auth(settings)
-    app.state.mailer = mailer or _mailer(settings)
     app.state.explainer = explainer or _explainer(settings)
     app.state.asker = _asker(settings)
     app.state.drafter = _drafter(settings)
@@ -217,6 +203,7 @@ def create_app(
         applications.router,
         explain.router,
         assist.router,
+        admin.router,
     ):
         app.include_router(router, prefix="/v1")
     return app

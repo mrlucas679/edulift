@@ -9,13 +9,11 @@ def test_responses_carry_the_security_headers(client: TestClient) -> None:
 
 
 def test_a_write_must_be_json(client: TestClient) -> None:
-    r = client.post(
-        "/v1/auth/start", content=b"email=a@example.org", headers={"Content-Type": "text/plain"}
-    )
+    r = client.post("/v1/auth/login", content=b"username=a", headers={"Content-Type": "text/plain"})
     assert r.status_code == 415
     assert r.json()["error"]["code"] == "unsupported_media_type"
 
 
 def test_json_writes_pass_the_content_type_check(client: TestClient) -> None:
-    r = client.post("/v1/auth/start", json={"email": "a@example.org"})
+    r = client.post("/v1/auth/login", json={"username": "abc", "password": "x"})
     assert r.status_code != 415

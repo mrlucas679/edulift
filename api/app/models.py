@@ -29,12 +29,49 @@ class User(Base):
             "status IN ('onboarding', 'pending_guardian', 'active', 'restricted')",
             name="users_status_known",
         ),
+        CheckConstraint("role IN ('student', 'admin')", name="users_role_known"),
     )
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     status: Mapped[str] = mapped_column(String(20), server_default="onboarding")
+    # Admin is only ever set from the command line (app.jobs.admins), never through the API.
+    role: Mapped[str] = mapped_column(String(10), server_default="student")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class Credential(Base):
+    """A username and password. Only the Argon2id hash is kept."""
+
+    __tablename__ = "credentials"
+
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    username: Mapped[str] = mapped_column(String(30), unique=True)  # always lower case
+    password_hash: Mapped[str] = mapped_column(String(200))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class RecoveryCode(Base):
+    """One single-use code for when the password is forgotten. Only its sha256 is kept."""
+
+    __tablename__ = "recovery_codes"
+
+    code_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+
+
+class RefreshToken(Base):
+    """A sign-in that can be renewed. Only its sha256 is kept; renewing replaces it."""
+
+    __tablename__ = "refresh_tokens"
+
+    token_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    # Fixed when the learner signs in; renewing never moves it.
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
 class DeletedLearner(Base):
@@ -215,7 +252,8 @@ class GuardianRequest(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     guardian_name: Mapped[str] = mapped_column(String(80))
-    guardian_email: Mapped[str] = mapped_column(String(254))
+    # Only on requests from when approvals were emailed; links are now shared by the learner.
+    guardian_email: Mapped[str | None] = mapped_column(String(254))
     token_hash: Mapped[str] = mapped_column(String(64), unique=True)  # sha256, never the token
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     status: Mapped[str] = mapped_column(String(10), default="pending")

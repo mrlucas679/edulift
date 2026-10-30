@@ -13,13 +13,14 @@ from app import models as m
 from app import rate_limit
 from app.accounts import ensure_account
 from app.age import ADULT, MIN_AGE, age_on
-from app.demo import DEMO_PREFIX
-from app.deps import AppSettings, ClientIp, Db, DbEngine, Identities, Mail, SignedIn
+from app.config import Settings
+from app.deps import AppSettings, ClientIp, Db, DbEngine, SignedIn
 from app.erasure import export_learner
-from app.errors import AppError, NotFoundError, UpstreamUnavailableError
+from app.errors import AppError, NotAllowedError, NotFoundError, UpstreamUnavailableError
 from app.schemas import (
     ConsentRequest,
     GuardianDecision,
+    GuardianLink,
     GuardianRequestIn,
     GuardianView,
     MeDetail,
@@ -45,10 +46,9 @@ class UnknownInterestError(AppError):
     message = "Some interests aren't recognised."
 
 
-class NotAllowedError(AppError):
-    code = "not_allowed"
-    status_code = 403
-    message = "That isn't allowed."
+def _optional(settings: Settings) -> set[str]:
+    # Reminders go by email, so they are only offered when email is switched on.
+    return OPTIONAL if settings.sender_email else OPTIONAL - {"reminders"}
 
 
 def _hash(token: str) -> str:
@@ -136,13 +136,13 @@ def details(me: SignedIn, db: Db) -> MeDetail:
 
 
 @router.put("/me/profile")
-def save_profile(body: ProfileIn, me: SignedIn, db: Db, identities: Identities) -> MeDetail:
+def save_profile(body: ProfileIn, me: SignedIn, db: Db) -> MeDetail:
     user = ensure_account(db, me.subject)
     if age_on(body.birth_date, date.today()) < MIN_AGE:
-        # Keep nothing: remove the account here and at Cognito.
+        # Keep nothing: the user row takes the username, password and sign-ins with it.
         db.delete(user)
+        db.merge(m.DeletedLearner(user_id=user.id))
         db.flush()
-        identities.delete_user(me.subject)
         raise TooYoungError
     profile = db.get(m.Profile, user.id) or m.Profile(user_id=user.id)
     for field, value in body.model_dump(exclude_unset=True, exclude={"interests"}).items():
@@ -159,9 +159,11 @@ def save_profile(body: ProfileIn, me: SignedIn, db: Db, identities: Identities) 
 
 
 @router.post("/me/consents")
-def set_consent(body: ConsentRequest, me: SignedIn, db: Db) -> MeDetail:
+def set_consent(body: ConsentRequest, me: SignedIn, db: Db, settings: AppSettings) -> MeDetail:
     user = ensure_account(db, me.subject)
     if body.granted:
+        if body.purpose not in _optional(settings) | {"account"}:
+            raise NotAllowedError("Email reminders aren't available yet.")
         if db.get(m.Profile, user.id) is None:
             raise NotAllowedError("Add your date of birth first.")
         allowed = _guardian_allowed(db, user.id)
@@ -215,31 +217,22 @@ def set_consent(body: ConsentRequest, me: SignedIn, db: Db) -> MeDetail:
     return _me(db, user)
 
 
-@router.post("/me/guardian", status_code=204)
+@router.post("/me/guardian")
 def ask_guardian(
     body: GuardianRequestIn,
     *,
     me: SignedIn,
     db: Db,
     engine: DbEngine,
-    identities: Identities,
-    mail: Mail,
     settings: AppSettings,
-) -> Response:
+) -> GuardianLink:
+    """A one-time link the learner sends to their parent or guardian, e.g. on WhatsApp."""
     if not settings.app_url:
-        raise UpstreamUnavailableError("Guardian emails aren't switched on yet.")
+        raise UpstreamUnavailableError("Guardian links aren't switched on yet.")
     rate_limit.check(engine, "guardian:user", me.subject, limit=3, window_seconds=86_400)
     user = ensure_account(db, me.subject)
     if user.status != "pending_guardian":
         raise NotAllowedError("A guardian's approval isn't needed for this account.")
-    guardian_email = body.guardian_email.lower()
-    # Demo learners have no email of their own to compare with.
-    if (
-        not me.subject.startswith(DEMO_PREFIX)
-        and guardian_email == identities.email_of(me.subject).lower()
-    ):
-        raise NotAllowedError("Use your parent or guardian's own email address.")
-
     db.execute(
         delete(m.GuardianRequest).where(
             m.GuardianRequest.user_id == user.id, m.GuardianRequest.status == "pending"
@@ -250,29 +243,11 @@ def ask_guardian(
         m.GuardianRequest(
             user_id=user.id,
             guardian_name=body.guardian_name,
-            guardian_email=guardian_email,
             token_hash=_hash(token),
             expires_at=datetime.now(UTC) + timedelta(hours=LINK_HOURS),
         )
     )
-    profile = db.get_one(m.Profile, user.id)
-    learner = profile.first_name or "Your child"
-    link = f"{settings.app_url}/guardian/{token}"
-    body_text = _guardian_email(body.guardian_name, learner, link)
-    mail.send(guardian_email, f"{learner} wants to use EduLift", body_text)
-    return Response(status_code=204)
-
-
-def _guardian_email(guardian: str, learner: str, link: str) -> str:
-    return (
-        f"Hi {guardian}.\n\n"
-        f"{learner} (17) wants to use EduLift to see which universities, colleges, "
-        "funding and jobs they qualify for. Because they are under 18, the law needs "
-        "your permission first.\n\n"
-        f"Read what we collect, then approve or decline:\n{link}\n\n"
-        f"The link works once and expires in {LINK_HOURS} hours. If you don't know "
-        f"{learner}, ignore this email and nothing will be kept."
-    )
+    return GuardianLink(link=f"{settings.app_url}/guardian/{token}")
 
 
 def _open_request(db: Session, token: str) -> m.GuardianRequest:
@@ -286,14 +261,16 @@ def _open_request(db: Session, token: str) -> m.GuardianRequest:
 
 
 @router.get("/guardian/{token}")
-def view_request(token: str, ip: ClientIp, db: Db, engine: DbEngine) -> GuardianView:
+def view_request(
+    token: str, ip: ClientIp, db: Db, engine: DbEngine, settings: AppSettings
+) -> GuardianView:
     rate_limit.check(engine, "guardian:ip", ip, limit=10, window_seconds=60)
     req = _open_request(db, token)
     profile = db.get(m.Profile, req.user_id)
     return GuardianView(
         learner_first_name=(profile.first_name if profile else None) or "Your child",
         guardian_name=req.guardian_name,
-        optional_purposes=sorted(OPTIONAL),
+        optional_purposes=sorted(_optional(settings)),
     )
 
 
@@ -305,7 +282,6 @@ def decide(
     ip: ClientIp,
     db: Db,
     engine: DbEngine,
-    mail: Mail,
     settings: AppSettings,
 ) -> Response | dict[str, str]:
     rate_limit.check(engine, "guardian:ip", ip, limit=10, window_seconds=60)
@@ -321,7 +297,7 @@ def decide(
 
     req.status = "approved"
     req.relationship = body.relationship
-    req.purposes = sorted(set(body.purposes) & OPTIONAL)
+    req.purposes = sorted(set(body.purposes) & _optional(settings))
     for purpose in ["account", *req.purposes]:
         db.add(
             m.Consent(
@@ -332,25 +308,8 @@ def decide(
     req.withdraw_token_hash = _hash(withdraw_token)
     db.flush()
     _refresh_status(db, user)
-    if settings.app_url:
-        profile = db.get_one(m.Profile, user.id)
-        link = f"{settings.app_url}/guardian/withdraw/{withdraw_token}"
-        mail.send(
-            req.guardian_email,
-            "You can change your decision any time",
-            _confirmation_email(req.guardian_name, profile.first_name or "Your child", link),
-        )
-    # The guardian is still on the approve page, so it gets the same link there.
+    # Shown on the approve page; the guardian keeps it to withdraw later.
     return {"withdraw_token": withdraw_token}
-
-
-def _confirmation_email(guardian: str, learner: str, link: str) -> str:
-    return (
-        f"Hi {guardian}.\n\n"
-        f"Thank you. {learner} can now use EduLift with the choices you made.\n\n"
-        f"To withdraw your approval at any time, use this link:\n{link}\n\n"
-        f"If you withdraw, {learner} can only browse until they turn 18."
-    )
 
 
 class WithdrawalView(BaseModel):

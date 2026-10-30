@@ -2,8 +2,8 @@ import jwt
 from fastapi.testclient import TestClient
 from sqlalchemy import Engine, text
 
-from app.fake_auth import ISSUER, FakeAuth
-from tests.conftest import sign_in
+from app.tokens import AUDIENCE, ISSUER
+from tests.conftest import AUTH_SECRET, sign_in
 
 
 def test_needs_a_token(client: TestClient) -> None:
@@ -13,7 +13,7 @@ def test_needs_a_token(client: TestClient) -> None:
 
 
 # Tokens are built here rather than pasted in, so the secret scanner has nothing to trip on.
-CLAIMS = {"sub": "x", "iss": ISSUER, "token_use": "access", "exp": 4_102_444_800}
+CLAIMS = {"sub": "x", "iss": ISSUER, "aud": AUDIENCE, "iat": 1_700_000_000, "exp": 4_102_444_800}
 
 
 def test_token_signed_with_someone_elses_key_is_refused(client: TestClient) -> None:
@@ -27,8 +27,8 @@ def test_unsigned_token_is_refused(client: TestClient) -> None:
     assert client.get("/v1/me", headers={"Authorization": f"Bearer {unsigned}"}).status_code == 401
 
 
-def test_expired_token_is_refused(client: TestClient, identity: FakeAuth) -> None:
-    expired = identity.expired_token("someone")
+def test_expired_token_is_refused(client: TestClient) -> None:
+    expired = jwt.encode({**CLAIMS, "exp": 1_700_000_001}, AUTH_SECRET, algorithm="HS256")
     assert client.get("/v1/me", headers={"Authorization": f"Bearer {expired}"}).status_code == 401
 
 

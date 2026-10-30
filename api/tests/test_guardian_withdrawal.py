@@ -1,4 +1,3 @@
-import re
 from datetime import date
 
 from fastapi.testclient import TestClient
@@ -6,35 +5,29 @@ from sqlalchemy import Engine, update
 from sqlalchemy.orm import Session
 
 from app import models as m
-from app.mail import ConsoleMailer
 from tests.conftest import Session as Signed
 from tests.test_onboarding import APPROVE, born, guardian_link, minor  # noqa: F401
 
 
-def withdrawal_link(mailer: ConsoleMailer) -> str:
-    match = re.search(r"/guardian/withdraw/(\S+)", mailer.sent[-1][2])
-    assert match
-    return match.group(1)
+def approve(client: TestClient, learner: Signed) -> str:
+    """Approve as the guardian; returns the withdrawal token shown on the approve page."""
+    reply = client.post(f"/v1/guardian/{guardian_link(client, learner)}", json=APPROVE)
+    token: str = reply.json()["withdraw_token"]
+    return token
 
 
-def test_approval_emails_a_withdrawal_link(
+def test_approval_shows_a_withdrawal_link(
     client: TestClient,
     minor: Signed,  # noqa: F811
-    mailer: ConsoleMailer,
 ) -> None:
-    guardian_link_token = guardian_link(client, minor, mailer)
-    client.post(f"/v1/guardian/{guardian_link_token}", json=APPROVE)
-    assert mailer.sent[-1][0] == "parent@example.org"
-    assert withdrawal_link(mailer)
+    assert approve(client, minor)
 
 
 def test_withdrawal_restricts_the_learner(
     client: TestClient,
     minor: Signed,  # noqa: F811
-    mailer: ConsoleMailer,
 ) -> None:
-    client.post(f"/v1/guardian/{guardian_link(client, minor, mailer)}", json=APPROVE)
-    token = withdrawal_link(mailer)
+    token = approve(client, minor)
     assert client.get(f"/v1/guardian/withdraw/{token}").json()["guardian_name"] == "Mrs Dlamini"
     assert client.post(f"/v1/guardian/withdraw/{token}").status_code == 204
 
@@ -50,10 +43,8 @@ def test_withdrawal_restricts_the_learner(
 def test_withdrawal_link_works_once(
     client: TestClient,
     minor: Signed,  # noqa: F811
-    mailer: ConsoleMailer,
 ) -> None:
-    client.post(f"/v1/guardian/{guardian_link(client, minor, mailer)}", json=APPROVE)
-    token = withdrawal_link(mailer)
+    token = approve(client, minor)
     assert client.post(f"/v1/guardian/withdraw/{token}").status_code == 204
     assert client.post(f"/v1/guardian/withdraw/{token}").status_code == 404
 
@@ -65,11 +56,10 @@ def test_made_up_withdrawal_link_is_refused(client: TestClient) -> None:
 def test_at_eighteen_the_learner_confirms_the_guardians_choices(
     client: TestClient,
     minor: Signed,  # noqa: F811
-    mailer: ConsoleMailer,
     engine: Engine,
 ) -> None:
     client.post(
-        f"/v1/guardian/{guardian_link(client, minor, mailer)}",
+        f"/v1/guardian/{guardian_link(client, minor)}",
         json={**APPROVE, "purposes": []},
     )
     with Session(engine) as db, db.begin():

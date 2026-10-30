@@ -11,7 +11,7 @@ from app import models as m
 from app.jobs.reminders import due_reminders, send_due
 from app.seed import read, write
 from tests.conftest import Session as Signed
-from tests.conftest import sign_in
+from tests.conftest import make_client, sign_in
 from tests.test_marks import active
 from tests.test_seed import REPO_DATA, dataset
 
@@ -138,6 +138,12 @@ def test_notes_are_capped(client: TestClient, inbox: dict[str, str], seeded: Non
     app_id = start_application(client, s)["id"]
     r = client.patch(f"/v1/me/applications/{app_id}", json={"notes": "x" * 1001}, headers=s.headers)
     assert r.status_code == 422
+
+
+@pytest.fixture
+def client(engine: Engine) -> TestClient:
+    # Reminders are only offered when email is switched on.
+    return make_client(engine, sender_email="edulift@example.org")
 
 
 class Outbox:

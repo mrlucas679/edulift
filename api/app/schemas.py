@@ -9,32 +9,47 @@ class Request(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
 
-class StartSignInRequest(Request):
-    email: EmailStr = Field(max_length=254)
+USERNAME = r"^[A-Za-z0-9._]{3,30}$"
+# Sign-in passwords are only length-checked here; new ones get the full rules in passwords.py.
+Password = Annotated[str, Field(min_length=1, max_length=128)]
 
 
-class DemoCredentialsRequest(Request):
-    email: EmailStr = Field(max_length=254)
-    password: str = Field(min_length=16, max_length=128)
+class Credentials(Request):
+    username: str = Field(pattern=USERNAME)
+    password: Password
+    # Web: keep the refresh token in an HttpOnly cookie instead of the reply.
+    use_cookie: bool = False
 
 
-class StartSignInResponse(BaseModel):
-    session: str
-    message: str = "If that address can receive email, a code is on its way."
-
-
-class VerifyCodeRequest(Request):
-    email: EmailStr = Field(max_length=254)
-    code: str = Field(pattern=r"^\d{6}$")
-    session: str = Field(min_length=1, max_length=4096)
+class RecoverRequest(Request):
+    username: str = Field(pattern=USERNAME)
+    code: str = Field(pattern=r"^[A-Za-z0-9 -]{12,20}$")
+    new_password: Password
+    use_cookie: bool = False
 
 
 class RefreshRequest(Request):
-    refresh_token: str = Field(min_length=1, max_length=4096)
+    # Empty when the web app sends the cookie instead.
+    refresh_token: str | None = Field(default=None, min_length=1, max_length=200)
+    use_cookie: bool = False
 
 
 class SignOutRequest(Request):
-    refresh_token: str = Field(min_length=1, max_length=4096)
+    refresh_token: str | None = Field(default=None, min_length=1, max_length=200)
+
+
+class ChangePasswordRequest(Request):
+    current_password: Password
+    new_password: Password
+    use_cookie: bool = False
+
+
+class NewCodesRequest(Request):
+    current_password: Password
+
+
+class RecoveryCodes(BaseModel):
+    recovery_codes: list[str]
 
 
 class TokenResponse(BaseModel):
@@ -42,6 +57,11 @@ class TokenResponse(BaseModel):
     refresh_token: str | None
     expires_in: int
     token_type: Literal["Bearer"] = "Bearer"  # noqa: S105
+
+
+class NewAccount(TokenResponse):
+    # Shown once. Only their hashes are kept.
+    recovery_codes: list[str]
 
 
 class MeResponse(BaseModel):
@@ -230,7 +250,11 @@ class MeDetail(BaseModel):
 
 class GuardianRequestIn(Request):
     guardian_name: str = Field(min_length=1, max_length=80)
-    guardian_email: EmailStr = Field(max_length=254)
+
+
+class GuardianLink(BaseModel):
+    # The learner shares this with their parent or guardian; it works once, for 72 hours.
+    link: str
 
 
 class GuardianView(BaseModel):

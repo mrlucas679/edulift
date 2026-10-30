@@ -29,28 +29,34 @@ class UnauthenticatedError(AppError):
     message = "Please sign in again."
 
 
-class InvalidCodeError(AppError):
-    code = "invalid_code"
-    status_code = 400
-    message = "That code isn't right. Check the email and try again."
+class NotAllowedError(AppError):
+    code = "not_allowed"
+    status_code = 403
+    message = "That isn't allowed."
 
 
 class InvalidCredentialsError(AppError):
+    # The same words whichever part was wrong, so nobody learns which usernames exist.
     code = "invalid_credentials"
     status_code = 400
-    message = "That email and password don't match."
+    message = "That username and password don't match."
 
 
-class AccountExistsError(AppError):
-    code = "account_exists"
-    status_code = 409
-    message = "An account already uses that email. Sign in with your password."
-
-
-class CodeExpiredError(AppError):
-    code = "code_expired"
+class InvalidRecoveryError(AppError):
+    code = "invalid_recovery"
     status_code = 400
-    message = "That code has expired. Ask for a new one."
+    message = "That username and recovery code don't match. Each code works once."
+
+
+class UsernameTakenError(AppError):
+    code = "username_taken"
+    status_code = 409
+    message = "That username is taken. Try another."
+
+
+class WeakPasswordError(AppError):
+    code = "weak_password"
+    status_code = 422
 
 
 class RateLimitedError(AppError):
