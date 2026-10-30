@@ -41,6 +41,23 @@ JSON validated with Pydantic: `{summary, next_step, plan_b_hint}`, each ≤ 300 
 | Cost | 10/min and 20/day per learner; cache by (programme, outcome, check pattern); global daily budget alarm |
 | Offshore processing (POPIA s72) | Only non-identifying verdict data; `ai_explanations` consent opt-in, worded plainly; for 17-year-olds only if the guardian allowed it |
 
+## Model and evals
+
+The model is Claude Haiku 4.5 through global cross-region inference: the cheapest model this
+account can use, and it passes every eval. A busy model gets one retry with backoff; after
+that the template answers. There is no bigger backup model: Sonnet 4.6 scored no better and
+cost 2.7x as much (eval run, 2026-10-30).
+
+`api/evals/` holds the evals: real questions, direct and indirect prompt-injection attacks
+(including poisoned records), explanations and drafts. They run through the same prompt,
+guardrails and fallback the API uses, against the real model, and print the pass rate and
+the cost. Run them before changing the model or a prompt:
+
+    cd api && AWS_PROFILE=<profile> uv run python evals/run.py [--model <inference profile id>]
+
+A question that finds no records never reaches the model. Explanations are sent without
+source links (the page shows those itself), and a reply with a link falls back.
+
 ## Configuration
 
 `BEDROCK_MODEL_ID`, `AI_TIMEOUT_SECONDS=8`, `AI_DAILY_LIMIT_PER_USER=20`,

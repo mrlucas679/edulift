@@ -102,7 +102,11 @@ def _ai_client(settings: Settings) -> object | None:
     client = boto3.client(
         "bedrock-runtime",
         region_name=settings.aws_region,
-        config=Config(read_timeout=settings.ai_timeout_seconds, retries={"max_attempts": 1}),
+        # A busy model gets one more try, with backoff, before the standard answer is used.
+        config=Config(
+            read_timeout=settings.ai_timeout_seconds,
+            retries={"max_attempts": 2, "mode": "standard"},
+        ),
     )
     return FallbackClient(client, settings.bedrock_fallback_model_id)
 
