@@ -5,7 +5,6 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app import models as m
-from app.auth import Auth
 
 
 def record(db: Session, user_id: str | None, action: str, target: str = "") -> None:
@@ -34,8 +33,11 @@ def export_learner(db: Session, user_id: str) -> dict[str, Any]:
         .where(m.PlanTarget.user_id == user_id)
         .order_by(m.PlanTarget.position)
     )
+    credential = db.get(m.Credential, user_id)
     return {
         "exported_at": datetime.now(UTC).isoformat(),
+        # Never the password hash or recovery codes: they are secrets, not data about you.
+        "username": credential.username if credential else None,
         "profile": None
         if profile is None
         else {
@@ -82,11 +84,10 @@ def _application(db: Session, app: m.Application) -> dict[str, Any]:
     }
 
 
-def erase_learner(db: Session, identities: Auth, user: m.User, action: str) -> None:
-    """Delete the learner's rows and their sign-in. Raises if sign-in deletion fails,
-    which rolls back the database deletion too, so the learner can simply try again."""
+def erase_learner(db: Session, user: m.User, action: str) -> None:
+    """Delete the learner's rows. Their username, password hash, recovery codes and
+    sign-ins go with the user row; the tombstone stops a live token recreating it."""
     record(db, None, action, "learner")
     db.execute(delete(m.User).where(m.User.id == user.id))
     db.merge(m.DeletedLearner(user_id=user.id))
     db.flush()
-    identities.delete_user(user.id)

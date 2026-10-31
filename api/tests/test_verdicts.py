@@ -54,8 +54,8 @@ def test_marks_are_not_stored(
     session = sign_in(client, inbox, "a@example.org")
     client.post("/v1/programmes/uj.bsc-it/check", json={"marks": THANDI}, headers=session.headers)
     with Session(engine) as db:
-        # Only the reference tables and users exist; nothing holds marks.
-        assert db.scalar(select(func.count()).select_from(m.User)) == 0
+        # Checking marks keeps nothing: no marks are saved for the learner.
+        assert db.scalar(select(func.count()).select_from(m.Mark)) == 0
 
 
 def test_unknown_programme_is_404(client: TestClient, inbox: dict[str, str], seeded: None) -> None:

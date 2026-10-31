@@ -1,6 +1,7 @@
 """Tests run on real Postgres, built with our migrations."""
 
 import os
+import re
 from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -15,14 +16,13 @@ from sqlalchemy.engine import make_url
 
 from app import rate_limit
 from app.config import Settings
-from app.fake_auth import FakeAuth
-from app.mail import ConsoleMailer
 from app.main import create_app
 
 TABLES = [
     "document_drafts",
     "ai_requests", "reminders_sent", "checklist_items", "applications", "saved_items",
     "plan_targets", "opportunities", "mark_records", "guardian_requests", "consents", "profiles",
+    "credentials", "recovery_codes", "refresh_tokens",
     "users", "rate_limit_hits", "nbt_records", "fps_bands", "programme_requirements", "programmes",
     "application_cycles", "institutions", "handoffs", "subjects", "fields", "sources",
 ]  # fmt: skip
@@ -59,40 +59,33 @@ def empty_tables(engine: Engine) -> None:
         db.execute(text(f"TRUNCATE {', '.join(TABLES)}"))
 
 
+AUTH_SECRET = "test-auth-secret-at-least-32-characters-long"
+# Long, unrelated words: passes the strength rules.
+PASSWORD = "copper lantern mango thunder"
+
+
 @pytest.fixture
 def inbox() -> dict[str, str]:
-    # email -> latest code
+    # Kept so sign_in(client, inbox, email) reads as before; nothing is emailed any more.
     return {}
 
 
-@pytest.fixture
-def identity(inbox: dict[str, str]) -> FakeAuth:
-    return FakeAuth(send_code=inbox.__setitem__)
-
-
-def make_client(
-    engine: Engine, identity: FakeAuth, mailer: ConsoleMailer | None = None, **overrides: object
-) -> TestClient:
+def make_client(engine: Engine, **overrides: object) -> TestClient:
     values: dict[str, object] = {
         "edulift_env": "test",
         "database_url": engine.url.render_as_string(hide_password=False),
-        "identity_provider": "fake",
+        "auth_secret": AUTH_SECRET,
         "app_url": "http://localhost:8081",
         "_env_file": None,
     }
     settings = Settings(**(values | overrides))  # type: ignore[arg-type]
-    app = create_app(settings, identity=identity, engine=engine, mailer=mailer)
+    app = create_app(settings, engine=engine)
     return TestClient(app, raise_server_exceptions=False)
 
 
 @pytest.fixture
-def mailer() -> ConsoleMailer:
-    return ConsoleMailer()
-
-
-@pytest.fixture
-def client(engine: Engine, identity: FakeAuth, mailer: ConsoleMailer) -> TestClient:
-    return make_client(engine, identity, mailer)
+def client(engine: Engine) -> TestClient:
+    return make_client(engine)
 
 
 @dataclass(frozen=True)
@@ -105,12 +98,15 @@ class Session:
         return {"Authorization": f"Bearer {self.access_token}"}
 
 
-def sign_in(client: TestClient, inbox: dict[str, str], email: str) -> Session:
-    session = client.post("/v1/auth/start", json={"email": email}).json()["session"]
-    body = {"email": email, "code": inbox[email], "session": session}
-    tokens = client.post("/v1/auth/verify", json=body).json()
+def username_for(email: str) -> str:
+    return re.sub(r"[^a-z0-9._]", ".", email.lower())[:30]
+
+
+def sign_in(client: TestClient, _inbox: dict[str, str], email: str) -> Session:
+    """Sign in as the learner named by this address, creating the account the first time."""
+    body = {"username": username_for(email), "password": PASSWORD}
+    reply = client.post("/v1/auth/register", json=body)
+    if reply.status_code == 409:
+        reply = client.post("/v1/auth/login", json=body)
+    tokens = reply.json()
     return Session(tokens["access_token"], tokens["refresh_token"])
-
-
-def wrong_code(right: str) -> str:
-    return "111111" if right == "000000" else "000000"

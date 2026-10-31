@@ -11,7 +11,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     edulift_env: Literal["local", "test", "demo"]
-    identity_provider: Literal["cognito", "fake"]
+    # Signs access tokens. 32+ random characters, from Secrets Manager on AWS.
+    auth_secret: str
 
     # DATABASE_URL locally; separate parts on AWS (password from the RDS secret).
     database_url: str = ""
@@ -22,8 +23,6 @@ class Settings(BaseSettings):
     db_password: str = ""
 
     aws_region: str = ""
-    cognito_user_pool_id: str = ""
-    cognito_app_client_id: str = ""
     cors_origins: str = ""
     # Proxies in front of us: 2 on AWS (CloudFront + load balancer), 0 locally.
     trusted_proxy_hops: int = Field(default=0, ge=0, le=5)
@@ -31,34 +30,27 @@ class Settings(BaseSettings):
     origin_secret: str = ""
     # Where guardian links point, e.g. https://xyz.cloudfront.net
     app_url: str = ""
+    # Email is off unless a verified SES sender is set.
     sender_email: str = ""
-    # Set to enable email/password demo registration and sign-in. Empty keeps it off.
+    # Set to turn on the one-tap demo. Empty keeps it off.
     demo_secret: str = ""
     ai_enabled: bool = False
     bedrock_model_id: str = ""
-    # Used only when the first model is busy or unavailable.
+    # Used only when the first model is busy or unavailable. Off on AWS (see docs/ai.md).
     bedrock_fallback_model_id: str = ""
     ai_timeout_seconds: float = 8
 
     @model_validator(mode="after")
     def _check(self) -> Self:
+        if len(self.auth_secret) < 32:  # noqa: PLR2004
+            raise ValueError("AUTH_SECRET must be 32+ characters")
         if self.edulift_env == "demo":
-            if self.identity_provider == "fake":
-                raise ValueError("the fake sign-in provider must never run in demo")
-            if not self.sender_email:
-                raise ValueError("demo needs SENDER_EMAIL")
             if self.app_url and not self.app_url.startswith("https://"):
                 raise ValueError("APP_URL must be https in demo")
             if len(self.origin_secret) < 32:  # noqa: PLR2004
                 raise ValueError("demo needs ORIGIN_SECRET (32+ characters)")
         if self.demo_secret and len(self.demo_secret) < 32:  # noqa: PLR2004
             raise ValueError("DEMO_SECRET must be 32+ characters")
-        if self.identity_provider == "cognito" and not (
-            self.aws_region and self.cognito_user_pool_id and self.cognito_app_client_id
-        ):
-            raise ValueError(
-                "cognito needs AWS_REGION, COGNITO_USER_POOL_ID, COGNITO_APP_CLIENT_ID"
-            )
         if not self.database_url and not (self.db_host and self.db_name and self.db_user):
             raise ValueError("set DATABASE_URL, or DB_HOST, DB_NAME, DB_USER and DB_PASSWORD")
         return self

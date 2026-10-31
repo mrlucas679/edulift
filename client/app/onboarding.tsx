@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
-import { Switch, View } from 'react-native';
+import { Share, Switch, View } from 'react-native';
 
 import { ApiError } from '../src/api';
 import { askGuardian, PURPOSES, saveMarks, saveProfile, setConsent, useMe, type MeDetail } from '../src/account';
@@ -136,40 +136,39 @@ function Basics({ onTooYoung }: { onTooYoung: () => void }) {
 function Guardian() {
   const { accessToken } = useSession();
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [relation, setRelation] = useState<'parent' | 'legal_guardian'>('parent');
-  const [sent, setSent] = useState(false);
+  const [link, setLink] = useState<string | null>(null);
   const send = useAction(async () => {
-    await askGuardian(accessToken, { guardian_name: name.trim(), guardian_email: email.trim() });
-    setSent(true);
+    setLink((await askGuardian(accessToken, { guardian_name: name.trim() })).link);
   });
   const guest = () => router.replace('/(tabs)');
+  const message = `I want to use EduLift to plan my studies. Because I'm under 18, it needs your OK first: ${link}`;
 
-  if (sent) {
+  if (link) {
     return (
       <Screen
         title="Parent approval"
         back={false}
         footer={
           <>
-            <Button label="Keep using as a guest" onPress={guest} />
-            <Button label="Resend the email" variant="secondary" onPress={send.run} busy={send.busy} />
-            <Button label="Use a different email" variant="link" onPress={() => setSent(false)} />
+            <Button label="Send the link" onPress={() => Share.share({ message }).catch(() => undefined)} />
+            <Button label="Keep using as a guest" variant="secondary" onPress={guest} />
           </>
         }
       >
-        <Heading>Request sent to {email.trim().replace(/^(.).*(@.*)$/, '$1•••$2')}</Heading>
-        <Body muted>When your parent or guardian taps Approve, your account opens and your plan is saved.</Body>
+        <Heading>Send this link to {name.trim()}</Heading>
+        <Body muted>Send it on WhatsApp or SMS, or show it to them. When they tap Approve, your account opens and your plan is saved.</Body>
+        <Field label="Approval link" value={link} editable={false} selectTextOnFocus />
         <Card>
           <CardTop title="Status" pill="Waiting" />
-          <Body muted small>Sent just now · link works for 72 hours</Body>
+          <Body muted small>The link works once, for 72 hours.</Body>
         </Card>
         <Card>
           <Title>What happens next</Title>
-          <Body small>1. They open the email and read what we store.</Body>
+          <Body small>1. They open the link and read what we store.</Body>
           <Body small>2. They confirm they’re your parent or guardian.</Body>
-          <Body small>3. They tap Approve. You’ll get a notification.</Body>
+          <Body small>3. They tap Approve.</Body>
         </Card>
+        <Body muted small>Only your parent or guardian may approve. Approving for yourself breaks our terms and the law (POPIA).</Body>
         <ErrorNote error={send.error} />
       </Screen>
     );
@@ -186,19 +185,10 @@ function Guardian() {
       </Card>
       <Card>
         <Title>Save your plan with a parent’s OK</Title>
-        <Body muted small>To save across phones, track applications and get reminders, a parent or guardian approves by email.</Body>
-        <Field label="Parent or guardian’s email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" inputMode="email" maxLength={254} placeholder="parent@example.com" />
+        <Body muted small>To save across phones and track applications, a parent or guardian approves. We give you a link to send them.</Body>
         <Field label="Their name" value={name} onChangeText={setName} maxLength={80} />
-        <Body small>They are my</Body>
-        <Chips
-          options={[{ id: 'parent', label: 'Parent' }, { id: 'legal_guardian', label: 'Legal guardian' }]}
-          value={relation}
-          onChange={setRelation}
-          wrap
-        />
         <ErrorNote error={send.error} />
-        <Button label="Send approval request" onPress={send.run} busy={send.busy} disabled={!name.trim() || !email.trim()} />
-        <Body muted small>We only use their email to send this request.</Body>
+        <Button label="Get the approval link" onPress={send.run} busy={send.busy} disabled={!name.trim()} />
       </Card>
     </Screen>
   );
@@ -207,7 +197,6 @@ function Guardian() {
 const PURPOSE_TITLES: Record<string, string> = {
   ai_explanations: 'Explain my results with AI',
   ai_writing: 'Help me write a CV or letter',
-  reminders: 'Deadline reminders by email',
   nbt_results: 'Use my NBT results',
   low_data: 'Use less data',
 };
@@ -218,19 +207,12 @@ function Choices({ me, onAgreed }: { me: MeDetail; onAgreed: () => void }) {
   const queryClient = useQueryClient();
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<unknown>(null);
-  const [reminderEmail, setReminderEmail] = useState('');
-  const [wantReminders, setWantReminders] = useState(false);
-
   async function toggle(purpose: string, on: boolean) {
-    if (purpose === 'reminders' && on && !reminderEmail.trim()) {
-      setWantReminders(true);
-      return;
-    }
     if (purpose === 'account' && on) onAgreed();
     setPending(purpose);
     setError(null);
     try {
-      await setConsent(accessToken, purpose, on, purpose === 'reminders' ? reminderEmail.trim() : undefined);
+      await setConsent(accessToken, purpose, on);
       await queryClient.invalidateQueries({ queryKey: ['me-details'] });
     } catch (e) {
       setError(e);
@@ -280,12 +262,6 @@ function Choices({ me, onAgreed }: { me: MeDetail; onAgreed: () => void }) {
             />
           </View>
           <Body muted small>{PURPOSES[purpose]}</Body>
-          {purpose === 'reminders' && wantReminders && !me.consents.includes('reminders') && (
-            <>
-              <Field label="Email for reminders" value={reminderEmail} onChangeText={setReminderEmail} autoCapitalize="none" keyboardType="email-address" inputMode="email" maxLength={254} />
-              <Button label="Turn on reminders" variant="secondary" disabled={!reminderEmail.trim()} onPress={() => toggle('reminders', true)} />
-            </>
-          )}
         </Card>
       ))}
       <Button label="Read the full privacy notice" variant="link" onPress={() => router.push('/privacy')} />

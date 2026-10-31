@@ -7,9 +7,6 @@ from sqlalchemy import Engine, func, select, update
 from sqlalchemy.orm import Session
 
 from app import models as m
-from app.errors import UnauthenticatedError
-from app.fake_auth import FakeAuth
-from app.mail import ConsoleMailer
 from tests.conftest import Session as Signed
 from tests.conftest import sign_in
 
@@ -45,10 +42,11 @@ def minor(client: TestClient, inbox: dict[str, str]) -> Signed:
     return s
 
 
-def guardian_link(client: TestClient, s: Signed, mailer: ConsoleMailer) -> str:
-    body = {"guardian_name": "Mrs Dlamini", "guardian_email": "parent@example.org"}
-    assert client.post("/v1/me/guardian", json=body, headers=s.headers).status_code == 204
-    match = re.search(r"/guardian/(\S+)", mailer.sent[-1][2])
+def guardian_link(client: TestClient, s: Signed) -> str:
+    body = {"guardian_name": "Mrs Dlamini"}
+    reply = client.post("/v1/me/guardian", json=body, headers=s.headers)
+    assert reply.status_code == 200
+    match = re.search(r"/guardian/(\S+)$", reply.json()["link"])
     assert match
     return match.group(1)
 
@@ -57,7 +55,7 @@ APPROVE = {
     "decision": "approve",
     "relationship": "parent",
     "declaration": True,
-    "purposes": ["reminders"],
+    "purposes": ["low_data"],
 }
 
 
@@ -85,17 +83,16 @@ def test_consent_needs_a_birth_date_first(client: TestClient, inbox: dict[str, s
 # Under 17
 
 
-def test_under_17_keeps_nothing(
-    client: TestClient, inbox: dict[str, str], engine: Engine, identity: FakeAuth
-) -> None:
+def test_under_17_keeps_nothing(client: TestClient, inbox: dict[str, str], engine: Engine) -> None:
     s = sign_in(client, inbox, "kid@example.org")
     r = client.put("/v1/me/profile", json={"birth_date": born(17, days=-1)}, headers=s.headers)
     assert r.json()["error"]["code"] == "too_young"
     with Session(engine) as db:
         assert db.scalar(select(func.count()).select_from(m.User)) == 0
         assert db.scalar(select(func.count()).select_from(m.Profile)) == 0
-    with pytest.raises(UnauthenticatedError):
-        identity.email_of("anything")
+        assert db.scalar(select(func.count()).select_from(m.Credential)) == 0
+    # The token they still hold doesn't bring the account back.
+    assert client.get("/v1/me", headers=s.headers).status_code == 401
 
 
 # 17-year-olds and guardians
@@ -105,16 +102,20 @@ def test_minor_cannot_consent_alone(client: TestClient, minor: Signed) -> None:
     assert consent(client, minor, "account") == 403
 
 
-def test_guardian_email_must_differ_from_learner(client: TestClient, minor: Signed) -> None:
-    body = {"guardian_name": "Me", "guardian_email": "Minor@Example.org"}
-    assert client.post("/v1/me/guardian", json=body, headers=minor.headers).status_code == 403
+def test_the_guardian_link_asks_for_no_email(client: TestClient, minor: Signed) -> None:
+    body = {"guardian_name": "Me", "guardian_email": "parent@example.org"}
+    assert client.post("/v1/me/guardian", json=body, headers=minor.headers).status_code == 422
+
+
+def test_reminders_are_not_offered_without_email(client: TestClient, adult: Signed) -> None:
+    body = {"purpose": "reminders", "granted": True, "contact_email": "a@example.org"}
+    assert client.post("/v1/me/consents", json=body, headers=adult.headers).status_code == 403
 
 
 def test_guardian_approval_activates_with_chosen_purposes(
-    client: TestClient, minor: Signed, mailer: ConsoleMailer
+    client: TestClient, minor: Signed
 ) -> None:
-    token = guardian_link(client, minor, mailer)
-    assert mailer.sent[-1][0] == "parent@example.org"
+    token = guardian_link(client, minor)
     assert client.get(f"/v1/guardian/{token}").json()["learner_first_name"] == "Thandi"
     approved = client.post(f"/v1/guardian/{token}", json=APPROVE)
     assert approved.status_code == 200
@@ -122,29 +123,25 @@ def test_guardian_approval_activates_with_chosen_purposes(
 
     me = client.get("/v1/me/details", headers=minor.headers).json()
     assert me["status"] == "active"
-    assert me["consents"] == ["account", "reminders"]
+    assert me["consents"] == ["account", "low_data"]
     # Something the guardian didn't allow stays off.
     assert consent(client, minor, "ai_writing") == 403
 
 
-def test_approval_needs_the_declaration(
-    client: TestClient, minor: Signed, mailer: ConsoleMailer
-) -> None:
-    token = guardian_link(client, minor, mailer)
+def test_approval_needs_the_declaration(client: TestClient, minor: Signed) -> None:
+    token = guardian_link(client, minor)
     body = dict(APPROVE, declaration=False)
     assert client.post(f"/v1/guardian/{token}", json=body).status_code == 422
 
 
-def test_link_works_once(client: TestClient, minor: Signed, mailer: ConsoleMailer) -> None:
-    token = guardian_link(client, minor, mailer)
+def test_link_works_once(client: TestClient, minor: Signed) -> None:
+    token = guardian_link(client, minor)
     client.post(f"/v1/guardian/{token}", json=APPROVE)
     assert client.post(f"/v1/guardian/{token}", json=APPROVE).status_code == 404
 
 
-def test_expired_link_is_refused(
-    client: TestClient, minor: Signed, mailer: ConsoleMailer, engine: Engine
-) -> None:
-    token = guardian_link(client, minor, mailer)
+def test_expired_link_is_refused(client: TestClient, minor: Signed, engine: Engine) -> None:
+    token = guardian_link(client, minor)
     with engine.begin() as db:
         db.execute(
             update(m.GuardianRequest).values(expires_at=datetime.now(UTC) - timedelta(seconds=1))
@@ -156,27 +153,25 @@ def test_made_up_link_is_refused(client: TestClient) -> None:
     assert client.get("/v1/guardian/not-a-real-token").status_code == 404
 
 
-def test_decline_removes_the_profile(
-    client: TestClient, minor: Signed, mailer: ConsoleMailer, engine: Engine
-) -> None:
-    token = guardian_link(client, minor, mailer)
+def test_decline_removes_the_profile(client: TestClient, minor: Signed, engine: Engine) -> None:
+    token = guardian_link(client, minor)
     assert client.post(f"/v1/guardian/{token}", json={"decision": "decline"}).status_code == 204
     with Session(engine) as db:
         assert db.scalar(select(func.count()).select_from(m.Profile)) == 0
 
 
 def test_adults_cannot_ask_for_guardian_approval(client: TestClient, adult: Signed) -> None:
-    body = {"guardian_name": "X", "guardian_email": "x@example.org"}
+    body = {"guardian_name": "X"}
     assert client.post("/v1/me/guardian", json=body, headers=adult.headers).status_code == 403
 
 
-def test_guardian_emails_are_limited(client: TestClient, minor: Signed) -> None:
-    body = {"guardian_name": "P", "guardian_email": "parent@example.org"}
+def test_guardian_links_are_limited(client: TestClient, minor: Signed) -> None:
+    body = {"guardian_name": "P"}
     codes = [
         client.post("/v1/me/guardian", json=body, headers=minor.headers).status_code
         for _ in range(4)
     ]
-    assert codes == [204, 204, 204, 429]
+    assert codes == [200, 200, 200, 429]
 
 
 def test_nbt_results_is_optional_and_off_until_granted(client: TestClient, adult: Signed) -> None:
@@ -194,10 +189,8 @@ def test_minor_needs_the_guardian_for_nbt_results(client: TestClient, minor: Sig
     assert consent(client, minor, "nbt_results") == 403
 
 
-def test_guardian_gets_the_withdraw_link_and_an_export(
-    client: TestClient, minor: Signed, mailer: ConsoleMailer
-) -> None:
-    token = guardian_link(client, minor, mailer)
+def test_guardian_gets_the_withdraw_link_and_an_export(client: TestClient, minor: Signed) -> None:
+    token = guardian_link(client, minor)
     withdraw = client.post(f"/v1/guardian/{token}", json=APPROVE).json()["withdraw_token"]
     export = client.get(f"/v1/guardian/withdraw/{withdraw}/export")
     assert export.status_code == 200

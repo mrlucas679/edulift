@@ -32,9 +32,9 @@ npm ci
 npx expo start --web
 ```
 
-For local work set `EDULIFT_ENV=local` and `IDENTITY_PROVIDER=fake` in `api/.env`. The
-fake provider prints sign-in codes to the API log instead of emailing them. It refuses to
-run when `EDULIFT_ENV=demo`.
+For local work set `EDULIFT_ENV=local` and a random 32+ character `AUTH_SECRET` in
+`api/.env`. Sign-in is a username and password with recovery codes; there is no email. To
+make an admin: `uv run python -m app.jobs.admins grant <username>`.
 
 Tests run against a real Postgres (the one from `docker compose`):
 

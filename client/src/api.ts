@@ -27,7 +27,8 @@ export const tokenResponse = z.object({
 });
 export type Tokens = z.infer<typeof tokenResponse>;
 
-export const startResponse = z.object({ session: z.string(), message: z.string() });
+export const newAccountResponse = tokenResponse.extend({ recovery_codes: z.array(z.string()) });
+export const codesResponse = z.object({ recovery_codes: z.array(z.string()) });
 
 export const meResponse = z.object({
   id: z.string(),

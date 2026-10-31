@@ -73,7 +73,8 @@ export class EduLiftStack extends Stack {
     database.connections.allowDefaultPortFrom(apiTasks);
     const dbSecret = database.secret!;
 
-    // Email codes only. The API creates users after rate limiting.
+    // No longer used: sign-in is our own (api/app/routers/auth.py). Kept, with its accounts,
+    // until the old accounts are dealt with; RETAIN means removing it later deletes nothing.
     const users = new cognito.UserPool(this, 'Users', {
       featurePlan: cognito.FeaturePlan.ESSENTIALS,
       signInAliases: { email: true },
@@ -124,24 +125,16 @@ export class EduLiftStack extends Stack {
       generateSecretString: { passwordLength: 48, excludePunctuation: true },
     });
     demoSecret.grantRead(executionRole);
+    // Signs learners' access tokens.
+    const authSecret = new secrets.Secret(this, 'AuthSecret', {
+      generateSecretString: { passwordLength: 64, excludePunctuation: true },
+    });
+    authSecret.grantRead(executionRole);
     image.repository.grantPull(executionRole);
 
     const taskRole = new iam.Role(this, 'ApiTaskRole', {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
     });
-    users.grant(
-      taskRole,
-      'cognito-idp:AdminGetUser',
-      'cognito-idp:AdminCreateUser',
-      'cognito-idp:AdminSetUserPassword',
-      'cognito-idp:AdminDeleteUser',
-    );
-    taskRole.addToPolicy(
-      new iam.PolicyStatement({
-        actions: ['ses:SendEmail'],
-        resources: [`arn:aws:ses:${this.region}:${this.account}:identity/${props.senderEmail}`],
-      }),
-    );
 
     const profile = `arn:aws:bedrock:${this.region}:${this.account}:inference-profile/global.${MODEL}`;
     taskRole.addToPolicy(
@@ -173,15 +166,11 @@ export class EduLiftStack extends Stack {
 
     const settings: Record<string, string> = {
       EDULIFT_ENV: 'demo',
-      IDENTITY_PROVIDER: 'cognito',
       AWS_REGION: this.region,
-      COGNITO_USER_POOL_ID: users.userPoolId,
-      COGNITO_APP_CLIENT_ID: appClient.userPoolClientId,
       DB_HOST: database.dbInstanceEndpointAddress,
       DB_PORT: database.dbInstanceEndpointPort,
       DB_NAME: 'edulift',
       TRUSTED_PROXY_HOPS: '2',
-      SENDER_EMAIL: props.senderEmail,
       APP_URL: props.appUrl ?? '',
       AI_ENABLED: 'true',
       BEDROCK_MODEL_ID: `global.${MODEL}`,
@@ -191,6 +180,7 @@ export class EduLiftStack extends Stack {
       ['DB_PASSWORD', dbSecret, 'password'],
       ['ORIGIN_SECRET', originSecret],
       ['DEMO_SECRET', demoSecret],
+      ['AUTH_SECRET', authSecret],
     ];
 
     const api = new ecs.CfnExpressGatewayService(this, 'Api', {
@@ -248,7 +238,7 @@ export class EduLiftStack extends Stack {
           }),
         }),
       });
-    daily('Reminders', 'app.jobs.reminders', 7);
+    // Reminders go by email, which is off until there is a verified sender.
     daily('Retention', 'app.jobs.retention', 3);
 
     // Web and API share one CloudFront URL.

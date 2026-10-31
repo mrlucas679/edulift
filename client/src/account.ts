@@ -74,8 +74,9 @@ export const setConsent = (
     accessToken,
   });
 
-export const askGuardian = (accessToken: string | null, body: { guardian_name: string; guardian_email: string }) =>
-  request('/v1/me/guardian', z.undefined(), { method: 'POST', body, accessToken });
+// A one-time link the learner sends to their parent or guardian.
+export const askGuardian = (accessToken: string | null, body: { guardian_name: string }) =>
+  request('/v1/me/guardian', z.object({ link: z.string() }), { method: 'POST', body, accessToken });
 
 export const viewGuardianRequest = (token: string) =>
   request(`/v1/guardian/${encodeURIComponent(token)}`, guardianView);

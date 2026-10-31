@@ -1,4 +1,4 @@
-"""Outgoing email. SES on AWS, the console locally."""
+"""Outgoing email: SES when a sender is set, the console locally, otherwise off."""
 
 import logging
 import sys
@@ -22,10 +22,16 @@ class Mailer(Protocol):
 
 
 def mailer_for(settings: "Settings") -> Mailer:
-    if settings.identity_provider == "cognito":
+    if settings.sender_email:
         client = boto3.client("sesv2", region_name=settings.aws_region)
         return SesMailer(client, settings.sender_email)
-    return ConsoleMailer()
+    # On AWS without a sender, refuse rather than print someone's email into the logs.
+    return NoMailer() if settings.deployed else ConsoleMailer()
+
+
+class NoMailer:
+    def send(self, to: str, subject: str, body: str) -> None:
+        raise UpstreamUnavailableError("Email isn't switched on.")
 
 
 class SesMailer:

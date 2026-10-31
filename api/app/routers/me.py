@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response
 
 from app.accounts import ensure_account
-from app.deps import Db, Identities, SignedIn
+from app.deps import Db, SignedIn
 from app.erasure import erase_learner, export_learner, record
 from app.schemas import MeResponse
 
@@ -22,7 +22,7 @@ def export(me: SignedIn, db: Db) -> dict[str, object]:
 
 
 @router.delete("", status_code=204)
-def delete_account(me: SignedIn, db: Db, identities: Identities) -> Response:
+def delete_account(me: SignedIn, db: Db) -> Response:
     user = ensure_account(db, me.subject)
-    erase_learner(db, identities, user, action="delete")
+    erase_learner(db, user, action="delete")
     return Response(status_code=204)

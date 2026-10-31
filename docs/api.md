@@ -8,7 +8,7 @@ the human summary and must change in the same pull request as the code.
 - **Error shape (every error):** `{"error": {"code": "...", "message": "<friendly text>", "request_id": "..."}}`
 - **Client IP:** taken from `X-Forwarded-For`, counting `TRUSTED_PROXY_HOPS` entries from the right (2 behind CloudFront + load balancer). Entries further left are written by the caller and ignored.
 - **Codes:** `invalid_code` (400), `invalid_credentials` (400), `code_expired` (400), `validation_failed` (422), `unauthenticated` (401), `not_allowed` (403), `not_found` (404), `account_exists` (409), `conflict` (409), `rate_limited` (429), `guardian_consent_required` (403), `upstream_unavailable` (503), `internal_error` (500). No stack traces in responses.
-- **Auth:** "Auth" = valid Cognito access token. "Public" = reference data or rate-limited anonymous actions. "Link" = single-use guardian token.
+- **Auth:** "Auth" = valid access token from `/auth` (ADR own-sign-in). "Admin" = Auth plus `users.role = admin`. "Public" = reference data or rate-limited anonymous actions. "Link" = single-use guardian token.
 - **Ownership:** every `/v1/me/*` query filters by the token's `sub`. Another learner's resource answers `404`, never `403`, so ids can't be probed.
 - **Gates:** `/v1/me/*` (except `GET /me`, profile DOB write, guardian request, consents, export, delete) require `users.status = active` and the `account` consent; otherwise `guardian_consent_required` or `not_allowed`.
 - **Pagination:** `?page=1&page_size=20`, max 50; response `{items, page, page_size, total}`.
@@ -33,27 +33,34 @@ the human summary and must change in the same pull request as the code.
 | GET `/handoffs` | NSFAS, CAS, SA Youth, DPSA, Khetha | |
 | POST `/aps/preview` | Score marks at every supported institution; nothing stored | 30/min per IP |
 
-## Sign-in (API proxies Cognito, the cognito passwordless decision)
+## Sign-in (own accounts, ADR own-sign-in)
 
 | Method + path | Auth | Purpose | Notes |
 |---|---|---|---|
-| POST `/auth/start` | Public | Email a one-time code; create Cognito user on first use | 5 per 15 min per email, 30 per 15 min per IP (counted in Postgres so every API task shares the limit); identical reply either way |
-| POST `/auth/verify` | Public | email + code + session → access and refresh tokens | 3 wrong codes → start again; 30 per 15 min per IP |
-| POST `/auth/refresh` | Public | refresh → new access token | |
-| POST `/auth/sign-out` | Auth | Revoke refresh token | |
-| POST `/auth/demo/register` | Public, demo only | Create a demo account with email and password; no email verification | Password minimum 16 characters; 10 per 15 min per email, 30 per IP |
-| POST `/auth/demo/login` | Public, demo only | Sign into that demo account with email and password | Same rate limits; invalid credentials return `invalid_credentials` |
+| POST `/auth/register` | Public | username + password → tokens and 10 recovery codes (shown once) | 10 per hour per IP; a weak password → 422 `weak_password` with the rule to follow |
+| POST `/auth/login` | Public | username + password → tokens | 10 per 15 min per username, 30 per IP; one `invalid_credentials` reply for any mistake |
+| POST `/auth/recover` | Public | username + recovery code + new password → tokens | Code works once; ends every sign-in; 5 per 15 min per username, 20 per IP |
+| POST `/auth/refresh` | Public | refresh token (body, or the web's cookie) → new pair | Old refresh token stops working; the sign-in ends 8 h after it began |
+| POST `/auth/sign-out` | Auth | Revoke the refresh token, clear the cookie | |
+| POST `/auth/password` | Auth | current + new password | Ends every other sign-in |
+| POST `/auth/recovery-codes` | Auth | current password → 10 new codes | Old codes stop working |
+| POST `/auth/demo` | Public, demo only | A new sample learner, 4-hour token | 20 per 15 min per IP |
 
-Each demo account has its own Cognito subject and keeps its learner row after sign-out.
-Demo registration creates a Cognito user without sending an email and sets a permanent
-password. The standard email-code routes remain separate.
+`use_cookie: true` (the web app) puts the refresh token in an HttpOnly cookie instead of
+the reply.
+
+## Admin
+
+| Method + path | Auth | Purpose |
+|---|---|---|
+| GET `/admin/stats` | Admin | Account totals and AI calls by feature, provider and fallback reason; no learner details |
 
 ## Learner
 
 | Method + path | Purpose | Notes |
 |---|---|---|
 | GET `/me` | Profile, status, consents, guardian status | creates `users` row on first call |
-| PUT `/me/profile` | first_name, date_of_birth, province, certificate_type, interests, low_data_mode | age computed here: <17 → 403 + Cognito user deleted; 17 → status `pending_guardian` |
+| PUT `/me/profile` | first_name, date_of_birth, province, certificate_type, interests, low_data_mode | age computed here: <17 → 403 + account deleted; 17 → status `pending_guardian` |
 | POST `/me/guardian-request` | `{guardian_name, guardian_email}` → email single-use link | 3/day; replaces a previous pending request |
 | GET `/me/guardian-request` | Pending/approved/declined status | |
 | POST `/me/consents` | Grant or withdraw one purpose | 17-year-olds: only purposes the guardian allowed |
@@ -73,7 +80,7 @@ password. The standard email-code routes remain separate.
 | GET, PATCH, DELETE `/me/applications/{id}` | Status, reference, offer deadline, notes | |
 | PATCH `/me/applications/{id}/checklist/{item_id}` | Tick a document | |
 | GET `/me/export` | All my data as JSON | POPIA access right |
-| DELETE `/me` | Delete account and all data, then Cognito user | confirm token in body |
+| DELETE `/me` | Delete account and all data, including the username and password | confirm token in body |
 
 ## Guardian (no account; the age 17 guardian consent decision)
 
