@@ -10,7 +10,7 @@ export default function SavePlan() {
         <>
           <Button label="Create a free account" onPress={() => router.push('/sign-in')} />
           <Button label="Not now" variant="secondary" onPress={() => router.back()} />
-          <Body muted small>Under 18? A parent or guardian approves your account by email.</Body>
+          <Body muted small>Under 18? A parent or guardian approves your account with a link you send them.</Body>
         </>
       }
     >
@@ -19,7 +19,7 @@ export default function SavePlan() {
       <Title>A free account keeps them safe and adds:</Title>
       <Body>✓ Your plan on any phone or computer</Body>
       <Body>✓ An application tracker with checklists</Body>
-      <Body>✓ Deadline reminders, if you want them</Body>
+      <Body>✓ Your next deadline on Home</Body>
     </Screen>
   );
 }

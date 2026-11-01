@@ -29,15 +29,15 @@ function SignedOut() {
       footer={
         <>
           <Button label="Sign in or create a free account" onPress={() => router.push('/sign-in')} />
-          <Body muted small>Under 18? A parent or guardian approves by email.</Body>
+          <Body muted small>Under 18? A parent or guardian approves with a link you send them.</Body>
         </>
       }
     >
       <Heading>Your profile</Heading>
-      <Body muted>Sign in to keep your plan, applications and reminders on any phone.</Body>
+      <Body muted>Sign in to keep your plan and applications on any phone.</Body>
       <Card>
         <Body>✓ See what you qualify for, saved</Body>
-        <Body>✓ Get reminders before deadlines close</Body>
+        <Body>✓ See your next deadline on Home</Body>
         <Body>✓ Track every application in one place</Body>
       </Card>
       <Row label="Help and talk to a person" onPress={() => router.push('/help')} />

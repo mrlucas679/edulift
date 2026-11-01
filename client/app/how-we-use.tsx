@@ -9,7 +9,7 @@ export default function HowWeUseYourData() {
       <Heading>In plain words</Heading>
       <Card>
         <Title>What we collect</Title>
-        <Body>• Your email, first name, date of birth and province</Body>
+        <Body>• Your username, first name, date of birth and province</Body>
         <Body>• Your school marks and subjects</Body>
         <Body>• Courses, funding and work you save or track</Body>
         <Body muted>We never ask for your ID number, banking details, race or income.</Body>

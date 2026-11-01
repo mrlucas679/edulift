@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -21,6 +22,9 @@ WITHOUT_MATHS = {
 def seeded(tmp_path: Path, engine: Engine) -> None:
     data = read(dataset(tmp_path))
     data.institutions[0].aps_scheme = "standard_best6"
+    # Keep the window open whatever today is, so "qualifies" never turns into "closed".
+    for cycle in data.institutions[0].cycles:
+        cycle.closes_on = date.today() + timedelta(days=90)
     data.subjects.subjects = read(REPO_DATA).subjects.subjects
     uj = data.institutions[0]
     diploma = uj.programmes[0].model_copy(
