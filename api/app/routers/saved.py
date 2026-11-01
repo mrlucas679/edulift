@@ -9,14 +9,15 @@ from sqlalchemy.orm import Session
 from app import models as m
 from app.deps import Db, SignedIn
 from app.routers.marks import active_user
+from app.schemas import Id, Request
 from app.tracking import target_summary
 
 router = APIRouter(prefix="/me/saved", tags=["saved"])
 
 
-class SavedIn(BaseModel):
+class SavedIn(Request):
     target_kind: Literal["programme", "opportunity"]
-    target_id: str
+    target_id: Id
 
 
 class SavedOut(BaseModel):

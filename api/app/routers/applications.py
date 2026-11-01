@@ -2,7 +2,7 @@ from datetime import date
 from typing import Literal
 
 from fastapi import APIRouter, Response
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
@@ -10,7 +10,7 @@ from app import models as m
 from app.deps import Db, SignedIn
 from app.errors import NotFoundError
 from app.routers.marks import active_user
-from app.schemas import Request
+from app.schemas import Id, Request, Text
 from app.tracking import (
     DEFAULT_CHECKLIST,
     deadline_soon,
@@ -24,17 +24,30 @@ router = APIRouter(prefix="/me/applications", tags=["applications"])
 Status = Literal["planning", "submitted", "offer", "waitlist", "declined", "withdrawn"]
 
 
+# Offer deadlines outside these years are typing mistakes.
+EARLIEST = date(2020, 1, 1)
+LATEST = date(2040, 12, 31)
+
+
 class ApplicationIn(Request):
     target_kind: Literal["programme", "opportunity"]
-    target_id: str = Field(min_length=1, max_length=80)
+    target_id: Id
 
 
-class ApplicationPatch(BaseModel):
+class ApplicationPatch(Request):
     status: Status | None = None
-    external_reference: str | None = Field(default=None, max_length=60)
+    external_reference: Text | None = Field(default=None, max_length=60)
     submitted_on: date | None = None
     offer_deadline: date | None = None
-    notes: str | None = Field(default=None, max_length=1000)
+    notes: Text | None = Field(default=None, max_length=1000)
+
+    @model_validator(mode="after")
+    def _dates(self) -> "ApplicationPatch":
+        if self.submitted_on and self.submitted_on > date.today():
+            raise ValueError("The date you applied can't be in the future.")
+        if self.offer_deadline and not EARLIEST <= self.offer_deadline <= LATEST:
+            raise ValueError("Check the offer deadline's year.")
+        return self
 
 
 class ChecklistOut(BaseModel):

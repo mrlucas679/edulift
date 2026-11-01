@@ -17,7 +17,7 @@ from app.assist import (
 from app.deps import Asker, Db, DbEngine, Drafter, SignedIn
 from app.errors import NotFoundError, RateLimitedError
 from app.routers.marks import active_user, latest_marks
-from app.schemas import Request
+from app.schemas import Id, Request, Text
 from app.tracking import target_summary
 from app.verdicts import subject_names
 
@@ -26,7 +26,7 @@ DRAFT_LABEL = "Draft — check and edit before you send."
 
 
 class AskIn(Request):
-    question: str = Field(min_length=3, max_length=300)
+    question: Text = Field(min_length=3, max_length=300)
 
 
 class CitedOut(BaseModel):
@@ -45,8 +45,8 @@ class AskOut(BaseModel):
 class DraftIn(Request):
     kind: Literal["cv", "motivation_letter"]
     target_kind: Literal["programme", "opportunity"] | None = None
-    target_id: str | None = Field(default=None, max_length=80)
-    facts: str = Field(min_length=1, max_length=3000)
+    target_id: Id | None = None
+    facts: Text = Field(min_length=1, max_length=3000)
 
 
 class DraftOut(BaseModel):
@@ -58,10 +58,10 @@ class DraftOut(BaseModel):
 
 class SaveDraftIn(Request):
     kind: Literal["cv", "motivation_letter"]
-    title: str = Field(min_length=1, max_length=120)
-    content: str = Field(min_length=1, max_length=10_000)
+    title: Text = Field(min_length=1, max_length=120)
+    content: Text = Field(min_length=1, max_length=10_000)
     target_kind: Literal["programme", "opportunity"] | None = None
-    target_id: str | None = Field(default=None, max_length=80)
+    target_id: Id | None = None
 
 
 class SavedDraftOut(BaseModel):

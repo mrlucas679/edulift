@@ -15,7 +15,7 @@ general; POPIA and AWS specifics are not in it — sources are the Act and AWS d
 | Elevation to admin | `/v1/admin/*` | Role read from the database on every request; granted only by `app.jobs.admins` with AWS access; `role` can't be sent to the API; a route inventory test fails if a route becomes public |
 | Spoofing a guardian | Guardian link | 32-byte random token, SHA-256 stored, single use, 72 h; declaration recorded; same 404 for invalid/used/expired |
 | Learner approving for themselves | Guardian link | **Accepted risk, for POPIA review:** the learner sends the link, so nothing technical stops them opening it. The page requires the guardian declaration and records the decision |
-| Tampering | Request bodies | Pydantic with ranges and lengths, unknown fields rejected; marks 0–100 |
+| Tampering | Request bodies | Allow-list rules in `api/app/schemas.py`, shared by every route: unknown fields rejected; ids `[a-z0-9._-]`; names letters (any language), spaces, `'` and `-`; the 9 provinces only; birthdays 1900–today; marks whole numbers 0–100 (no strings or decimals); free text without control characters; lengths on every string. Refusals name the field and the rule, never the value. The app checks the same rules first (`client/src/names.ts`, `credentials.ts`); the API stays the authority |
 | Repudiation | Consent and guardian decisions | `consents`, `guardian_consents`, `audit_events` with policy/declaration version |
 | Information disclosure | Cross-learner reads | Owner filter on every query; 404 on others' ids; test per endpoint |
 | Information disclosure | Logs, AI | No PII in logs (scrub test); AI gets verdict data only |
