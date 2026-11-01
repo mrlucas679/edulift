@@ -20,8 +20,19 @@ type Session = {
 
 const SessionContext = createContext<Session | null>(null);
 
+// One renewal at a time. Refresh tokens work once, so when several screens find the access
+// token expired together, a second renewal would be refused and sign the learner out.
+let renewing: Promise<Tokens | null> | null = null;
+
+function renew(): Promise<Tokens | null> {
+  renewing ??= renewOnce().finally(() => {
+    renewing = null;
+  });
+  return renewing;
+}
+
 // Asks for a new access token: the web sends its cookie, phones send the stored token.
-async function renew(): Promise<Tokens | null> {
+async function renewOnce(): Promise<Tokens | null> {
   const refreshToken = await loadRefreshToken();
   if (!usesCookie && !refreshToken) return null;
   const tokens = await request('/v1/auth/refresh', tokenResponse, {

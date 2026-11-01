@@ -9,7 +9,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 
 import { MarksProvider } from '../src/marks';
-import { SessionProvider } from '../src/session';
+import { SessionProvider, useSession } from '../src/session';
 import { useColors } from '../src/theme';
 import { Loading } from '../src/ui';
 import { Maintenance } from '../src/maintenance';
@@ -24,6 +24,19 @@ export const unstable_settings = { initialRouteName: 'splash' };
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
 });
+
+// Screens wait until a saved sign-in is restored, so a reload never shows "Sign in" (or
+// redirects to it) for someone who is signed in. A slow network waits 8 seconds at most.
+function AfterRestore({ children }: { children: React.ReactNode }) {
+  const { status } = useSession();
+  const [waited, setWaited] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setWaited(true), 8000);
+    return () => clearTimeout(timer);
+  }, []);
+  if (status === 'restoring' && !waited) return <Loading />;
+  return children;
+}
 
 export default function RootLayout() {
   const colors = useColors();
@@ -45,9 +58,11 @@ export default function RootLayout() {
         {MAINTENANCE ? (
           <Maintenance />
         ) : (
-          <Stack
-            screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}
-          />
+          <AfterRestore>
+            <Stack
+              screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.paper } }}
+            />
+          </AfterRestore>
         )}
         </MarksProvider>
       </SessionProvider>

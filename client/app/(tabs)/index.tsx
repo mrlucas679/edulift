@@ -105,7 +105,7 @@ export default function Home() {
           ))}
         </ScrollView>
       </QueryState>
-      {deadlines.data?.length === 0 && <Empty message="No application windows are loaded yet. Check each institution's site." />}
+      {deadlines.data?.length === 0 && <Empty message="No application windows are open right now. Most open again early next year; check each institution's site." />}
 
       {signedIn && nextStep && left.length > 0 && (
         <Card onPress={() => router.push(`/application/${nextStep.id}`)} label="Open your next step">

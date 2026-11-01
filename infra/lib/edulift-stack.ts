@@ -255,7 +255,8 @@ export class EduLiftStack extends Stack {
     const spaRewrite = new cloudfront.Function(this, 'SpaRewrite', {
       runtime: cloudfront.FunctionRuntime.JS_2_0,
       code: cloudfront.FunctionCode.fromInline(
-        "function handler(event) { var r = event.request; if (!r.uri.includes('.')) { r.uri = '/index.html'; } return r; }",
+        // Only real files skip the app. Course ids have dots (uj.b2i02q), so "has a dot" isn't enough.
+        "function handler(event) { var r = event.request; if (!/\\.(js|css|map|json|png|jpe?g|gif|svg|ico|webp|ttf|otf|woff2?|txt|html|webmanifest|xml)$/i.test(r.uri)) { r.uri = '/index.html'; } return r; }",
       ),
     });
     const webHeaders = new cloudfront.ResponseHeadersPolicy(this, 'WebHeaders', {
