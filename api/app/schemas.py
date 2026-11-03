@@ -1,12 +1,47 @@
+import re
 from datetime import date, datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, EmailStr, Field, model_validator
 
 
 class Request(BaseModel):
     # Reject unknown fields.
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+
+# Shared input rules: say what is allowed, and refuse the rest (OWASP input validation).
+# Messages name the rule and never repeat what was typed.
+_CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
+# Letters in any language, single spaces, apostrophes or hyphens between them.
+# \u2019 is the curly apostrophe phones type.
+_NAME = re.compile(r"[^\W\d_]+(?:[ '\u2019-][^\W\d_]+)*")
+NAME_RULE = "Use letters, spaces, apostrophes and hyphens only, like Mary-Jane or O'Neil."
+
+
+def _plain_text(value: str) -> str:
+    if _CONTROL.search(value):
+        raise ValueError("Remove hidden characters (they can come from copying and pasting).")
+    return value
+
+
+def _name(value: str) -> str:
+    if not _NAME.fullmatch(value):
+        raise ValueError(NAME_RULE)
+    return value
+
+
+# Ids of courses, bursaries, subjects and fields: lower case, as in data/.
+Id = Annotated[str, Field(pattern=r"^[a-z0-9][a-z0-9._-]{0,79}$")]
+Text = Annotated[str, AfterValidator(_plain_text)]
+Name = Annotated[str, AfterValidator(_name)]
+Province = Literal[
+    "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal", "Limpopo",
+    "Mpumalanga", "North West", "Northern Cape", "Western Cape",
+]  # fmt: skip
+# Whole numbers only: "60" or 60.5 is refused, not quietly turned into 60.
+Marks = dict[Id, Annotated[int, Field(ge=0, le=100, strict=True)]]
+OLDEST_BIRTH = date(1900, 1, 1)
 
 
 USERNAME = r"^[A-Za-z0-9._]{3,30}$"
@@ -178,7 +213,7 @@ class MetaOut(BaseModel):
 
 class PreviewRequest(Request):
     # subject id -> percent
-    marks: dict[str, Annotated[int, Field(ge=0, le=100)]] = Field(min_length=1, max_length=15)
+    marks: Marks = Field(min_length=1, max_length=15)
 
 
 class PreviewScore(BaseModel):
@@ -215,14 +250,16 @@ Purpose = Literal[
 
 
 class ProfileIn(Request):
-    first_name: str | None = Field(default=None, max_length=60)
+    first_name: Name | None = Field(default=None, min_length=1, max_length=60)
     birth_date: date
-    province: str | None = Field(default=None, max_length=30)
+    province: Province | None = None
     certificate: Literal["nsc", "ieb", "sacai"] | None = None
-    interests: list[str] | None = Field(default=None, max_length=3)
+    interests: list[Id] | None = Field(default=None, max_length=3)
 
     @model_validator(mode="after")
-    def unique_interests(self) -> "ProfileIn":
+    def _check(self) -> "ProfileIn":
+        if not OLDEST_BIRTH <= self.birth_date <= date.today():
+            raise ValueError("Check your birthday: use day, month and a 4-digit year.")
         if self.interests is not None and len(set(self.interests)) != len(self.interests):
             raise ValueError("pick each interest once")
         return self
@@ -249,7 +286,7 @@ class MeDetail(BaseModel):
 
 
 class GuardianRequestIn(Request):
-    guardian_name: str = Field(min_length=1, max_length=80)
+    guardian_name: Name = Field(min_length=1, max_length=80)
 
 
 class GuardianLink(BaseModel):
@@ -277,14 +314,12 @@ class GuardianDecision(Request):
 
 
 class MarksIn(Request):
-    marks: dict[str, Annotated[int, Field(ge=0, le=100)]] = Field(min_length=1, max_length=15)
+    marks: Marks = Field(min_length=1, max_length=15)
 
 
 class CheckRequest(Request):
     # Leave out to use your saved marks.
-    marks: dict[str, Annotated[int, Field(ge=0, le=100)]] | None = Field(
-        default=None, max_length=15
-    )
+    marks: Marks | None = Field(default=None, max_length=15)
 
 
 # My plan
@@ -293,7 +328,7 @@ PLAN_LIMIT = 3
 
 
 class PlanIn(Request):
-    programme_ids: list[str] = Field(max_length=PLAN_LIMIT)
+    programme_ids: list[Id] = Field(max_length=PLAN_LIMIT)
 
     @model_validator(mode="after")
     def unique_targets(self) -> "PlanIn":

@@ -9,6 +9,7 @@ import { ApsSummary, blankRows, MarksEditor, useResolvedMarks } from '../src/mar
 import { useMarks, type Row } from '../src/marks';
 import { useFields } from '../src/reference';
 import { PERIODS } from '../src/saved-marks';
+import { nameProblem } from '../src/names';
 import { useSession } from '../src/session';
 import { space } from '../src/theme';
 import {
@@ -78,7 +79,8 @@ function Basics({ onTooYoung }: { onTooYoung: () => void }) {
   const digits = (v: string, n: number) => v.replace(/\D/g, '').slice(0, n);
   const save = useAction(async () => {
     try {
-      await saveProfile(accessToken, { first_name: name.trim(), birth_date: birth ?? '', province, certificate });
+      // An empty name is left out: it's optional, and the API refuses an empty one.
+      await saveProfile(accessToken, { first_name: name.trim() || undefined, birth_date: birth ?? '', province, certificate });
       await queryClient.invalidateQueries({ queryKey: ['me-details'] });
     } catch (e) {
       if (e instanceof ApiError && e.code === 'too_young') return onTooYoung();
@@ -97,8 +99,9 @@ function Basics({ onTooYoung }: { onTooYoung: () => void }) {
             label="Continue"
             busy={save.busy}
             onPress={() => {
-              setHint(birth ? null : 'Add your birthday as day, month and a 4-digit year, like 14 / 3 / 2008.');
-              if (birth) save.run();
+              const problem = birth ? nameProblem(name.trim()) : 'Add your birthday as day, month and a 4-digit year, like 14 / 3 / 2008.';
+              setHint(problem);
+              if (!problem) save.run();
             }}
           />
         </>
@@ -186,9 +189,9 @@ function Guardian() {
       <Card>
         <Title>Save your plan with a parent’s OK</Title>
         <Body muted small>To save across phones and track applications, a parent or guardian approves. We give you a link to send them.</Body>
-        <Field label="Their name" value={name} onChangeText={setName} maxLength={80} />
-        <ErrorNote error={send.error} />
-        <Button label="Get the approval link" onPress={send.run} busy={send.busy} disabled={!name.trim()} />
+        <Field label="Their name" value={name} onChangeText={setName} maxLength={80} autoComplete="name" />
+        <ErrorNote error={nameProblem(name.trim()) ?? send.error} />
+        <Button label="Get the approval link" onPress={send.run} busy={send.busy} disabled={!name.trim() || !!nameProblem(name.trim())} />
       </Card>
     </Screen>
   );

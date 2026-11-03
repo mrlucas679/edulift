@@ -87,9 +87,18 @@ async def _app_error(request: Request, exc: Exception) -> JSONResponse:
 async def _bad_input(request: Request, exc: Exception) -> JSONResponse:
     if not isinstance(exc, RequestValidationError):
         return await _unexpected(request, exc)
-    # Name the fields, never echo the values.
+    # Name the fields, never echo the values. Our own rules (value errors) also say what to
+    # do; their text is ours, not the input.
     fields = sorted({".".join(str(p) for p in err["loc"][1:]) or "body" for err in exc.errors()})
-    return error_response(422, "validation_failed", "Please check: " + ", ".join(fields))
+    rules = sorted(
+        {
+            str(err["msg"]).removeprefix("Value error, ")
+            for err in exc.errors()
+            if err["type"] == "value_error"
+        }
+    )
+    message = "Please check: " + ", ".join(fields)
+    return error_response(422, "validation_failed", " ".join([message + ".", *rules]))
 
 
 async def _http_error(request: Request, exc: Exception) -> JSONResponse:
