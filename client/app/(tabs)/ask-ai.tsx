@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Linking, Pressable, Text, TextInput, View } from 'react-native';
 
 import { useAsk, type Answer } from '../../src/assist';
+import { Appear, Pulse } from '../../src/motion';
 import { t } from '../../src/i18n';
 import { useSession } from '../../src/session';
 import { font, radius, space, text, touchTarget, useColors } from '../../src/theme';
@@ -30,13 +31,13 @@ function safeHost(url: string | null): string | null {
   }
 }
 
+// Each message slides in as it arrives.
 function Bubble({ mine, children }: { mine?: boolean; children: React.ReactNode }) {
   const colors = useColors();
   return (
+    <Appear style={{ alignSelf: mine ? 'flex-end' : 'flex-start', maxWidth: '85%' }}>
     <View
       style={{
-        alignSelf: mine ? 'flex-end' : 'flex-start',
-        maxWidth: '85%',
         gap: space.xs,
         padding: space.md,
         borderRadius: radius.card * 2,
@@ -45,6 +46,7 @@ function Bubble({ mine, children }: { mine?: boolean; children: React.ReactNode 
     >
       {children}
     </View>
+    </Appear>
   );
 }
 
@@ -188,7 +190,9 @@ export default function AskAiScreen() {
       )}
       {ask.isPending && (
         <Bubble>
-          <Body muted>Thinking…</Body>
+          <Pulse>
+            <Body muted>Thinking…</Body>
+          </Pulse>
         </Bubble>
       )}
     </Screen>

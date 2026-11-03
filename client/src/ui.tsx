@@ -16,6 +16,7 @@ import { useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ApiError } from './api';
+import { Appear, pressedScale, useReducedMotion } from './motion';
 import type { Source } from './reference';
 import { font, lineHeight, radius, space, text, touchTarget, useColors } from './theme';
 
@@ -55,7 +56,8 @@ export function Screen({ children, title, back = true, footer, stickToBottom }: 
         keyboardShouldPersistTaps="handled"
         onContentSizeChange={stickToBottom ? () => scroll.current?.scrollToEnd({ animated: true }) : undefined}
       >
-        {children}
+        {/* Each screen's content fades in as it opens; same gap as the scroll content. */}
+        <Appear style={styles.stack}>{children}</Appear>
       </ScrollView>
       {footer && <View style={[styles.footer, { borderTopColor: colors.border }]}>{footer}</View>}
     </SafeAreaView>
@@ -116,6 +118,7 @@ type ButtonProps = {
 
 export function Button({ label, onPress, busy, disabled, variant = 'primary', sub }: ButtonProps) {
   const colors = useColors();
+  const reduced = useReducedMotion();
   const off = disabled || busy;
   const filled = variant === 'primary';
   const fg = filled ? colors.onAccent : colors.ink;
@@ -143,7 +146,7 @@ export function Button({ label, onPress, busy, disabled, variant = 'primary', su
               borderColor: variant === 'dashed' ? colors.inkMuted : colors.ink,
               borderStyle: variant === 'dashed' ? 'dashed' : 'solid',
             },
-        { opacity: off ? 0.6 : pressed ? 0.85 : 1 },
+        { opacity: off ? 0.6 : pressed ? 0.85 : 1, transform: pressedScale(pressed, reduced) },
       ]}
     >
       {busy ? (
@@ -234,6 +237,7 @@ export function Card({ children, onPress, label, muted }: {
   muted?: boolean;
 }) {
   const colors = useColors();
+  const reduced = useReducedMotion();
   const style = [
     styles.card,
     muted
@@ -242,7 +246,12 @@ export function Card({ children, onPress, label, muted }: {
   ];
   if (!onPress) return <View style={style}>{children}</View>;
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={style}>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={({ pressed }) => [...style, { transform: pressedScale(pressed, reduced) }]}
+    >
       {children}
     </Pressable>
   );
@@ -415,7 +424,8 @@ const styles = StyleSheet.create({
   },
   back: { minWidth: touchTarget - 12, minHeight: touchTarget, justifyContent: 'center' },
   headerTitle: { fontFamily: font.bold, fontSize: text.body + 1, flex: 1 },
-  screen: { padding: space.lg, gap: space.md, maxWidth: 560, width: '100%', alignSelf: 'center' },
+  screen: { padding: space.lg, maxWidth: 560, width: '100%', alignSelf: 'center' },
+  stack: { gap: space.md },
   footer: {
     padding: space.lg,
     gap: space.sm,
